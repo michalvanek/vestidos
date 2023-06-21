@@ -39,7 +39,8 @@ const dressSchema = mongoose.Schema(
       required: [true, "Please provide the dress cost"],
     },
     marca: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
       required: [true, "Please provide the dress brand"],
     },
   },

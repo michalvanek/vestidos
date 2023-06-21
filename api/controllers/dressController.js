@@ -27,12 +27,6 @@ const dressCreate = asyncHandler(async (req, res) => {
   try {
     console.log("The request body is: ", req.body);
 
-    // if (!name || !owner) {
-    //   res.status(400);
-    //   return res.json({
-    //     message: "Please provide values for both the 'name' and 'owner' fields",
-    //   });
-    // }
     const dress = new Dress({
       talla,
       color,
