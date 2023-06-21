@@ -23,6 +23,7 @@ const dressReadAll = asyncHandler(async (req, res) => {
 const dressCreate = asyncHandler(async (req, res) => {
   const { talla, color, piedras, precio, fotoPrincipal, fotos, costo, marca } =
     req.body;
+
   try {
     console.log("The request body is: ", req.body);
 

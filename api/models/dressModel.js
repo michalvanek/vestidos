@@ -5,9 +5,16 @@ const dressSchema = mongoose.Schema(
     talla: {
       type: String,
       required: [true, "Please provide the dress size"],
+      enum: {
+        values: ["XCH", "CH", "M", "G", "XG", "XXG"],
+        message:
+          "{VALUE} is not supported, please insert one of those: XCH, CH, M, G, XG, XXG (case sensitive)",
+      },
+      nullable: false,
     },
     color: {
       type: String,
+      minLength: 4,
       required: [true, "Please provide the dress color"],
     },
     piedras: {
@@ -15,7 +22,8 @@ const dressSchema = mongoose.Schema(
       required: [true, "Please provide the dress stones"],
     },
     precio: {
-      type: Number,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Price",
       required: [true, "Please provide the dress price"],
     },
     fotoPrincipal: {
