@@ -1,46 +1,48 @@
 const asyncHandler = require("express-async-handler");
 const Dress = require("../models/dressModel");
 const adminIds = JSON.parse(process.env.ADMIN);
+const { default: mongoose } = require("mongoose");
 
-//@desc Read all shopping lists
+//@desc Read all dresss
 //@route GET /api/dress
 //@access private
 const dressReadAll = asyncHandler(async (req, res) => {
   try {
-    if (adminIds.includes(req.user.id)) {
-      const dresss = await Dress.find({});
-      res.status(200).json(dresss);
-    } else {
-      const dresss = await Dress.find({
-        $or: [{ user_id: req.user.id }, { owner: { $in: [req.user.id] } }],
-      });
-      res.status(200).json(dresss);
-    }
+    const dress = await Dress.find({});
+    res.status(200).json(dress);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
   }
 });
 
-//@desc Create new shopping list
+//@desc Create new dress
 //@route POST /api/dress
 //@access private
 
 const dressCreate = asyncHandler(async (req, res) => {
+  const { talla, color, piedras, precio, fotoPrincipal, fotos, costo, marca } =
+    req.body;
   try {
     console.log("The request body is: ", req.body);
-    const { name, owner } = req.body;
-    if (!name || !owner) {
-      res.status(400);
-      return res.json({
-        message: "Please provide values for both the 'name' and 'owner' fields",
-      });
-    }
-    const dress = await Dress.create({
-      name,
-      owner,
-      user_id: req.user.id,
+
+    // if (!name || !owner) {
+    //   res.status(400);
+    //   return res.json({
+    //     message: "Please provide values for both the 'name' and 'owner' fields",
+    //   });
+    // }
+    const dress = new Dress({
+      talla,
+      color,
+      piedras,
+      precio,
+      fotoPrincipal,
+      fotos,
+      costo,
+      marca,
     });
+    await dress.save();
     res.status(201).json(dress);
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
@@ -52,7 +54,7 @@ const dressCreate = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc Read shopping list by id
+//@desc Read dress by id
 //@route GET /api/dress/:id
 //@access private
 
@@ -60,24 +62,15 @@ const dressReadId = asyncHandler(async (req, res) => {
   try {
     const dress = await Dress.findById(req.params.id);
     if (!dress) {
-      return res.status(404).json({ error: "Shopping list not found" });
-    }
-    if (
-      dress.user_id.toString() !== req.user.id &&
-      !adminIds.includes(req.user.id) &&
-      !dress.owner.includes(req.user.id)
-    ) {
-      return res.status(403).json({
-        error: "User don't have permission to read other user's shopping list",
-      });
+      return res.status(404).json({ error: "Dress not found" });
     }
     res.status(200).json(dress);
   } catch (error) {
-    res.status(500).json({ error: "Failed to read shopping list" });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-//@desc Edit shopping list
+//@desc Edit dress
 //@route PUT /api/dress/:id
 //@access private
 
@@ -86,19 +79,14 @@ const dressEdit = asyncHandler(async (req, res) => {
     const dress = await Dress.findById(req.params.id);
     if (!dress) {
       res.status(404);
-      return res.json({ message: "Shopping list not found!" });
+      return res.json({ message: "Dress not found!" });
     }
 
-    if (
-      dress.user_id.toString() !== req.user.id &&
-      !adminIds.includes(req.user.id) &&
-      !dress.owner.includes(req.user.id)
-    ) {
-      res.status(403);
-      return res.json({
-        message:
-          "User doesn't have permission to edit other user's shopping list",
-      });
+    dress.set(req.body);
+    const validationError = dress.validateSync();
+    if (validationError) {
+      res.status(400).json({ message: validationError.message });
+      return;
     }
 
     const updatedDress = await Dress.findByIdAndUpdate(
@@ -114,7 +102,7 @@ const dressEdit = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc Delete shopping list
+//@desc Delete dress
 //@route DELETE /api/dress/:id
 //@access private
 
@@ -122,22 +110,12 @@ const dressDelete = asyncHandler(async (req, res) => {
   try {
     const dress = await Dress.findById(req.params.id);
     if (!dress) {
-      return res.status(404).json({ error: "Shopping list not found" });
-    }
-    if (
-      dress.user_id.toString() !== req.user.id &&
-      !adminIds.includes(req.user.id) &&
-      !dress.owner.includes(req.user.id)
-    ) {
-      return res.status(403).json({
-        error:
-          "User don't have permission to delete other user's shopping list",
-      });
+      return res.status(404).json({ error: "Dress not found" });
     }
     await dress.deleteOne({ _id: req.params.id });
     res.status(200).json({ success: true, data: dress });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete shopping list" });
+    res.status(500).json({ error: "Failed to delete dress" });
   }
 });
 

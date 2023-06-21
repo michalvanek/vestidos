@@ -2,18 +2,37 @@ const mongoose = require("mongoose");
 
 const dressSchema = mongoose.Schema(
   {
-    user_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User",
-    },
-    name: {
+    talla: {
       type: String,
-      required: [true, "Please provide the shopping list name"],
+      required: [true, "Please provide the dress size"],
     },
-    owner: {
+    color: {
+      type: String,
+      required: [true, "Please provide the dress color"],
+    },
+    piedras: {
+      type: Boolean,
+      required: [true, "Please provide the dress stones"],
+    },
+    precio: {
+      type: Number,
+      required: [true, "Please provide the dress price"],
+    },
+    fotoPrincipal: {
+      type: String,
+      required: [true, "Please provide the main dress photo"],
+    },
+    fotos: {
       type: Array,
-      required: [true, "Please provide the shopping list owner(s)"],
+      required: [true, "Please provide the dress photos"],
+    },
+    costo: {
+      type: String,
+      required: [true, "Please provide the dress cost"],
+    },
+    marca: {
+      type: String,
+      required: [true, "Please provide the dress brand"],
     },
   },
   { timestamps: true }
