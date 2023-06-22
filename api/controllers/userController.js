@@ -98,8 +98,15 @@ const logoutUser = asyncHandler(async (req, res) => {
   }
 
   try {
-    // Remove the refresh token from the database
-    await RefreshToken.deleteOne({ token: refreshToken });
+    // Find the user ID associated with the refresh token
+    const tokenDoc = await RefreshToken.findOne({ token: refreshToken });
+    if (!tokenDoc) {
+      return res.status(401).send("Refresh token is invalid");
+    }
+    const userId = tokenDoc.userId;
+
+    // Delete all refresh tokens associated with the user ID
+    await RefreshToken.deleteMany({ userId });
 
     return res.status(204).send("Success");
   } catch (err) {
@@ -121,11 +128,15 @@ const loginUser = asyncHandler(async (req, res) => {
     const accessToken = generateAccessToken(user);
     const refreshToken = jwt.sign(
       { id: user.id },
-      process.env.JWT_REFRESH_SECRET
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN }
     );
 
     try {
-      const refreshTokenDoc = new RefreshToken({ token: refreshToken });
+      const refreshTokenDoc = new RefreshToken({
+        token: refreshToken,
+        userId: user.id,
+      });
       await refreshTokenDoc.save();
       res
         .status(200)
