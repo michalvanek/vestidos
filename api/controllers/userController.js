@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const { default: mongoose } = require("mongoose");
+const RefreshToken = require("../models/refreshTokenModel");
 let refreshTokens = [];
 
 function generateAccessToken(user) {
@@ -61,34 +62,49 @@ const tokenRefresh = asyncHandler(async (req, res) => {
     return res.status(401).send("Refresh token is missing");
   }
 
-  jwt.verify(
-    refreshToken,
-    process.env.JWT_REFRESH_SECRET,
-    async (err, decoded) => {
-      if (err) {
-        return res.status(403).send("Refresh token is invalid");
-      }
+  try {
+    // Check if the refresh token exists in the database
+    const existingToken = await RefreshToken.findOne({ token: refreshToken });
 
-      const userId = decoded.id;
-
-      const user = await User.findById(userId);
-
-      if (!user) {
-        return res.status(401).send("User not found");
-      }
-
-      const accessToken = generateAccessToken(user);
-      return res.status(200).json({ accessToken: accessToken });
+    if (!existingToken) {
+      return res.status(403).send("Refresh token is invalid");
     }
-  );
+
+    // Verify the refresh token and extract the user ID
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const userId = decoded.id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(401).send("User not found");
+    }
+
+    const accessToken = generateAccessToken(user);
+    return res.status(200).json({ accessToken: accessToken });
+  } catch (err) {
+    return res.status(500).send("Error refreshing token");
+  }
 });
 
 //@desc Logout user
 //@route POST /api/users/logout
 //@access public
 const logoutUser = asyncHandler(async (req, res) => {
-  refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
-  return res.status(204).send("Success");
+  const refreshToken = req.body.token;
+
+  if (!refreshToken) {
+    return res.status(401).send("Refresh token is missing");
+  }
+
+  try {
+    // Remove the refresh token from the database
+    await RefreshToken.deleteOne({ token: refreshToken });
+
+    return res.status(204).send("Success");
+  } catch (err) {
+    return res.status(500).send("Error logging out");
+  }
 });
 
 //@desc Login user
@@ -100,19 +116,25 @@ const loginUser = asyncHandler(async (req, res) => {
     return res.status(400).send("All fields are mandatory!");
   }
   const user = await User.findOne({ email });
-  // Compare password with hashed password
+
   if (user && (await bcrypt.compare(password, user.password))) {
-    const accessToken = generateAccessToken(user); // Generate access token using user.toJSON()
+    const accessToken = generateAccessToken(user);
     const refreshToken = jwt.sign(
-      { id: user.id }, // Include the user ID in the refresh token payload
+      { id: user.id },
       process.env.JWT_REFRESH_SECRET
     );
-    refreshTokens.push(refreshToken);
-    return res
-      .status(200)
-      .json({ accessToken: accessToken, refreshToken: refreshToken });
+
+    try {
+      const refreshTokenDoc = new RefreshToken({ token: refreshToken });
+      await refreshTokenDoc.save();
+      res
+        .status(200)
+        .json({ accessToken: accessToken, refreshToken: refreshToken });
+    } catch (err) {
+      res.status(500).send(err.message);
+    }
   } else {
-    return res.status(401).send("Email or password is not valid");
+    res.status(401).send("Email or password is not valid");
   }
 });
 
