@@ -10,8 +10,9 @@ const {
 const validateToken = require("../middleware/validateTokenHandler");
 const validateAdmin = require("../middleware/validateAdmin");
 
+router.route("/").get(dressReadAll);
 router.use(validateToken);
-router.route("/").get(dressReadAll).post(validateAdmin, dressCreate);
+router.route("/").post(validateAdmin, dressCreate);
 
 router
   .route("/:id")

@@ -19,7 +19,6 @@ const dressReadAll = asyncHandler(async (req, res) => {
         precio: dress.precio ? dress.precio.value : null,
         fotoPrincipal: dress.fotoPrincipal,
         fotos: dress.fotos,
-        costo: dress.costo,
         marca: dress.marca ? dress.marca.marca : null,
         createdAt: dress.createdAt,
         updatedAt: dress.updatedAt,
