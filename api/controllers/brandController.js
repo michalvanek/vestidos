@@ -9,10 +9,10 @@ const { default: mongoose } = require("mongoose");
 const brandReadAll = asyncHandler(async (req, res) => {
   try {
     const brand = await Brand.find({});
-    res.status(200).json(brand);
+    return res.status(200).json(brand);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).send("Server Error");
   }
 });
 
@@ -26,17 +26,22 @@ const brandCreate = asyncHandler(async (req, res) => {
   try {
     console.log("The request body is: ", req.body);
 
+    const existingBrand = await Brand.findOne({ marca });
+    if (existingBrand) {
+      return res.status(409).send("Brand already exists");
+    }
+
     const brand = new Brand({
       marca,
     });
     await brand.save();
-    res.status(201).json(brand);
+    return res.status(201).json(brand);
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
-      res.status(400).json({ message: err.message });
+      return res.status(400).send(err.message);
     } else {
       console.error(err);
-      res.status(500).json({ message: "Server Error" });
+      return res.status(500).send("Server Error");
     }
   }
 });
@@ -49,11 +54,11 @@ const brandReadId = asyncHandler(async (req, res) => {
   try {
     const brand = await Brand.findById(req.params.id);
     if (!brand) {
-      return res.status(404).json({ error: "Brand not found" });
+      return res.status(404).send({ error: "Brand not found" });
     }
-    res.status(200).json(brand);
+    return res.status(200).json(brand);
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    return res.status(500).send("Server error");
   }
 });
 
@@ -65,15 +70,13 @@ const brandEdit = asyncHandler(async (req, res) => {
   try {
     const brand = await Brand.findById(req.params.id);
     if (!brand) {
-      res.status(404);
-      return res.json({ message: "Brand not found!" });
+      return res.status(404).send("Brand not found!");
     }
 
     brand.set(req.body);
     const validationError = brand.validateSync();
     if (validationError) {
-      res.status(400).json({ message: validationError.message });
-      return;
+      return res.status(400).send(validationError.message);
     }
 
     const updatedBrand = await Brand.findByIdAndUpdate(
@@ -85,7 +88,7 @@ const brandEdit = asyncHandler(async (req, res) => {
     res.status(200).json(updatedBrand);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).send("Server Error");
   }
 });
 
@@ -97,12 +100,12 @@ const brandDelete = asyncHandler(async (req, res) => {
   try {
     const brand = await Brand.findById(req.params.id);
     if (!brand) {
-      return res.status(404).json({ error: "Brand not found" });
+      return res.status(404).send("Brand not found");
     }
     await brand.deleteOne({ _id: req.params.id });
-    res.status(200).json({ success: true, data: brand });
+    return res.status(200).json({ success: true, data: brand });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete brand" });
+    return res.status(500).send("Failed to delete brand");
   }
 });
 

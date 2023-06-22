@@ -8,10 +8,10 @@ const { default: mongoose } = require("mongoose");
 const priceReadAll = asyncHandler(async (req, res) => {
   try {
     const price = await Price.find({});
-    res.status(200).json(price);
+    return res.status(200).json(price);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).send("Server Error");
   }
 });
 
@@ -23,15 +23,13 @@ const priceEdit = asyncHandler(async (req, res) => {
   try {
     const price = await Price.findById(req.params.id);
     if (!price) {
-      res.status(404);
-      return res.json({ message: "Dress not found!" });
+      return res.status(404).send("Dress not found!");
     }
 
     price.set(req.body);
     const validationError = price.validateSync();
     if (validationError) {
-      res.status(400).json({ message: validationError.message });
-      return;
+      return res.status(400).send(validationError.message);
     }
 
     const updatedPrice = await Price.findByIdAndUpdate(
@@ -43,7 +41,7 @@ const priceEdit = asyncHandler(async (req, res) => {
     res.status(200).json(updatedPrice);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    return res.status(500).send("Server Error");
   }
 });
 

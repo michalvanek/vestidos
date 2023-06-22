@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const { default: mongoose } = require("mongoose");
 let refreshTokens = [];
+
 function generateAccessToken(user) {
   return jwt.sign(
     {
@@ -24,7 +25,7 @@ function generateAccessToken(user) {
 const createUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
   if (password.length < 4) {
-    res.status(400).send("Password must be at least 4 characters long");
+    return res.status(400).send("Password must be at least 4 characters long");
   }
 
   try {
@@ -44,9 +45,9 @@ const createUser = asyncHandler(async (req, res) => {
     res.status(201).json({ _id: user.id, email: user.email });
   } catch (err) {
     if (err.name === "ValidationError") {
-      res.status(400).send(err.message);
+      return res.status(400).send(err.message);
     } else {
-      res.status(500).send(err.message);
+      return res.status(500).send(err.message);
     }
   }
 });
@@ -55,13 +56,31 @@ const createUser = asyncHandler(async (req, res) => {
 //@access public
 const tokenRefresh = asyncHandler(async (req, res) => {
   const refreshToken = req.body.token;
-  if (refreshToken == null) return res.status(401).send();
-  if (!refreshTokens.includes(refreshToken)) return res.status(403).send();
-  jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
-    if (err) return res.status(403);
-    const accessToken = generateAccessToken({ name: user.name });
-    res.json({ accessToken: accessToken });
-  });
+
+  if (!refreshToken) {
+    return res.status(401).send("Refresh token is missing");
+  }
+
+  jwt.verify(
+    refreshToken,
+    process.env.JWT_REFRESH_SECRET,
+    async (err, decoded) => {
+      if (err) {
+        return res.status(403).send("Refresh token is invalid");
+      }
+
+      const userId = decoded.id;
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(401).send("User not found");
+      }
+
+      const accessToken = generateAccessToken(user);
+      return res.status(200).json({ accessToken: accessToken });
+    }
+  );
 });
 
 //@desc Logout user
@@ -69,7 +88,7 @@ const tokenRefresh = asyncHandler(async (req, res) => {
 //@access public
 const logoutUser = asyncHandler(async (req, res) => {
   refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
-  res.status(204).send();
+  return res.status(204).send("Success");
 });
 
 //@desc Login user
@@ -78,30 +97,31 @@ const logoutUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    res.status(400).send("All fields are mandatory!");
+    return res.status(400).send("All fields are mandatory!");
   }
   const user = await User.findOne({ email });
-  //compare password with hashedpassword
+  // Compare password with hashed password
   if (user && (await bcrypt.compare(password, user.password))) {
-    const accessToken = generateAccessToken(user);
+    const accessToken = generateAccessToken(user); // Generate access token using user.toJSON()
     const refreshToken = jwt.sign(
-      user.toJSON(),
+      { id: user.id }, // Include the user ID in the refresh token payload
       process.env.JWT_REFRESH_SECRET
     );
     refreshTokens.push(refreshToken);
-    res
+    return res
       .status(200)
       .json({ accessToken: accessToken, refreshToken: refreshToken });
   } else {
-    res.status(401).send("Email or password is not valid");
+    return res.status(401).send("Email or password is not valid");
   }
 });
 
 //@desc Current user info
-//@route POST /api/users/current
+//@route GET /api/users/current
 //@access private
 const currentUser = asyncHandler(async (req, res) => {
-  res.json(req.user);
+  console.log(req.user);
+  return res.json(req.user);
 });
 
 //@desc Read all users
@@ -109,7 +129,7 @@ const currentUser = asyncHandler(async (req, res) => {
 //@access private
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
-  res.status(200).json(users);
+  return res.status(200).json(users);
 });
 
 //@desc Delete user
@@ -119,13 +139,13 @@ const deleteUser = asyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      res.status(404).send("User not found!");
+      return res.status(404).send("User not found!");
     }
     await user.deleteOne({ _id: req.params.id });
-    res.status(200).json({ success: true, data: user });
+    return res.status(200).json({ success: true, data: user });
   } catch (error) {
     // Handle the error and send an appropriate response
-    res.status(500).json({ error: "Failed to delete user" });
+    return res.status(500).json({ error: "Failed to delete user" });
   }
 });
 
@@ -135,11 +155,11 @@ const deleteUser = asyncHandler(async (req, res) => {
 const editUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
   if (!user) {
-    res.status(404).send("User not found!");
+    return res.status(404).send("User not found!");
   }
 
   if (req.body.email || req.body.password) {
-    res.status(400).send("You can only update the username");
+    return res.status(400).send("You can only update the username");
   }
 
   const updatedUser = await User.findByIdAndUpdate(
@@ -148,7 +168,7 @@ const editUser = asyncHandler(async (req, res) => {
     { new: true }
   );
 
-  res.status(200).json(updatedUser);
+  return res.status(200).json(updatedUser);
 });
 
 //@desc Read user by id
@@ -158,12 +178,12 @@ const readIdUser = asyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      res.status(404).send("User not found!");
+      return res.status(404).send("User not found!");
     }
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (error) {
     // Handle the error and send an appropriate response
-    res.status(500).json({ error: "Failed to get user" });
+    return res.status(500).json({ error: "Failed to get user" });
   }
 });
 
