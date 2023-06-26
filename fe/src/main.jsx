@@ -1,22 +1,18 @@
 import React from "react";
-import { render } from "react-dom";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import App from "./App";
+import { createRoot } from "react-dom/client";
 import "./index.css";
+import App from "./App";
 
-render(
+// Font Awesome icons
+import "@fortawesome/fontawesome-free/css/all.css";
+
+// bootstrap
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import $ from "jquery";
+
+createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="app" />} />
-        <Route path="/app" element={<App />} />
-      </Routes>
-    </Router>
-  </React.StrictMode>,
-  document.getElementById("root")
+    <App />
+  </React.StrictMode>
 );

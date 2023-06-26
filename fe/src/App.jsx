@@ -1,36 +1,26 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
-import "./scss/main.scss";
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Catalogue from "./pages/catalogue";
+import "./index.css";
+import NavBar from "./components/navBar/navBar";
 
-function App() {
-  const [count, setCount] = useState(0);
-
+let App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <React.Fragment>
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<Navigate to="catalogue" />} />
+          <Route path="/catalogue" element={<Catalogue />} />
+        </Routes>
+      </Router>
+    </React.Fragment>
   );
-}
+};
 
 export default App;
