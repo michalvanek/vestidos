@@ -1,4 +1,5 @@
 import React from "react";
+// import "./scss/main.scss";
 import {
   BrowserRouter as Router,
   Routes,
@@ -6,7 +7,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import Catalogue from "./pages/catalogue";
-import "./index.css";
 import NavBar from "./components/navBar/navBar";
 
 let App = () => {
