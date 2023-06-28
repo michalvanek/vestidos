@@ -3,19 +3,19 @@ const mongoose = require("mongoose");
 const dressSchema = mongoose.Schema(
   {
     talla: {
-      type: String,
+      type: [String],
       required: [true, "Please provide the dress size"],
       enum: {
-        values: ["XCH", "CH", "M", "G", "XG", "XXG"],
+        values: ["CH", "M", "G", "XG", "Adolescente"],
         message:
           "{VALUE} is not supported, please insert one of those: XCH, CH, M, G, XG, XXG (case sensitive)",
       },
       nullable: false,
     },
     color: {
-      type: String,
-      minLength: 4,
-      required: [true, "Please provide the dress color"],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Color",
+      required: [true, "Please provide the dress brand"],
     },
     piedras: {
       type: Boolean,

@@ -8,13 +8,16 @@ const { default: mongoose } = require("mongoose");
 //@access private
 const dressReadAll = asyncHandler(async (req, res) => {
   try {
-    const dresses = await Dress.find({}).populate("marca").populate("precio");
+    const dresses = await Dress.find({})
+      .populate("marca")
+      .populate("precio")
+      .populate("color");
 
     const dressesWithBrandAndPrice = dresses.map((dress) => {
       return {
         _id: dress._id,
         talla: dress.talla,
-        color: dress.color,
+        color: dress.color ? dress.color.color : null,
         piedras: dress.piedras,
         precio: dress.precio ? dress.precio.value : null,
         fotoPrincipal: dress.fotoPrincipal,

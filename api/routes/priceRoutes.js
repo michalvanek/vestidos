@@ -4,9 +4,8 @@ const { priceReadAll, priceEdit } = require("../controllers/priceController");
 const validateToken = require("../middleware/validateTokenHandler");
 const validateAdmin = require("../middleware/validateAdmin");
 
-router.use(validateToken);
 router.route("/").get(priceReadAll);
 
-router.route("/:id").put(validateAdmin, priceEdit);
+router.route("/:id").put(validateToken, validateAdmin, priceEdit);
 
 module.exports = router;

@@ -1,6 +1,5 @@
 const asyncHandler = require("express-async-handler");
 const Brand = require("../models/brandModel");
-const adminIds = JSON.parse(process.env.ADMIN);
 const { default: mongoose } = require("mongoose");
 
 //@desc Read all brands

@@ -16,6 +16,9 @@ function Catalogue() {
       categoryId: "",
       topicId: "",
     },
+    tallas: ["CH", "M", "G", "XG", "Adolescente"],
+    colores: [],
+    precios: [],
     errorMessage: "",
   });
 
@@ -51,7 +54,7 @@ function Catalogue() {
       <h1>Catalogo</h1>
       <div className="card-container">
         {/* Render dress data */}
-        {state.dresses.map((dress) => (
+        {state.filteredDresses.map((dress) => (
           <div
             key={dress._id}
             className="card"
@@ -66,7 +69,7 @@ function Catalogue() {
               <div className="card-details">
                 <div className="card-detail">
                   <i className="fas fa-ruler icon" title="talla"></i>
-                  <span className="icon-value">{dress.talla}</span>
+                  <span className="icon-value">{dress.talla.join(", ")}</span>
                 </div>
                 <div className="card-detail">
                   <i className="fas fa-palette icon" title="color"></i>
