@@ -9,8 +9,9 @@ function Catalogue() {
     dresses: [],
     filteredDresses: [],
     dress: {
-      categoryId: "",
-      topicId: "",
+      sizeActualSelector: "",
+      colorActualSelector: "",
+      priceActualSelector: "",
     },
     tallas: ["CH", "M", "G", "XG", "Adolescente"],
     colores: [],
@@ -34,7 +35,6 @@ function Catalogue() {
           colores: colorsResponse.data.map((color) => color.color),
           precios: pricesResponse.data.map((price) => price.value),
         });
-        console.log(state.colores, state.precios, state.tallas);
       } catch (error) {
         setState({
           ...state,
@@ -51,101 +51,155 @@ function Catalogue() {
   }, []);
 
   let updateInput = (event) => {
-    function filterBySize(include) {
-      theDresses = state.dresses.filter((dress) => {
-        return dress.talla.includes(include) || include === ""; // Filter dresses by including the selected size or if include is empty
+    const { name, value } = event.target;
+
+    const filterBySize = (include) => {
+      return state.dresses.filter((dress) => {
+        return dress.talla.includes(include) || include === "";
       });
-    }
-    function filterByColor(include) {
-      theDresses = state.dresses.filter((dress) => {
+    };
+
+    const filterByColor = (include) => {
+      return state.dresses.filter((dress) => {
         return dress.color === include || include === "";
       });
-    }
+    };
 
-    function filterByPrice(include) {
-      theDresses = state.dresses.filter((dress) => {
+    const filterByPrice = (include) => {
+      return state.dresses.filter((dress) => {
         return dress.precio.toString() === include || include === "";
       });
-    }
-    let theDresses;
+    };
 
-    if (event.target.name === "talla") {
-      filterBySize(event.target.value);
+    let updatedDress = {};
+
+    if (name === "talla") {
+      const filteredDresses = filterBySize(value);
+      updatedDress = {
+        sizeActualSelector: value,
+        colorActualSelector: "",
+        priceActualSelector: "",
+      };
       setState({
         ...state,
-        filteredDresses: theDresses,
+        filteredDresses,
+        dress: {
+          ...state.dress,
+          ...updatedDress,
+        },
       });
-    } else if (event.target.name === "color") {
-      filterByColor(event.target.value);
+    } else if (name === "color") {
+      const filteredDresses = filterByColor(value);
+      updatedDress = {
+        sizeActualSelector: "",
+        colorActualSelector: value,
+        priceActualSelector: "",
+      };
       setState({
         ...state,
-        filteredDresses: theDresses,
+        filteredDresses,
+        dress: {
+          ...state.dress,
+          ...updatedDress,
+        },
       });
-    } else if (event.target.name === "precio") {
-      filterByPrice(event.target.value);
+    } else if (name === "precio") {
+      const filteredDresses = filterByPrice(value);
+      updatedDress = {
+        sizeActualSelector: "",
+        colorActualSelector: "",
+        priceActualSelector: value,
+      };
       setState({
         ...state,
-        filteredDresses: theDresses,
+        filteredDresses,
+        dress: {
+          ...state.dress,
+          ...updatedDress,
+        },
       });
     }
+
+    // Reset the select field values
+    setState((prevState) => ({
+      ...prevState,
+      dress: {
+        ...prevState.dress,
+        ...updatedDress,
+      },
+    }));
   };
 
   return (
     <>
-      <div className="mb-2">
-        <select
-          name="talla"
-          value={state.dress.talla}
-          onChange={updateInput}
-          className="form-control"
-        >
-          <option value="">Select a size (Optional)</option>
-          {state.tallas.length > 0 &&
-            state.tallas.map((talla) => {
-              return (
-                <option key={talla} value={talla}>
-                  {talla}
-                </option>
-              );
-            })}
-        </select>
+      <div className="row">
+        <div className="col-md-8">
+          <form className="row border border-3 rounded-3">
+            <i className="fa-solid fa-magnifying-glass"></i>
+            <div className="col">
+              <div className="mb-2">
+                <select
+                  name="talla"
+                  value={state.dress.sizeActualSelector}
+                  onChange={updateInput}
+                  className="form-control"
+                >
+                  <option value="">Talla</option>
+                  {state.tallas.length > 0 &&
+                    state.tallas.map((talla) => {
+                      return (
+                        <option key={talla} value={talla}>
+                          {talla}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+            </div>
+            <div className="col">
+              <div className="mb-2">
+                <select
+                  name="color"
+                  value={state.dress.colorActualSelector}
+                  onChange={updateInput}
+                  className="form-control"
+                >
+                  <option value="">Color</option>
+                  {state.colores.length > 0 &&
+                    state.colores.map((color) => {
+                      return (
+                        <option key={color} value={color}>
+                          {color}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+            </div>
+            <div className="col">
+              <div className="mb-2">
+                <select
+                  name="precio"
+                  value={state.dress.priceActualSelector}
+                  onChange={updateInput}
+                  className="form-control"
+                >
+                  <option value="">Precio</option>
+                  {state.precios.length > 0 &&
+                    state.precios.map((price) => {
+                      return (
+                        <option key={price} value={price}>
+                          {price}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-      <div className="mb-2">
-        <select
-          name="color"
-          value={state.dress.color}
-          onChange={updateInput}
-          className="form-control"
-        >
-          <option value="">Select a color (Optional)</option>
-          {state.colores.length > 0 &&
-            state.colores.map((color) => {
-              return (
-                <option key={color} value={color}>
-                  {color}
-                </option>
-              );
-            })}
-        </select>
-      </div>
-      <div className="mb-2">
-        <select
-          name="precio"
-          value={state.dress.precio}
-          onChange={updateInput}
-          className="form-control"
-        >
-          <option value="">Select a price (Optional)</option>
-          {state.precios.length > 0 &&
-            state.precios.map((price) => {
-              return (
-                <option key={price} value={price}>
-                  {price}
-                </option>
-              );
-            })}
-        </select>
-      </div>
+
       <h1>Catalogo</h1>
       <div className="card-container">
         {/* Render dress data */}
