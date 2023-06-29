@@ -1,34 +1,49 @@
 import React, { useState } from "react";
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
-// import "bootstrap/dist/css/bootstrap.min.css";
+import { Navbar, Nav } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import LoginModal from "../loginModal/loginModal"; // Update the import statement
 
 const NavBar = () => {
   const [menuVisible, setMenuVisible] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
   };
 
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+
   return (
-    <Navbar expand="lg" bg="dark" variant="dark">
-      <Navbar.Brand href="#home">Logo</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={toggleMenu} />
-      <Navbar.Collapse
-        id="basic-navbar-nav"
-        className={menuVisible ? "show" : ""}
-      >
-        <Nav className="mr-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
-          <Nav.Link href="#about">About</Nav.Link>
-          <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-            <NavDropdown.Item href="#action1">Action 1</NavDropdown.Item>
-            <NavDropdown.Item href="#action2">Action 2</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="#action3">Action 3</NavDropdown.Item>
-          </NavDropdown>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
+    <>
+      <Navbar expand="lg" bg="dark" variant="dark">
+        <Navbar.Brand as={Link} to="/">
+          Logo
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={toggleMenu} />
+        <Navbar.Collapse
+          id="basic-navbar-nav"
+          className={menuVisible ? "show" : ""}
+        >
+          <Nav className="mr-auto">
+            <Nav.Link as={Link} to="/">
+              Catálogo
+            </Nav.Link>
+            <Nav.Link as={Link} to="/about">
+              Acerca de nosotros
+            </Nav.Link>
+            <Nav.Link onClick={openModal}>Login</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+      <LoginModal isOpen={modalIsOpen} closeModal={closeModal} />{" "}
+      {/* Render the LoginModal component */}
+    </>
   );
 };
 

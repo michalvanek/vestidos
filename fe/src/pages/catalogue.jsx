@@ -132,6 +132,8 @@ function Catalogue() {
 
   return (
     <>
+      <h1>Catálogo</h1>
+
       <div className="row">
         <div className="col-md-8">
           <form className="row border border-3 rounded-3">
@@ -199,8 +201,8 @@ function Catalogue() {
           </form>
         </div>
       </div>
+      <br />
 
-      <h1>Catalogo</h1>
       <div className="card-container">
         {/* Render dress data */}
         {state.filteredDresses.map((dress) => (
