@@ -10,13 +10,15 @@ const {
 const validateToken = require("../middleware/validateTokenHandler");
 const validateAdmin = require("../middleware/validateAdmin");
 
-router.use(validateToken);
-router.route("/").get(colorReadAll).post(validateAdmin, colorCreate);
+router
+  .route("/")
+  .get(colorReadAll)
+  .post(validateToken, validateAdmin, colorCreate);
 
 router
   .route("/:id")
   .get(colorReadId)
-  .put(validateAdmin, colorEdit)
-  .delete(validateAdmin, colorDelete);
+  .put(validateToken, validateAdmin, colorEdit)
+  .delete(validateToken, validateAdmin, colorDelete);
 
 module.exports = router;

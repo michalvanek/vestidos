@@ -23,6 +23,21 @@ export class DressService {
     let dataURL = `${this.serverURL}/api/dress`;
     return axios.get(dataURL);
   }
+
+  static getAllColors() {
+    let dataURL = `${this.serverURL}/api/color`;
+    return axios.get(dataURL);
+  }
+
+  static getAllBrands() {
+    let dataURL = `${this.serverURL}/api/brand`;
+    return axios.get(dataURL);
+  }
+
+  static getAllPrices() {
+    let dataURL = `${this.serverURL}/api/price`;
+    return axios.get(dataURL);
+  }
 }
 
 //   //fce na ziskani konkretniho videa podle ID z databaze
