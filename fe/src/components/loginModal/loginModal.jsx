@@ -38,20 +38,31 @@ const LoginModal = ({ isOpen, closeModal }) => {
     <Modal isOpen={isOpen} onRequestClose={closeModal}>
       <h2>Login</h2>
       {error && <p>{error}</p>}
-      <div>
-        <label>Email:</label>
-        <input type="email" value={email} onChange={handleEmailChange} />
+      <div className="container">
+        <div className="row">
+          <div className="col-md-6">
+            <label>Email:</label>
+            <div className="mb-2">
+              <input type="email" value={email} onChange={handleEmailChange} />
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-6">
+            <label>Password:</label>
+            <div className="mb-2">
+              <input
+                type="password"
+                value={password}
+                onChange={handlePasswordChange}
+              />
+            </div>
+          </div>
+        </div>
+        <button onClick={handleLogin}>Login</button>
+        <button onClick={closeModal}>Close</button>
       </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-      </div>
-      <button onClick={handleLogin}>Login</button>
-      <button onClick={closeModal}>Close</button>
     </Modal>
   );
 };
