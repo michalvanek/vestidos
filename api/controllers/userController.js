@@ -108,12 +108,19 @@ const logoutUser = asyncHandler(async (req, res) => {
     // Delete all refresh tokens associated with the user ID
     await RefreshToken.deleteMany({ userId });
 
+    // Clear the access token and refresh token cookies
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
     return res.status(204).send("Success");
   } catch (err) {
     return res.status(500).send("Error logging out");
   }
 });
 
+//@desc Login user
+//@route POST /api/users/login
+//@access public
 //@desc Login user
 //@route POST /api/users/login
 //@access public
@@ -138,6 +145,20 @@ const loginUser = asyncHandler(async (req, res) => {
         userId: user.id,
       });
       await refreshTokenDoc.save();
+
+      // Set HTTP-only cookies in the response
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: true, // Enable this if your server uses HTTPS
+        sameSite: "strict", // Adjust sameSite attribute based on your requirements
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true, // Enable this if your server uses HTTPS
+        sameSite: "strict", // Adjust sameSite attribute based on your requirements
+      });
+
       res
         .status(200)
         .json({ accessToken: accessToken, refreshToken: refreshToken });

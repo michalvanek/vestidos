@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import LoginModal from "../loginModal/loginModal"; // Update the import statement
+import LoginModal from "../loginModal/loginModal";
+import { LoginContext } from "../../context/loginContext";
 
 const NavBar = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const { isLoggedIn, login, logout } = useContext(LoginContext);
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -17,6 +19,10 @@ const NavBar = () => {
 
   const closeModal = () => {
     setModalIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout(); // Call the logout function from LoginContext
   };
 
   return (
@@ -37,12 +43,17 @@ const NavBar = () => {
             <Nav.Link as={Link} to="/about">
               Acerca de nosotros
             </Nav.Link>
-            <Nav.Link onClick={openModal}>Login</Nav.Link>
+          </Nav>
+          <Nav>
+            {isLoggedIn ? (
+              <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+            ) : (
+              <Nav.Link onClick={openModal}>Login</Nav.Link>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      <LoginModal isOpen={modalIsOpen} closeModal={closeModal} />{" "}
-      {/* Render the LoginModal component */}
+      <LoginModal isOpen={modalIsOpen} closeModal={closeModal} />
     </>
   );
 };

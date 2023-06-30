@@ -32,10 +32,19 @@ export class DressService {
     return this.axiosInstance.post(dataURL, { email, password });
   }
 
-  static logout(refreshToken) {
+  static logout(accessToken, refreshToken) {
     let dataURL = "/api/users/logout";
     return this.axiosInstance.delete(dataURL, {
-      data: { token: refreshToken },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      data: {
+        token: refreshToken,
+      },
     });
+  }
+  static refreshAccessToken(refreshToken) {
+    let dataURL = "/api/users/token";
+    return this.axiosInstance.post(dataURL, { token: refreshToken });
   }
 }

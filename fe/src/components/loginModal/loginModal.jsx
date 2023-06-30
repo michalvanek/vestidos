@@ -1,19 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-modal";
-import axios from "axios";
+import { LoginContext } from "../../context/loginContext";
 
 const LoginModal = ({ isOpen, closeModal }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { login } = useContext(LoginContext);
+
+  useEffect(() => {
+    Modal.setAppElement("#root"); // Set the app element for accessibility
+  }, []);
 
   const handleLogin = () => {
     // Make a request to login
-    axios
-      .post("http://localhost:5001/api/users/login", { email, password })
-      .then((response) => {
+    login(email, password)
+      .then(() => {
         // Handle successful login
-        console.log(response.data);
         closeModal();
       })
       .catch((error) => {
