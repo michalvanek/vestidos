@@ -1,10 +1,17 @@
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import Spinner from "../components/spinner/Spinner"; //tocici se kolecko kdyz loaduje 100% css
 import { DressService } from "../../dao/dressService";
 import "../index.css";
 import CardComponent from "../components/cardComponent/cardComponent";
+import SearchBar from "../components/searchBar";
+import { LoginContext } from "../context/loginContext";
+import { Link } from "react-router-dom";
+import CreateDressModal from "../components/modalWindows/createDressModal";
+import { Nav } from "react-bootstrap";
 
 function Catalogue() {
+  const { isLoggedIn } = useContext(LoginContext);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
   const [state, setState] = useState({
     loading: false,
     dresses: [],
@@ -18,7 +25,17 @@ function Catalogue() {
     colores: [],
     precios: [],
     errorMessage: "",
+    currentPage: 1,
+    dressesPerPage: 10,
   });
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +67,18 @@ function Catalogue() {
       // This now gets called when the component unmounts
     };
   }, []);
+
+  const indexOfLastDress = state.currentPage * state.dressesPerPage;
+  const indexOfFirstDress = indexOfLastDress - state.dressesPerPage;
+  const currentDresses = state.filteredDresses.slice(
+    indexOfFirstDress,
+    indexOfLastDress
+  );
+  const handlePageChange = (pageNumber) => {
+    // Scroll to the top of the page when the page is turned
+    window.scrollTo(0, 0);
+    setState({ ...state, currentPage: pageNumber });
+  };
 
   let updateInput = (event) => {
     const { name, value } = event.target;
@@ -134,82 +163,80 @@ function Catalogue() {
   return (
     <>
       <h1>Catálogo</h1>
-
-      <div className="row">
-        <div className="col-md-8">
-          <form className="row border border-3 rounded-3">
-            <i className="fa-solid fa-magnifying-glass"></i>
-            <div className="col">
-              <div className="mb-2">
-                <select
-                  name="talla"
-                  value={state.dress.sizeActualSelector}
-                  onChange={updateInput}
-                  className="form-control"
-                >
-                  <option value="">Talla</option>
-                  {state.tallas.length > 0 &&
-                    state.tallas.map((talla) => {
-                      return (
-                        <option key={talla} value={talla}>
-                          {talla}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div>
-            </div>
-            <div className="col">
-              <div className="mb-2">
-                <select
-                  name="color"
-                  value={state.dress.colorActualSelector}
-                  onChange={updateInput}
-                  className="form-control"
-                >
-                  <option value="">Color</option>
-                  {state.colores.length > 0 &&
-                    state.colores.map((color) => {
-                      return (
-                        <option key={color} value={color}>
-                          {color}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div>
-            </div>
-            <div className="col">
-              <div className="mb-2">
-                <select
-                  name="precio"
-                  value={state.dress.priceActualSelector}
-                  onChange={updateInput}
-                  className="form-control"
-                >
-                  <option value="">Precio</option>
-                  {state.precios.length > 0 &&
-                    state.precios.map((price) => {
-                      return (
-                        <option key={price} value={price}>
-                          {price}
-                        </option>
-                      );
-                    })}
-                </select>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+      <SearchBar state={state} updateInput={updateInput} />
       <br />
-
-      <div className="card-container">
-        {/* Render dress data */}
-        {state.filteredDresses.map((dress) => (
-          <CardComponent key={dress._id} dress={dress} /> // Use the CardComponent here
-        ))}
-      </div>
+      {/* Add the button to open the CreateDressModal */}
+      {isLoggedIn && (
+        <>
+          <Link onClick={openModal} className="btn btn-success my-1 mx-1">
+            <i className="fa fa-plus-circle me-2" /> Nuevo vestido
+          </Link>
+          <CreateDressModal isOpen={modalIsOpen} closeModal={closeModal} />
+        </>
+      )}
+      {state.loading ? (
+        <Spinner />
+      ) : (
+        <>
+          {/* Bootstrap Pagination at the top */}
+          <nav aria-label="Page navigation" className="pagination-container">
+            <ul className="pagination justify-content-center">
+              {state.filteredDresses.length > state.dressesPerPage &&
+                Array.from({
+                  length: Math.ceil(
+                    state.filteredDresses.length / state.dressesPerPage
+                  ),
+                }).map((_, index) => (
+                  <li
+                    key={index}
+                    className={`page-item ${
+                      index + 1 === state.currentPage ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+          <div className="card-container">
+            {/* Render dress data for the current page */}
+            {currentDresses.map((dress) => (
+              <CardComponent key={dress._id} dress={dress} />
+            ))}
+          </div>
+          <br />
+          {/* Bootstrap Pagination */}
+          <nav aria-label="Page navigation">
+            <ul className="pagination justify-content-center">
+              {state.filteredDresses.length > state.dressesPerPage &&
+                Array.from({
+                  length: Math.ceil(
+                    state.filteredDresses.length / state.dressesPerPage
+                  ),
+                }).map((_, index) => (
+                  <li
+                    key={index}
+                    className={`page-item ${
+                      index + 1 === state.currentPage ? "active" : ""
+                    }`}
+                  >
+                    <button
+                      className="page-link"
+                      onClick={() => handlePageChange(index + 1)}
+                    >
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+        </>
+      )}
     </>
   );
 }

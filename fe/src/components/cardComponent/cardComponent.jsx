@@ -1,6 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { LoginContext } from "../../context/loginContext";
 
 const CardComponent = ({ dress }) => {
+  const { isLoggedIn } = useContext(LoginContext);
   return (
     <div className="card" style={{ background: "#FFF8F7" }}>
       <div className="card-body">
@@ -17,6 +21,24 @@ const CardComponent = ({ dress }) => {
           <div className="card-detail">
             <i className="fas fa-dollar-sign icon" title="precio en pesos"></i>
             <span className="icon-value">{dress.precio}</span>
+          </div>
+          <div>
+            <Link to={`/`} className="btn btn-warning my-1 mx-1">
+              <i className="fa fa-eye"></i>
+            </Link>
+            {isLoggedIn && (
+              <>
+                <Link to={`/`} className="btn btn-primary my-1 mx-1">
+                  <i className="fa fa-pen"></i>
+                </Link>
+                <button
+                  className="btn btn-danger my-1 mx-1"
+                  //   onClick={() => clickDelete(video.id)}
+                >
+                  <i className="fa fa-trash"></i>
+                </button>{" "}
+              </>
+            )}
           </div>
         </div>
       </div>

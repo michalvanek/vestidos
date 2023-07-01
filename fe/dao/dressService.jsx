@@ -17,9 +17,13 @@ export class DressService {
     return this.axiosInstance.get(dataURL);
   }
 
-  static getAllBrands() {
+  static getAllBrands(accessToken) {
     let dataURL = "/api/brand";
-    return this.axiosInstance.get(dataURL);
+    return this.axiosInstance.get(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
   }
 
   static getAllPrices() {
@@ -46,5 +50,14 @@ export class DressService {
   static refreshAccessToken(refreshToken) {
     let dataURL = "/api/users/token";
     return this.axiosInstance.post(dataURL, { token: refreshToken });
+  }
+
+  static createDress(dressData, accessToken) {
+    let dataURL = "/api/dress";
+    return this.axiosInstance.post(dataURL, dressData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
   }
 }

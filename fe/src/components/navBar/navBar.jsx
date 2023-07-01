@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import LoginModal from "../loginModal/loginModal";
+import LoginModal from "../modalWindows/loginModal";
 import { LoginContext } from "../../context/loginContext";
 
 const NavBar = () => {
@@ -43,6 +43,13 @@ const NavBar = () => {
             <Nav.Link as={Link} to="/about">
               Acerca de nosotros
             </Nav.Link>
+          </Nav>
+          <Nav>
+            {isLoggedIn && (
+              <Nav.Link as={Link} to="/admin">
+                Administración
+              </Nav.Link>
+            )}
           </Nav>
           <Nav>
             {isLoggedIn ? (

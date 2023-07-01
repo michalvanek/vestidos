@@ -2,7 +2,6 @@ import { useContext, useState, useEffect } from "react";
 import Spinner from "../components/spinner/Spinner"; //tocici se kolecko kdyz loaduje 100% css
 import { DressService } from "../../dao/dressService";
 import "../index.css";
-import CardComponent from "../components/cardComponent/cardComponent";
 import { LoginContext } from "../context/loginContext";
 
 function menuAdmin() {
@@ -138,83 +137,7 @@ function menuAdmin() {
       <h2>admin page</h2>
       {isLoggedIn ? (
         <>
-          <h1>Catálogo</h1>
-
-          <div className="row">
-            <div className="col-md-8">
-              <form className="row border border-3 rounded-3">
-                <i className="fa-solid fa-magnifying-glass"></i>
-                <div className="col">
-                  <div className="mb-2">
-                    <select
-                      name="talla"
-                      value={state.dress.sizeActualSelector}
-                      onChange={updateInput}
-                      className="form-control"
-                    >
-                      <option value="">Talla</option>
-                      {state.tallas.length > 0 &&
-                        state.tallas.map((talla) => {
-                          return (
-                            <option key={talla} value={talla}>
-                              {talla}
-                            </option>
-                          );
-                        })}
-                    </select>
-                  </div>
-                </div>
-                <div className="col">
-                  <div className="mb-2">
-                    <select
-                      name="color"
-                      value={state.dress.colorActualSelector}
-                      onChange={updateInput}
-                      className="form-control"
-                    >
-                      <option value="">Color</option>
-                      {state.colores.length > 0 &&
-                        state.colores.map((color) => {
-                          return (
-                            <option key={color} value={color}>
-                              {color}
-                            </option>
-                          );
-                        })}
-                    </select>
-                  </div>
-                </div>
-                <div className="col">
-                  <div className="mb-2">
-                    <select
-                      name="precio"
-                      value={state.dress.priceActualSelector}
-                      onChange={updateInput}
-                      className="form-control"
-                    >
-                      <option value="">Precio</option>
-                      {state.precios.length > 0 &&
-                        state.precios.map((price) => {
-                          return (
-                            <option key={price} value={price}>
-                              {price}
-                            </option>
-                          );
-                        })}
-                    </select>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-          <br />
-
-          <div className="card-container">
-            {/* Render dress data */}
-            {state.filteredDresses.map((dress) => (
-              <CardComponent key={dress._id} dress={dress} /> // Use the CardComponent here
-            ))}
-          </div>
+          <h1>Hello Admin</h1>
         </>
       ) : (
         <h2>Not allowed</h2>
