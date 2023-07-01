@@ -18,7 +18,7 @@ function CreateDressModal(props) {
     marcas: [],
     errorMessage: "",
     formData: {
-      talla: "",
+      talla: [],
       color: "",
       piedras: false,
       precio: "",
@@ -32,26 +32,35 @@ function CreateDressModal(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log(getAccessTokenHeader());
+        console.log(props.getAccessTokenHeader());
         const colorsResponse = await DressService.getAllColors();
         const pricesResponse = await DressService.getAllPrices();
         const brandsResponse = await DressService.getAllBrands(
-          getAccessTokenHeader()
+          props.getAccessTokenHeader()
         );
 
-        setState({
-          ...state,
+        setState((prevState) => ({
+          ...prevState,
           loading: false,
-          colores: colorsResponse.data.map((color) => color.color),
-          precios: pricesResponse.data.map((price) => price.value),
-          marcas: brandsResponse.data.map((brand) => brand.marca),
-        });
+          colores: colorsResponse.data.map((color) => ({
+            _id: color._id,
+            color: color.color,
+          })),
+          precios: pricesResponse.data.map((price) => ({
+            _id: price._id,
+            value: price.value,
+          })),
+          marcas: brandsResponse.data.map((brand) => ({
+            _id: brand._id,
+            marca: brand.marca,
+          })),
+        }));
       } catch (error) {
-        setState({
-          ...state,
+        setState((prevState) => ({
+          ...prevState,
           loading: false,
           errorMessage: error.message,
-        });
+        }));
       }
     };
     fetchData();
@@ -64,28 +73,44 @@ function CreateDressModal(props) {
     }
   }, [isLoggedIn]);
 
-  const getAccessTokenHeader = () => {
-    return localStorage.getItem("accessToken");
-  };
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setState((prevState) => ({
-      ...prevState,
-      formData: {
-        ...prevState.formData,
-        [name]: type === "checkbox" ? checked : value,
-      },
-    }));
+
+    // Check if the field is "talla" and handle it as an array of selected options
+    if (name === "talla") {
+      const selectedOptions = Array.from(
+        e.target.selectedOptions,
+        (option) => option.value
+      );
+      setState((prevState) => ({
+        ...prevState,
+        formData: {
+          ...prevState.formData,
+          [name]: selectedOptions,
+        },
+      }));
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        formData: {
+          ...prevState.formData,
+          [name]: type === "checkbox" ? checked : value,
+        },
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
+    console.log(state.formData);
     e.preventDefault();
     try {
       setState({ ...state, loading: true });
-      await DressService.createDress(state.formData);
+      await DressService.createDress(
+        state.formData,
+        props.getAccessTokenHeader()
+      );
       setState({ ...state, loading: false });
-      props.closeModal();
+      props.closeModal(1);
     } catch (error) {
       setState({
         ...state,
@@ -110,6 +135,7 @@ function CreateDressModal(props) {
               value={state.formData.talla}
               onChange={handleChange}
               required
+              multiple
             >
               <option value="">Select a size</option>
               {state.tallas.map((size) => (
@@ -131,8 +157,8 @@ function CreateDressModal(props) {
             >
               <option value="">Select a color</option>
               {state.colores.map((color) => (
-                <option key={color} value={color}>
-                  {color}
+                <option key={color._id} value={color._id}>
+                  {color.color}
                 </option>
               ))}
             </Form.Control>
@@ -159,8 +185,8 @@ function CreateDressModal(props) {
             >
               <option value="">Select a price</option>
               {state.precios.map((price) => (
-                <option key={price} value={price}>
-                  {price}
+                <option key={price._id} value={price._id}>
+                  {price.value}
                 </option>
               ))}
             </Form.Control>
@@ -188,7 +214,7 @@ function CreateDressModal(props) {
               onChange={handleChange}
               required
             />
-          </Form.Group>
+          </Form.Group> */}
 
           <Form.Group controlId="costo">
             <Form.Label>Costo:</Form.Label>
@@ -199,7 +225,7 @@ function CreateDressModal(props) {
               onChange={handleChange}
               required
             />
-          </Form.Group> */}
+          </Form.Group>
 
           <Form.Group controlId="marca">
             <Form.Label>Marca:</Form.Label>
@@ -213,8 +239,8 @@ function CreateDressModal(props) {
               <option value="">Select a brand</option>
               {/* Assuming you have a method to get all brands from DressService */}
               {state.marcas.map((brand) => (
-                <option key={brand} value={brand}>
-                  {brand}
+                <option key={brand._id} value={brand._id}>
+                  {brand.marca}
                 </option>
               ))}
             </Form.Control>

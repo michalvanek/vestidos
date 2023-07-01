@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { LoginContext } from "../../context/loginContext";
 
-const CardComponent = ({ dress }) => {
+const CardComponent = ({ dress, onDelete }) => {
   const { isLoggedIn } = useContext(LoginContext);
   return (
     <div className="card" style={{ background: "#FFF8F7" }}>
@@ -33,6 +33,7 @@ const CardComponent = ({ dress }) => {
                 </Link>
                 <button
                   className="btn btn-danger my-1 mx-1"
+                  onClick={() => onDelete()}
                   //   onClick={() => clickDelete(video.id)}
                 >
                   <i className="fa fa-trash"></i>

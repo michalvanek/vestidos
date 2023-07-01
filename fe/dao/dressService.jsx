@@ -60,4 +60,12 @@ export class DressService {
       },
     });
   }
+  static deleteDress(dressId, accessToken) {
+    let dataURL = `/api/dress/${dressId}`;
+    return this.axiosInstance.delete(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
 }

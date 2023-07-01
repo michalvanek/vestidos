@@ -7,10 +7,10 @@ import SearchBar from "../components/searchBar";
 import { LoginContext } from "../context/loginContext";
 import { Link } from "react-router-dom";
 import CreateDressModal from "../components/modalWindows/createDressModal";
-import { Nav } from "react-bootstrap";
 
 function Catalogue() {
   const { isLoggedIn } = useContext(LoginContext);
+  const [dressChanged, setDressChanged] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [state, setState] = useState({
     loading: false,
@@ -33,8 +33,29 @@ function Catalogue() {
     setModalIsOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (props) => {
     setModalIsOpen(false);
+    props === 1 && setDressChanged((prevDressChanged) => prevDressChanged + 1);
+  };
+
+  const deleteDress = async (dressId) => {
+    if (window.confirm("Are you sure?")) {
+      try {
+        // Call the DressService to delete the dress with the given dressId
+        await DressService.deleteDress(dressId, getAccessTokenHeader());
+        setDressChanged((prevDressChanged) => prevDressChanged + 1);
+
+        // Log a success message if the dress is deleted successfully
+        console.log("Dress deleted successfully.");
+      } catch (error) {
+        // Handle any errors that occur during the deletion process
+        console.error("Error deleting dress:", error.message);
+      }
+    }
+  };
+
+  const getAccessTokenHeader = () => {
+    return localStorage.getItem("accessToken");
   };
 
   useEffect(() => {
@@ -66,7 +87,7 @@ function Catalogue() {
     return () => {
       // This now gets called when the component unmounts
     };
-  }, []);
+  }, [dressChanged]);
 
   const indexOfLastDress = state.currentPage * state.dressesPerPage;
   const indexOfFirstDress = indexOfLastDress - state.dressesPerPage;
@@ -171,7 +192,11 @@ function Catalogue() {
           <Link onClick={openModal} className="btn btn-success my-1 mx-1">
             <i className="fa fa-plus-circle me-2" /> Nuevo vestido
           </Link>
-          <CreateDressModal isOpen={modalIsOpen} closeModal={closeModal} />
+          <CreateDressModal
+            isOpen={modalIsOpen}
+            closeModal={closeModal}
+            getAccessTokenHeader={getAccessTokenHeader}
+          />
         </>
       )}
       {state.loading ? (
@@ -206,7 +231,11 @@ function Catalogue() {
           <div className="card-container">
             {/* Render dress data for the current page */}
             {currentDresses.map((dress) => (
-              <CardComponent key={dress._id} dress={dress} />
+              <CardComponent
+                key={dress._id}
+                dress={dress}
+                onDelete={() => deleteDress(dress._id)}
+              />
             ))}
           </div>
           <br />
