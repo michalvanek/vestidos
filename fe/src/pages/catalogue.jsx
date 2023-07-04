@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import CreateDressModal from "../components/modalWindows/createDressModal";
 
 function Catalogue() {
-  const { isLoggedIn } = useContext(LoginContext);
+  const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
   const [dressChanged, setDressChanged] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [state, setState] = useState({
@@ -52,10 +52,6 @@ function Catalogue() {
         console.error("Error deleting dress:", error.message);
       }
     }
-  };
-
-  const getAccessTokenHeader = () => {
-    return localStorage.getItem("accessToken");
   };
 
   useEffect(() => {

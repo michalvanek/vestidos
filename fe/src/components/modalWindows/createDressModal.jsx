@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { DressService } from "../../../dao/dressService";
 import { LoginContext } from "../../context/loginContext";
+import Select from "react-select";
 
 function CreateDressModal(props) {
   const { isLoggedIn, refreshAccessToken } = useContext(LoginContext);
@@ -119,6 +120,17 @@ function CreateDressModal(props) {
       });
     }
   };
+  const handleTallaChange = (selectedOptions) => {
+    // For multi-select, the selectedOptions will be an array of selected values
+    const selectedTallas = selectedOptions.map((option) => option.value);
+    setState((prevState) => ({
+      ...prevState,
+      formData: {
+        ...prevState.formData,
+        talla: selectedTallas,
+      },
+    }));
+  };
 
   return (
     <Modal show={props.isOpen} onHide={props.closeModal}>
@@ -129,21 +141,20 @@ function CreateDressModal(props) {
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="talla">
             <Form.Label>Talla:</Form.Label>
-            <Form.Control
-              as="select"
+            <Select
               name="talla"
-              value={state.formData.talla}
-              onChange={handleChange}
+              value={state.formData.talla.map((size) => ({
+                value: size,
+                label: size,
+              }))}
+              onChange={handleTallaChange}
+              isMulti // Add the isMulti prop to enable multi-select
+              options={state.tallas.map((size) => ({
+                value: size,
+                label: size,
+              }))}
               required
-              multiple
-            >
-              <option value="">Select a size</option>
-              {state.tallas.map((size) => (
-                <option key={size} value={size}>
-                  {size}
-                </option>
-              ))}
-            </Form.Control>
+            />
           </Form.Group>
 
           <Form.Group controlId="color">

@@ -34,6 +34,10 @@ const LoginProvider = ({ children }) => {
     }
   }, []);
 
+  const getAccessTokenHeader = () => {
+    return localStorage.getItem("accessToken");
+  };
+
   const login = (email, password) => {
     return DressService.login(email, password)
       .then((response) => {
@@ -79,7 +83,13 @@ const LoginProvider = ({ children }) => {
 
   return (
     <LoginContext.Provider
-      value={{ isLoggedIn, login, logout, refreshAccessToken }}
+      value={{
+        isLoggedIn,
+        login,
+        logout,
+        refreshAccessToken,
+        getAccessTokenHeader,
+      }}
     >
       {children}
     </LoginContext.Provider>

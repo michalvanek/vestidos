@@ -16,10 +16,36 @@ export class DressService {
     let dataURL = "/api/color";
     return this.axiosInstance.get(dataURL);
   }
-
+  //------------------------------------------------------------------------
+  // ----------------- BRAND requests --------------------------------------
+  //------------------------------------------------------------------------
   static getAllBrands(accessToken) {
     let dataURL = "/api/brand";
     return this.axiosInstance.get(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  static createBrand(brandData, accessToken) {
+    let dataURL = `/api/brand/`;
+    return this.axiosInstance.post(dataURL, brandData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  static editBrand(brandData, brandId, accessToken) {
+    let dataURL = `/api/brand/${brandId}`;
+    return this.axiosInstance.put(dataURL, brandData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  static deleteBrand(brandId, accessToken) {
+    let dataURL = `/api/brand/${brandId}`;
+    return this.axiosInstance.delete(dataURL, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
