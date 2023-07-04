@@ -1,8 +1,8 @@
 import { useContext, useState, useEffect } from "react";
-import { Form, Button } from "react-bootstrap";
 import Spinner from "../components/spinner/Spinner";
 import { DressService } from "../../dao/dressService";
 import { LoginContext } from "../context/loginContext";
+import DressDependencyManagement from "../components/dressDependencyManagement/dressDependencyManagement";
 
 function MenuAdmin() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
@@ -10,8 +10,9 @@ function MenuAdmin() {
   const [state, setState] = useState({
     loading: false,
     brands: [],
-    newBrand: { marca: "" },
-    editOrDeleteBrand: "",
+    addBrandTextField: { marca: "" },
+    editBrandTextField: { marca: "" },
+    selectedBrandId: "",
     errorMessage: "",
   });
 
@@ -46,6 +47,74 @@ function MenuAdmin() {
     };
   }, [dressChanged]);
 
+  const [colorChanged, setColorChanged] = useState(0);
+  const [colorState, setColorState] = useState({
+    loading: false,
+    colors: [],
+    addColorTextField: { color: "" },
+    editColorTextField: { color: "" },
+    selectedColorId: "",
+    errorMessage: "",
+  });
+
+  useEffect(() => {
+    const fetchColors = async () => {
+      try {
+        setColorState({ ...colorState, loading: true });
+        const colorsResponse = await DressService.getAllColors(
+          getAccessTokenHeader()
+        );
+
+        setColorState({
+          ...colorState,
+          loading: false,
+          colors: colorsResponse.data.map((color) => ({
+            _id: color._id,
+            color: color.color,
+          })),
+        });
+      } catch (error) {
+        setColorState({
+          ...colorState,
+          loading: false,
+          errorMessage: error.message,
+        });
+      }
+    };
+
+    fetchColors();
+    return () => {
+      // Cleanup
+    };
+  }, [colorChanged]);
+
+  const updateColorInput = (event) => {
+    const { name, value } = event.target;
+
+    if (name === "colorNueva") {
+      setColorState({
+        ...colorState,
+        addColorTextField: {
+          ...colorState.addColorTextField,
+          color: value,
+        },
+      });
+    } else if (name === "colorSeleccionado") {
+      setColorState({
+        ...colorState,
+        selectedColorId: value,
+      });
+    } else if (name === "colorEditado") {
+      setColorState({
+        ...colorState,
+        editColorTextField: {
+          ...colorState.editColorTextField,
+          color: value,
+        },
+      });
+    }
+  };
+
   const updateInput = (event) => {
     const { name, value } = event.target;
 
@@ -53,20 +122,31 @@ function MenuAdmin() {
     if (name === "marcaNueva") {
       setState({
         ...state,
-        newBrand: {
-          ...state.newBrand,
+        addBrandTextField: {
+          ...state.addBrandTextField,
           marca: value,
         },
       });
-    } else if (name === "marca") {
+    } else if (name === "marcaSeleccionada") {
       setState({
         ...state,
-        editOrDeleteBrand: value,
+        selectedBrandId: value,
+      });
+    } else if (name === "marcaEditada") {
+      setState({
+        ...state,
+        editBrandTextField: {
+          ...state.editBrandTextField,
+          marca: value,
+        },
       });
     }
   };
 
-  const deleteBrand = async (brandId) => {
+  const submitDelete = async (brandId) => {
+    if (brandId === "") {
+      return alert("Primero selecciona un valor.");
+    }
     if (window.confirm("Are you sure?")) {
       try {
         await DressService.deleteBrand(brandId, getAccessTokenHeader());
@@ -79,12 +159,34 @@ function MenuAdmin() {
     }
   };
 
-  const submitForm = async (event) => {
-    event.preventDefault();
+  const submitForm = async (data) => {
     try {
       setState({ ...state, loading: true });
-      await DressService.createBrand(state.newBrand, getAccessTokenHeader());
-      setState({ ...state, loading: false });
+      await DressService.createBrand(data, getAccessTokenHeader());
+      setState({ ...state, loading: false, addBrandTextField: { marca: "" } }); // Clear the text field
+      setDressChanged((prevDressChanged) => prevDressChanged + 1);
+    } catch (error) {
+      alert(error);
+      setState({
+        ...state,
+        loading: false,
+        errorMessage: error.message,
+      });
+    }
+  };
+  const submitEdditedForm = async (data, id) => {
+    if (id === "") {
+      return alert("Primero selecciona un valor.");
+    }
+    try {
+      setState({ ...state, loading: true });
+      await DressService.editBrand(data, id, getAccessTokenHeader());
+      setState({
+        ...state,
+        loading: false,
+        editBrandTextField: { marca: "" },
+        selectedBrandId: "",
+      }); // Clear the text field
       setDressChanged((prevDressChanged) => prevDressChanged + 1);
     } catch (error) {
       alert(error);
@@ -107,60 +209,15 @@ function MenuAdmin() {
             <Spinner />
           ) : (
             <>
-              <div className="container">
-                <Form.Group controlId="marcaNueva">
-                  <Form.Label>Agregar marca:</Form.Label>
-                  <div className="row align-items-center">
-                    <div className="col-md-8 pe-1">
-                      <Form.Control
-                        type="text"
-                        name="marcaNueva"
-                        value={state.newBrand.marca}
-                        onChange={updateInput}
-                        required
-                        placeholder="Enter a brand name"
-                      />
-                    </div>
-
-                    <div className="col-md-4 ps-1">
-                      <Button
-                        onClick={submitForm}
-                        className="btn btn-success my-1 mx-1"
-                      >
-                        <i className="fa fa-plus-circle me-2" />
-                        Nueva marca
-                      </Button>
-                    </div>
-                  </div>
-                </Form.Group>
-                <br />
-                {/* Display the list of brands */}
-                <Form.Group controlId="marca">
-                  <Form.Label>Marcas existentes:</Form.Label>
-
-                  <Form.Control
-                    as="select"
-                    name="marca"
-                    value={state.editOrDeleteBrand}
-                    onChange={updateInput}
-                    required
-                  >
-                    <option value="">Select a brand</option>
-                    {state.brands.map((brand) => (
-                      <option key={brand._id} value={brand._id}>
-                        {brand.marca}
-                      </option>
-                    ))}
-                  </Form.Control>
-
-                  <Button
-                    className="btn btn-danger my-1 mx-1"
-                    onClick={() => deleteBrand(state.editOrDeleteBrand)}
-                  >
-                    <i className="fa fa-trash"></i>
-                  </Button>
-                </Form.Group>
-              </div>
+              {/* Use the new component here */}
+              <DressDependencyManagement
+                state={state}
+                updateInput={updateInput}
+                submitForm={submitForm}
+                submitDelete={submitDelete}
+                submitEdditedForm={submitEdditedForm}
+                typeOf="marca"
+              />
             </>
           )}
         </>
