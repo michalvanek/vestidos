@@ -17,23 +17,23 @@ export class DressService {
     return this.axiosInstance.get(dataURL);
   }
   static createColor(colorData, accessToken) {
-    let dataURL = `/api/brand/`;
+    let dataURL = `/api/color/`;
     return this.axiosInstance.post(dataURL, colorData, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
   }
-  static editColor(colorData, brandId, accessToken) {
-    let dataURL = `/api/brand/${colorId}`;
-    return this.axiosInstance.put(dataURL, brandData, {
+  static editColor(colorData, colorId, accessToken) {
+    let dataURL = `/api/color/${colorId}`;
+    return this.axiosInstance.put(dataURL, colorData, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
   }
   static deleteColor(colorId, accessToken) {
-    let dataURL = `/api/brand/${colorId}`;
+    let dataURL = `/api/color/${colorId}`;
     return this.axiosInstance.delete(dataURL, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -79,6 +79,14 @@ export class DressService {
   static getAllPrices() {
     let dataURL = "/api/price";
     return this.axiosInstance.get(dataURL);
+  }
+  static editPrice(priceData, priceId, accessToken) {
+    let dataURL = `/api/price/${priceId}`;
+    return this.axiosInstance.put(dataURL, priceData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
   }
 
   static login(email, password) {

@@ -13,6 +13,13 @@ function MenuAdmin() {
     addBrandTextField: { marca: "" },
     editBrandTextField: { marca: "" },
     selectedBrandId: "",
+    colors: [],
+    addColorTextField: { color: "" },
+    editColorTextField: { color: "" },
+    selectedColorId: "",
+    prices: [],
+    editPriceTextField: { precio: "" },
+    selectedPriceId: "",
     errorMessage: "",
   });
 
@@ -23,6 +30,8 @@ function MenuAdmin() {
         const brandsResponse = await DressService.getAllBrands(
           getAccessTokenHeader()
         );
+        const colorsResponse = await DressService.getAllColors();
+        const pricesResponse = await DressService.getAllPrices();
 
         setState({
           ...state,
@@ -30,6 +39,14 @@ function MenuAdmin() {
           brands: brandsResponse.data.map((brand) => ({
             _id: brand._id,
             marca: brand.marca,
+          })),
+          colors: colorsResponse.data.map((color) => ({
+            _id: color._id,
+            color: color.color,
+          })),
+          prices: pricesResponse.data.map((price) => ({
+            _id: price._id,
+            value: price.value,
           })),
         });
       } catch (error) {
@@ -46,74 +63,6 @@ function MenuAdmin() {
       // This now gets called when the component unmounts
     };
   }, [dressChanged]);
-
-  const [colorChanged, setColorChanged] = useState(0);
-  const [colorState, setColorState] = useState({
-    loading: false,
-    colors: [],
-    addColorTextField: { color: "" },
-    editColorTextField: { color: "" },
-    selectedColorId: "",
-    errorMessage: "",
-  });
-
-  useEffect(() => {
-    const fetchColors = async () => {
-      try {
-        setColorState({ ...colorState, loading: true });
-        const colorsResponse = await DressService.getAllColors(
-          getAccessTokenHeader()
-        );
-
-        setColorState({
-          ...colorState,
-          loading: false,
-          colors: colorsResponse.data.map((color) => ({
-            _id: color._id,
-            color: color.color,
-          })),
-        });
-      } catch (error) {
-        setColorState({
-          ...colorState,
-          loading: false,
-          errorMessage: error.message,
-        });
-      }
-    };
-
-    fetchColors();
-    return () => {
-      // Cleanup
-    };
-  }, [colorChanged]);
-
-  const updateColorInput = (event) => {
-    const { name, value } = event.target;
-
-    if (name === "colorNueva") {
-      setColorState({
-        ...colorState,
-        addColorTextField: {
-          ...colorState.addColorTextField,
-          color: value,
-        },
-      });
-    } else if (name === "colorSeleccionado") {
-      setColorState({
-        ...colorState,
-        selectedColorId: value,
-      });
-    } else if (name === "colorEditado") {
-      setColorState({
-        ...colorState,
-        editColorTextField: {
-          ...colorState.editColorTextField,
-          color: value,
-        },
-      });
-    }
-  };
 
   const updateInput = (event) => {
     const { name, value } = event.target;
@@ -140,30 +89,102 @@ function MenuAdmin() {
           marca: value,
         },
       });
+    } else if (name === "colorNueva") {
+      setState({
+        ...state,
+        addColorTextField: {
+          ...state.addColorTextField,
+          color: value,
+        },
+      });
+    } else if (name === "colorSeleccionada") {
+      setState({
+        ...state,
+        selectedColorId: value,
+      });
+    } else if (name === "colorEditada") {
+      setState({
+        ...state,
+        editColorTextField: {
+          ...state.editColorTextField,
+          color: value,
+        },
+      });
+    } else if (name === "precioSeleccionada") {
+      setState({
+        ...state,
+        selectedPriceId: value,
+      });
+    } else if (name === "precioEditada") {
+      setState({
+        ...state,
+        editPriceTextField: {
+          ...state.editPriceTextField,
+          precio: Number(value), // Convert value to a number
+        },
+      });
     }
   };
 
-  const submitDelete = async (brandId) => {
-    if (brandId === "") {
+  const submitDelete = async (id, submitMethod) => {
+    if (id === "" || id === undefined) {
       return alert("Primero selecciona un valor.");
+    } else if (submitMethod !== "marca" && submitMethod !== "color") {
+      return alert(`invalid submitMethod, submit method is: ${submitMethod}`);
     }
+
     if (window.confirm("Are you sure?")) {
       try {
-        await DressService.deleteBrand(brandId, getAccessTokenHeader());
+        setState({ ...state, loading: true });
+        if (submitMethod === "marca") {
+          await DressService.deleteBrand(id, getAccessTokenHeader());
+          setState({
+            ...state,
+            loading: false,
+            selectedBrandId: "",
+          });
+        } else if (submitMethod === "color") {
+          await DressService.deleteColor(id, getAccessTokenHeader());
+          setState({
+            ...state,
+            loading: false,
+            selectedColorId: "",
+          });
+        }
+
         setDressChanged((prevDressChanged) => prevDressChanged + 1);
-        console.log("Brand deleted successfully.");
       } catch (error) {
         alert(error);
-        console.error("Error deleting brand:", error.message);
+        setState({
+          ...state,
+          loading: false,
+          errorMessage: error.message,
+        });
       }
     }
   };
 
-  const submitForm = async (data) => {
+  const submitForm = async (data, submitMethod) => {
+    if (submitMethod !== "marca" && submitMethod !== "color") {
+      return alert(`invalid submitMethod, submit method is: ${submitMethod}`);
+    }
     try {
       setState({ ...state, loading: true });
-      await DressService.createBrand(data, getAccessTokenHeader());
-      setState({ ...state, loading: false, addBrandTextField: { marca: "" } }); // Clear the text field
+      if (submitMethod === "marca") {
+        await DressService.createBrand(data, getAccessTokenHeader());
+        setState({
+          ...state,
+          loading: false,
+          addBrandTextField: { marca: "" },
+        });
+      } else if (submitMethod === "color") {
+        await DressService.createColor(data, getAccessTokenHeader());
+        setState({
+          ...state,
+          loading: false,
+          addColorTextField: { color: "" },
+        });
+      } // Clear the text field
       setDressChanged((prevDressChanged) => prevDressChanged + 1);
     } catch (error) {
       alert(error);
@@ -174,19 +195,45 @@ function MenuAdmin() {
       });
     }
   };
-  const submitEdditedForm = async (data, id) => {
-    if (id === "") {
+  const submitEdditedForm = async (data, id, submitMethod) => {
+    if (id === "" || id === undefined) {
       return alert("Primero selecciona un valor.");
+    } else if (
+      submitMethod !== "marca" &&
+      submitMethod !== "color" &&
+      submitMethod !== "precio"
+    ) {
+      return alert(`invalid submitMethod, submit method is: ${submitMethod}`);
     }
     try {
-      setState({ ...state, loading: true });
-      await DressService.editBrand(data, id, getAccessTokenHeader());
-      setState({
-        ...state,
-        loading: false,
-        editBrandTextField: { marca: "" },
-        selectedBrandId: "",
-      }); // Clear the text field
+      if (submitMethod === "marca") {
+        setState({ ...state, loading: true });
+        await DressService.editBrand(data, id, getAccessTokenHeader());
+        setState({
+          ...state,
+          loading: false,
+          editBrandTextField: { marca: "" },
+          selectedBrandId: "",
+        });
+      } else if (submitMethod === "color") {
+        setState({ ...state, loading: true });
+        await DressService.editColor(data, id, getAccessTokenHeader());
+        setState({
+          ...state,
+          loading: false,
+          editColorTextField: { color: "" },
+          selectedColorId: "",
+        });
+      } else if (submitMethod === "precio") {
+        setState({ ...state, loading: true });
+        await DressService.editPrice(data, id, getAccessTokenHeader());
+        setState({
+          ...state,
+          loading: false,
+          editPriceTextField: { precio: "" },
+          selectedPriceId: "",
+        });
+      }
       setDressChanged((prevDressChanged) => prevDressChanged + 1);
     } catch (error) {
       alert(error);
@@ -217,6 +264,22 @@ function MenuAdmin() {
                 submitDelete={submitDelete}
                 submitEdditedForm={submitEdditedForm}
                 typeOf="marca"
+              />
+              <DressDependencyManagement
+                state={state}
+                updateInput={updateInput}
+                submitForm={submitForm}
+                submitDelete={submitDelete}
+                submitEdditedForm={submitEdditedForm}
+                typeOf="color"
+              />
+              <DressDependencyManagement
+                state={state}
+                updateInput={updateInput}
+                submitForm={submitForm}
+                submitDelete={submitDelete}
+                submitEdditedForm={submitEdditedForm}
+                typeOf="precio"
               />
             </>
           )}
