@@ -3,10 +3,12 @@ import Spinner from "../components/spinner/Spinner";
 import { DressService } from "../../dao/dressService";
 import { LoginContext } from "../context/loginContext";
 import DressDependencyManagement from "../components/dressDependencyManagement/dressDependencyManagement";
+import { Form, Button, Collapse } from "react-bootstrap";
 
 function MenuAdmin() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
   const [dressChanged, setDressChanged] = useState(0);
+  const [showBrand, setShowBrand] = useState(false);
   const [state, setState] = useState({
     loading: false,
     brands: [],
@@ -22,6 +24,10 @@ function MenuAdmin() {
     selectedPriceId: "",
     errorMessage: "",
   });
+
+  const handleShowBrand = () => {
+    setShowBrand((prevShowBrand) => !prevShowBrand);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -256,31 +262,35 @@ function MenuAdmin() {
             <Spinner />
           ) : (
             <>
-              {/* Use the new component here */}
-              <DressDependencyManagement
-                state={state}
-                updateInput={updateInput}
-                submitForm={submitForm}
-                submitDelete={submitDelete}
-                submitEdditedForm={submitEdditedForm}
-                typeOf="marca"
-              />
-              <DressDependencyManagement
-                state={state}
-                updateInput={updateInput}
-                submitForm={submitForm}
-                submitDelete={submitDelete}
-                submitEdditedForm={submitEdditedForm}
-                typeOf="color"
-              />
-              <DressDependencyManagement
-                state={state}
-                updateInput={updateInput}
-                submitForm={submitForm}
-                submitDelete={submitDelete}
-                submitEdditedForm={submitEdditedForm}
-                typeOf="precio"
-              />
+              <div className="container border">
+                {/* Use the new component here */}
+
+                <DressDependencyManagement
+                  state={state}
+                  updateInput={updateInput}
+                  submitForm={submitForm}
+                  submitDelete={submitDelete}
+                  submitEdditedForm={submitEdditedForm}
+                  typeOf="marca"
+                />
+
+                <DressDependencyManagement
+                  state={state}
+                  updateInput={updateInput}
+                  submitForm={submitForm}
+                  submitDelete={submitDelete}
+                  submitEdditedForm={submitEdditedForm}
+                  typeOf="color"
+                />
+                <DressDependencyManagement
+                  state={state}
+                  updateInput={updateInput}
+                  submitForm={submitForm}
+                  submitDelete={submitDelete}
+                  submitEdditedForm={submitEdditedForm}
+                  typeOf="precio"
+                />
+              </div>
             </>
           )}
         </>

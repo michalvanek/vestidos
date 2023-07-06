@@ -9,14 +9,6 @@ code {
   object-fit: contain;
 }
 
-body {
-  background-color: bisque;
-}
-
-.my-custom-background {
-  background-color: #f00; /* Replace #f00 with your desired color */
-}
-
 .card-details {
   display: flex;
 }
