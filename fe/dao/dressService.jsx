@@ -1,7 +1,9 @@
 import axios from "axios";
 
 export class DressService {
-  static serverURL = "https://vestidos-cd-valles.onrender.com";
+  static serverURL =
+    import.meta.env.VITE_SERVER_URL ||
+    "https://vestidos-cd-valles.onrender.com";
 
   static axiosInstance = axios.create({
     baseURL: this.serverURL,
