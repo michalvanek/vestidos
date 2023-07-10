@@ -28,9 +28,9 @@ const NavBar = () => {
   return (
     <>
       <Navbar expand="lg" bg="dark" variant="dark">
-        <Navbar.Brand as={Link} to="/">
-          Logo
-        </Navbar.Brand>
+        {/* <Navbar.Brand as={Link} to="/">
+          <img src="../public/logoChico.webp" alt="Logo" className="logo-img" />
+        </Navbar.Brand> */}
         <Navbar.Toggle aria-controls="basic-navbar-nav" onClick={toggleMenu} />
         <Navbar.Collapse
           id="basic-navbar-nav"
