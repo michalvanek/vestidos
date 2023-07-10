@@ -16,8 +16,6 @@ let App = () => {
     <React.Fragment>
       <Router>
         <LoginProvider>
-          {" "}
-          {/* Add the LoginProvider here */}
           <NavBar />
           <Routes>
             <Route path="/" element={<Navigate to="catalogue" />} />
