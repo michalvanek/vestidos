@@ -76,7 +76,7 @@ const LoginProvider = ({ children }) => {
       })
       .catch((error) => {
         console.error(error);
-        openModal(); // You may need to define the 'openModal' function to open the login modal when token refresh fails
+        logout();
         throw error;
       });
   };

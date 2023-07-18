@@ -9,6 +9,15 @@ export class DressService {
     baseURL: this.serverURL,
   });
 
+  static getCurrentUser() {
+    let dataURL = "/api/users/current";
+    return this.axiosInstance.get(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+
   static getAllDresses() {
     let dataURL = "/api/dress";
     return this.axiosInstance.get(dataURL);

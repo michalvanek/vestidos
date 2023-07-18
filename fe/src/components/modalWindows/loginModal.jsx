@@ -18,7 +18,7 @@ const LoginModal = ({ isOpen, closeModal }) => {
       .catch((error) => {
         // Handle login error
         console.error(error);
-        setError("Invalid email or password");
+        setError(error);
       });
   };
 

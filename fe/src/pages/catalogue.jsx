@@ -26,7 +26,7 @@ function Catalogue() {
     precios: [],
     errorMessage: "",
     currentPage: 1,
-    dressesPerPage: 10,
+    dressesPerPage: 15,
   });
 
   const openModal = () => {
@@ -134,6 +134,7 @@ function Catalogue() {
           ...state.dress,
           ...updatedDress,
         },
+        currentPage: 1, // Reset the current page to 1
       });
     } else if (name === "color") {
       const filteredDresses = filterByColor(value);
@@ -149,6 +150,7 @@ function Catalogue() {
           ...state.dress,
           ...updatedDress,
         },
+        currentPage: 1, // Reset the current page to 1
       });
     } else if (name === "precio") {
       const filteredDresses = filterByPrice(value);
@@ -164,6 +166,7 @@ function Catalogue() {
           ...state.dress,
           ...updatedDress,
         },
+        currentPage: 1, // Reset the current page to 1
       });
     }
 
@@ -200,7 +203,7 @@ function Catalogue() {
       ) : (
         <>
           {/* Bootstrap Pagination at the top */}
-          <nav aria-label="Page navigation" className="pagination-container">
+          <nav aria-label="Page navigation">
             <ul className="pagination justify-content-center">
               {state.filteredDresses.length > state.dressesPerPage &&
                 Array.from({
@@ -224,6 +227,7 @@ function Catalogue() {
                 ))}
             </ul>
           </nav>
+
           <div className="card-container">
             {/* Render dress data for the current page */}
             {currentDresses.map((dress) => (
