@@ -4,7 +4,7 @@ function SearchBar({ state, updateInput }) {
   return (
     <div className="row">
       <div className="col-md-8">
-        <form className="row border border-3 rounded-3">
+        <form className="row">
           <i className="fa-solid fa-magnifying-glass"></i>
           <div className="col">
             <div className="mb-2">

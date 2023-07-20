@@ -2,11 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { LoginContext } from "../../context/loginContext";
+import EditDress from "../../pages/editDress";
 
-const CardComponent = ({ dress, onDelete }) => {
+const CardComponent = ({
+  dress,
+  onDelete,
+  onOpenEditModal,
+  onCloseEditModal,
+  isOpen,
+  getAccessTokenHeader,
+  dressChanged,
+}) => {
   const { isLoggedIn } = useContext(LoginContext);
   return (
-    <div className="card" style={{ background: "#FFF8F7" }}>
+    <div className="card border-0" style={{ background: "#FFF8F7" }}>
       <div className="card-body">
         <img className="card-img-top" src={dress.fotoPrincipal} alt="Dress" />
         <div className="card-details">
@@ -28,9 +37,17 @@ const CardComponent = ({ dress, onDelete }) => {
             </Link>
             {isLoggedIn && (
               <>
-                <Link to={`/`} className="btn btn-primary my-1 mx-1">
+                <Link
+                  to={`/${dress._id}`}
+                  className="btn btn-primary my-1 mx-1"
+                >
                   <i className="fa fa-pen"></i>
                 </Link>
+                {/* <EditDress
+                  getAccessTokenHeader={getAccessTokenHeader}
+                  dress={dress}
+                  dressChanged={dressChanged}
+                /> */}
                 <button
                   className="btn btn-danger my-1 mx-1"
                   onClick={() => onDelete()}

@@ -11,6 +11,7 @@ import Catalogue from "./pages/catalogue";
 import About from "./pages/about";
 import MenuAdmin from "./pages/menuAdmin";
 import NavBar from "./components/navBar/navBar";
+import EditDress from "./pages/editDress";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       <Route index element={<Catalogue />} />
       <Route path="/about" element={<About />} />
       <Route path="/admin" element={<MenuAdmin />} />
+      <Route path="/:dressId" element={<EditDress />} />
     </Route>
   )
 );

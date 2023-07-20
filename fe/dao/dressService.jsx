@@ -9,19 +9,9 @@ export class DressService {
     baseURL: this.serverURL,
   });
 
-  static getCurrentUser() {
-    let dataURL = "/api/users/current";
-    return this.axiosInstance.get(dataURL, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-  }
-
-  static getAllDresses() {
-    let dataURL = "/api/dress";
-    return this.axiosInstance.get(dataURL);
-  }
+  //------------------------------------------------------------------------
+  // ----------------- COLOR requests --------------------------------------
+  //------------------------------------------------------------------------
 
   static getAllColors() {
     let dataURL = "/api/color";
@@ -87,6 +77,10 @@ export class DressService {
     });
   }
 
+  //------------------------------------------------------------------------
+  // ----------------- PRICE requests --------------------------------------
+  //------------------------------------------------------------------------
+
   static getAllPrices() {
     let dataURL = "/api/price";
     return this.axiosInstance.get(dataURL);
@@ -99,6 +93,10 @@ export class DressService {
       },
     });
   }
+
+  //------------------------------------------------------------------------
+  // ----------------- USER requests --------------------------------------
+  //------------------------------------------------------------------------
 
   static login(email, password) {
     let dataURL = "/api/users/login";
@@ -116,9 +114,27 @@ export class DressService {
       },
     });
   }
+
+  static getCurrentUser() {
+    let dataURL = "/api/users/current";
+    return this.axiosInstance.get(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+
   static refreshAccessToken(refreshToken) {
     let dataURL = "/api/users/token";
     return this.axiosInstance.post(dataURL, { token: refreshToken });
+  }
+  //------------------------------------------------------------------------
+  // ----------------- DRESS requests --------------------------------------
+  //------------------------------------------------------------------------
+
+  static getAllDresses() {
+    let dataURL = "/api/dress";
+    return this.axiosInstance.get(dataURL);
   }
 
   static createDress(dressData, accessToken) {
@@ -132,6 +148,22 @@ export class DressService {
   static deleteDress(dressId, accessToken) {
     let dataURL = `/api/dress/${dressId}`;
     return this.axiosInstance.delete(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  static getDressById(dressId, accessToken) {
+    let dataURL = `/api/dress/${dressId}`;
+    return this.axiosInstance.get(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  static editDressById(dressData, dressId, accessToken) {
+    let dataURL = `/api/dress/${dressId}`;
+    return this.axiosInstance.put(dataURL, dressData, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

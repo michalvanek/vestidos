@@ -33,6 +33,7 @@ function CreateDressModal(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setState({ ...state, loading: true });
         console.log(props.getAccessTokenHeader());
         const colorsResponse = await DressService.getAllColors();
         const pricesResponse = await DressService.getAllPrices();
@@ -135,7 +136,7 @@ function CreateDressModal(props) {
   return (
     <Modal show={props.isOpen} onHide={props.closeModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Create Dress</Modal.Title>
+        <Modal.Title>Crear vestido</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>

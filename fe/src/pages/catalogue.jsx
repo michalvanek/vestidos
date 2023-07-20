@@ -182,7 +182,6 @@ function Catalogue() {
 
   return (
     <>
-      <h1>Catálogo</h1>
       <SearchBar state={state} updateInput={updateInput} />
       <br />
       {/* Add the button to open the CreateDressModal */}
@@ -235,6 +234,8 @@ function Catalogue() {
                 key={dress._id}
                 dress={dress}
                 onDelete={() => deleteDress(dress._id)}
+                getAccessTokenHeader={getAccessTokenHeader}
+                dressChanged={dressChanged}
               />
             ))}
           </div>
