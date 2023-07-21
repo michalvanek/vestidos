@@ -49,6 +49,6 @@ code {
 .original-size {
   max-height: none; /* Remove the max-height constraint to show the original size */
 }
-.my-modal .modal-content {
+.modal-bg {
   background-color: #fff8f7;
 }

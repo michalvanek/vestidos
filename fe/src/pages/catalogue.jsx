@@ -260,7 +260,7 @@ function Catalogue() {
                     id={`carouseModal-${dress._id}`}
                     isOpen={modalCarouseIsOpen === `carouseModal-${dress._id}`}
                     closeModal={(props) => closeModalCarouse(dress._id, props)}
-                    getAccessTokenHeader={getAccessTokenHeader}
+                    props={dress}
                   />
                   <div className="card-details">
                     <div className="card-detail">
