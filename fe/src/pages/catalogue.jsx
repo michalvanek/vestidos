@@ -281,9 +281,9 @@ function Catalogue() {
                       <span className="icon-value">{dress.precio}</span>
                     </div>
                     <div>
-                      <Link to={`/`} className="btn btn-warning my-1 mx-1">
+                      {/* <Link to={`/`} className="btn btn-warning my-1 mx-1">
                         <i className="fa fa-eye"></i>
-                      </Link>
+                      </Link> */}
                       {isLoggedIn && (
                         <>
                           <Link

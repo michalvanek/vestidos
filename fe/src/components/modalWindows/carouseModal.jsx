@@ -4,7 +4,7 @@ import { Modal, Button, Carousel } from "react-bootstrap"; // Import Bootstrap c
 const CarouseModal = ({ isOpen, closeModal, props }) => {
   const hasFotos = props.fotos && props.fotos.length > 0;
   return (
-    <Modal show={isOpen} onHide={closeModal} className="modal-lg ">
+    <Modal show={isOpen} onHide={closeModal} className="modal">
       <Modal.Header closeButton>
         <Modal.Title>Detalle</Modal.Title>
       </Modal.Header>
@@ -16,7 +16,6 @@ const CarouseModal = ({ isOpen, closeModal, props }) => {
         >
           <Carousel.Item>
             <img
-              style={{ maxHeight: "500vh" }}
               className="d-block w-100"
               src={props.fotoPrincipal}
               alt="First slide"
