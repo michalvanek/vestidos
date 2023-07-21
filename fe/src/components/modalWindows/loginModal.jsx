@@ -70,7 +70,7 @@ const LoginModal = ({ isOpen, closeModal }) => {
           Login
         </Button>
         <Button variant="secondary" onClick={closeModal}>
-          Close
+          Cerrar
         </Button>
       </Modal.Footer>
     </Modal>

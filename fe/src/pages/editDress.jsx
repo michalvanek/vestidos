@@ -213,137 +213,139 @@ function EditDress(props) {
   return (
     <>
       <h2>Editar vestido</h2>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="talla">
-          <Form.Label>Talla:</Form.Label>
-          <Select
-            name="talla"
-            value={state.formData.talla.map((size) => ({
-              value: size,
-              label: size,
-            }))}
-            onChange={handleTallaChange}
-            isMulti // Add the isMulti prop to enable multi-select
-            options={state.tallas.map((size) => ({
-              value: size,
-              label: size,
-            }))}
-            required
-          />
-        </Form.Group>
 
-        <Form.Group controlId="color">
-          <Form.Label>Color:</Form.Label>
-          <Form.Control
-            as="select"
-            name="color"
-            value={state.formData.color}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a color</option>
-            {state.colores.map((color) => (
-              <option key={color._id} value={color._id}>
-                {color.color}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="piedras">
-          <Form.Check
-            type="checkbox"
-            label="Piedras"
-            name="piedras"
-            checked={state.formData.piedras}
-            onChange={handleChange}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="precio">
-          <Form.Label>Precio:</Form.Label>
-          <Form.Control
-            as="select"
-            name="precio"
-            value={state.formData.precio}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a price</option>
-            {state.precios.map((price) => (
-              <option key={price._id} value={price._id}>
-                {price.value}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
-
-        <Form.Group controlId="fotoPrincipal">
-          <Form.Label>Foto Principal:</Form.Label>
-          <Form.Control
-            type="text"
-            name="fotoPrincipal"
-            value={state.formData.fotoPrincipal}
-            onChange={handleChange}
-            required
-          />
-          {state.formData.fotoPrincipal && (
-            <img
-              src={state.formData.fotoPrincipal}
-              alt="Principal Preview"
-              className={`preview-image ${
-                showOriginalSize ? "original-size" : ""
-              }`}
-              onClick={() => setShowOriginalSize(!showOriginalSize)}
+      <div className="d-flex justify-content-center">
+        <Form onSubmit={handleSubmit}>
+          <Form.Group controlId="talla">
+            <Form.Label>Talla:</Form.Label>
+            <Select
+              name="talla"
+              value={state.formData.talla.map((size) => ({
+                value: size,
+                label: size,
+              }))}
+              onChange={handleTallaChange}
+              isMulti // Add the isMulti prop to enable multi-select
+              options={state.tallas.map((size) => ({
+                value: size,
+                label: size,
+              }))}
+              required
             />
-          )}
-        </Form.Group>
-        <Form.Group controlId="fotos">
-          <Form.Label>Fotos:</Form.Label>
-          <div className="d-flex align-items-center">
+          </Form.Group>
+
+          <Form.Group controlId="color">
+            <Form.Label>Color:</Form.Label>
+            <Form.Control
+              as="select"
+              name="color"
+              value={state.formData.color}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a color</option>
+              {state.colores.map((color) => (
+                <option key={color._id} value={color._id}>
+                  {color.color}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId="piedras">
+            <Form.Check
+              type="checkbox"
+              label="Piedras"
+              name="piedras"
+              checked={state.formData.piedras}
+              onChange={handleChange}
+            />
+          </Form.Group>
+
+          <Form.Group controlId="precio">
+            <Form.Label>Precio:</Form.Label>
+            <Form.Control
+              as="select"
+              name="precio"
+              value={state.formData.precio}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a price</option>
+              {state.precios.map((price) => (
+                <option key={price._id} value={price._id}>
+                  {price.value}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId="fotoPrincipal">
+            <Form.Label>Foto Principal:</Form.Label>
             <Form.Control
               type="text"
-              placeholder="Enter photo link"
-              value={photoLink}
-              onChange={(e) => setPhotoLink(e.target.value)}
+              name="fotoPrincipal"
+              value={state.formData.fotoPrincipal}
+              onChange={handleChange}
+              required
             />
-            <Button
-              variant="success"
-              size="sm"
-              onClick={handleAddPhotoLink}
-              disabled={photoLink.trim() === ""}
-              style={{ marginLeft: "10px" }}
-            >
-              <i className="fa fa-plus-circle" />
-            </Button>
-            <br />
-          </div>
-          {state.formData.fotos.map((link, index) => (
-            <div key={index} className="d-flex align-items-center">
+            {state.formData.fotoPrincipal && (
+              <img
+                src={state.formData.fotoPrincipal}
+                alt="Principal Preview"
+                className={`preview-image ${
+                  showOriginalSize ? "original-size" : ""
+                }`}
+                onClick={() => setShowOriginalSize(!showOriginalSize)}
+              />
+            )}
+          </Form.Group>
+          <Form.Group controlId="fotos">
+            <Form.Label>Fotos:</Form.Label>
+            <div className="d-flex align-items-center">
               <Form.Control
                 type="text"
-                value={link}
-                readOnly
-                style={{ marginRight: "10px" }}
-              />
-              <img
-                src={link}
-                alt={`Preview ${index + 1}`}
-                className={`preview-image-sm`}
+                placeholder="Enter photo link"
+                value={photoLink}
+                onChange={(e) => setPhotoLink(e.target.value)}
               />
               <Button
-                variant="danger"
+                variant="success"
                 size="sm"
-                onClick={() => handleRemovePhotoLink(index)}
+                onClick={handleAddPhotoLink}
+                disabled={photoLink.trim() === ""}
+                style={{ marginLeft: "10px" }}
               >
-                <i className="fa fa-trash"></i>
+                <i className="fa fa-plus-circle" />
               </Button>
+              <br />
             </div>
-          ))}
-        </Form.Group>
-        {/* Add more form fields for other properties in the dress schema here */}
-        {/* For example, to add photos and cost fields: */}
-        {/* <Form.Group controlId="fotos">
+            {state.formData.fotos.map((link, index) => (
+              <div key={index} className="d-flex align-items-center">
+                <Form.Control
+                  type="text"
+                  value={link}
+                  readOnly
+                  style={{ marginRight: "10px" }}
+                />
+                <img
+                  src={link}
+                  alt={`Preview ${index + 1}`}
+                  className={`preview-image-sm`}
+                />
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleRemovePhotoLink(index)}
+                >
+                  <i className="fa fa-trash"></i>
+                </Button>
+              </div>
+            ))}
+          </Form.Group>
+          {/* Add more form fields for other properties in the dress schema here */}
+          {/* For example, to add photos and cost fields: */}
+          {/* <Form.Group controlId="fotos">
             <Form.Label>Fotos:</Form.Label>
             <Form.Control
               type="text"
@@ -354,45 +356,46 @@ function EditDress(props) {
             />
           </Form.Group> */}
 
-        <Form.Group controlId="costo">
-          <Form.Label>Costo:</Form.Label>
-          <Form.Control
-            type="text"
-            name="costo"
-            value={state.formData.costo}
-            onChange={handleChange}
-            required
-          />
-        </Form.Group>
+          <Form.Group controlId="costo">
+            <Form.Label>Costo:</Form.Label>
+            <Form.Control
+              type="text"
+              name="costo"
+              value={state.formData.costo}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
 
-        <Form.Group controlId="marca">
-          <Form.Label>Marca:</Form.Label>
-          <Form.Control
-            as="select"
-            name="marca"
-            value={state.formData.marca}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select a brand</option>
-            {/* Assuming you have a method to get all brands from DressService */}
-            {state.marcas.map((brand) => (
-              <option key={brand._id} value={brand._id}>
-                {brand.marca}
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
-        <br />
-        <Button variant="primary" type="submit" disabled={state.loading}>
-          {state.loading ? "Cargando..." : "Confirmar cambios"}
-        </Button>
-        <Link to={"/"} className="btn btn-dark ms-2">
-          Cerrar
-        </Link>
-      </Form>
+          <Form.Group controlId="marca">
+            <Form.Label>Marca:</Form.Label>
+            <Form.Control
+              as="select"
+              name="marca"
+              value={state.formData.marca}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select a brand</option>
+              {/* Assuming you have a method to get all brands from DressService */}
+              {state.marcas.map((brand) => (
+                <option key={brand._id} value={brand._id}>
+                  {brand.marca}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+          <br />
+          <Button variant="primary" type="submit" disabled={state.loading}>
+            {state.loading ? "Cargando..." : "Confirmar cambios"}
+          </Button>
+          <Link to={"/"} className="btn btn-dark ms-2">
+            Cerrar
+          </Link>
+        </Form>
 
-      {state.errorMessage && <p>{state.errorMessage}</p>}
+        {state.errorMessage && <p>{state.errorMessage}</p>}
+      </div>
     </>
   );
 }

@@ -2,16 +2,17 @@ import { useContext, useState, useEffect } from "react";
 import Spinner from "../components/spinner/Spinner"; //tocici se kolecko kdyz loaduje 100% css
 import { DressService } from "../../dao/dressService";
 import "../index.css";
-import CardComponent from "../components/cardComponent/cardComponent";
 import SearchBar from "../components/searchBar";
 import { LoginContext } from "../context/loginContext";
 import { Link } from "react-router-dom";
 import CreateDressModal from "../components/modalWindows/createDressModal";
+import CarouseModal from "../components/modalWindows/carouseModal";
 
 function Catalogue() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
   const [dressChanged, setDressChanged] = useState(0);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalCarouseIsOpen, setModalCarouseIsOpen] = useState(false);
   const [state, setState] = useState({
     loading: false,
     dresses: [],
@@ -35,6 +36,16 @@ function Catalogue() {
 
   const closeModal = (props) => {
     setModalIsOpen(false);
+    props === 1 && setDressChanged((prevDressChanged) => prevDressChanged + 1);
+  };
+  const openModalCarouse = (dressId) => {
+    // Set the modalIsOpen state to true, and also set the dressId as part of the modal ID
+    setModalCarouseIsOpen(`carouseModal-${dressId}`);
+  };
+
+  const closeModalCarouse = (dressId, props) => {
+    // Set the modalIsOpen state to false, and reset the modal ID
+    setModalCarouseIsOpen(false);
     props === 1 && setDressChanged((prevDressChanged) => prevDressChanged + 1);
   };
 
@@ -191,6 +202,7 @@ function Catalogue() {
             <i className="fa fa-plus-circle me-2" /> Nuevo vestido
           </Link>
           <CreateDressModal
+            id="dressCreateModal"
             isOpen={modalIsOpen}
             closeModal={closeModal}
             getAccessTokenHeader={getAccessTokenHeader}
@@ -228,15 +240,76 @@ function Catalogue() {
           </nav>
 
           <div className="card-container">
-            {/* Render dress data for the current page */}
+            {/* ----CARD COMPONENT----- */}
+
             {currentDresses.map((dress) => (
-              <CardComponent
+              <div
                 key={dress._id}
-                dress={dress}
-                onDelete={() => deleteDress(dress._id)}
-                getAccessTokenHeader={getAccessTokenHeader}
-                dressChanged={dressChanged}
-              />
+                className="card border rounded"
+                style={{ background: "#FFF8F7" }}
+              >
+                <div className="card-body">
+                  <Link onClick={() => openModalCarouse(dress._id)}>
+                    <img
+                      className="card-img-top"
+                      src={dress.fotoPrincipal}
+                      alt="Dress"
+                    />
+                  </Link>
+                  <CarouseModal
+                    id={`carouseModal-${dress._id}`}
+                    isOpen={modalCarouseIsOpen === `carouseModal-${dress._id}`}
+                    closeModal={(props) => closeModalCarouse(dress._id, props)}
+                    getAccessTokenHeader={getAccessTokenHeader}
+                  />
+                  <div className="card-details">
+                    <div className="card-detail">
+                      <i className="fas fa-ruler icon" title="talla"></i>
+                      <span className="icon-value">
+                        {dress.talla.join(", ")}
+                      </span>
+                    </div>
+                    <div className="card-detail">
+                      <i className="fas fa-palette icon" title="color"></i>
+                      <span className="icon-value">{dress.color}</span>
+                    </div>
+                    <div className="card-detail">
+                      <i
+                        className="fas fa-dollar-sign icon"
+                        title="precio en pesos"
+                      ></i>
+                      <span className="icon-value">{dress.precio}</span>
+                    </div>
+                    <div>
+                      <Link to={`/`} className="btn btn-warning my-1 mx-1">
+                        <i className="fa fa-eye"></i>
+                      </Link>
+                      {isLoggedIn && (
+                        <>
+                          <Link
+                            to={`/${dress._id}`}
+                            className="btn btn-primary my-1 mx-1"
+                          >
+                            <i className="fa fa-pen"></i>
+                          </Link>
+                          {/* <EditDress
+                  getAccessTokenHeader={getAccessTokenHeader}
+                  dress={dress}
+                  dressChanged={dressChanged}
+                /> */}
+                          <button
+                            className="btn btn-danger my-1 mx-1"
+                            onClick={() => deleteDress(dress._id)}
+                            //   onClick={() => clickDelete(video.id)}
+                          >
+                            <i className="fa fa-trash"></i>
+                          </button>{" "}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
           <br />
