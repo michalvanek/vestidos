@@ -5,6 +5,8 @@ import { LoginContext } from "../../context/loginContext";
 import Select from "react-select";
 
 function CreateDressModal(props) {
+  const [showOriginalSize, setShowOriginalSize] = useState(false);
+  const [photoLink, setPhotoLink] = useState(""); // State to store the current photo link input
   const { isLoggedIn, refreshAccessToken } = useContext(LoginContext);
   const [state, setState] = useState({
     loading: false,
@@ -100,6 +102,31 @@ function CreateDressModal(props) {
         },
       }));
     }
+  };
+
+  // Function to handle adding a new photo link to the formData state
+  const handleAddPhotoLink = () => {
+    if (photoLink.trim() !== "") {
+      setState((prevState) => ({
+        ...prevState,
+        formData: {
+          ...prevState.formData,
+          fotos: [...prevState.formData.fotos, photoLink.trim()],
+        },
+      }));
+      setPhotoLink(""); // Reset the input field after adding the link
+    }
+  };
+
+  // Function to handle removing a photo link from the formData state
+  const handleRemovePhotoLink = (index) => {
+    setState((prevState) => ({
+      ...prevState,
+      formData: {
+        ...prevState.formData,
+        fotos: prevState.formData.fotos.filter((_, i) => i !== index),
+      },
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -213,8 +240,60 @@ function CreateDressModal(props) {
               onChange={handleChange}
               required
             />
+            {state.formData.fotoPrincipal && (
+              <img
+                src={state.formData.fotoPrincipal}
+                alt="Principal Preview"
+                className={`preview-image ${
+                  showOriginalSize ? "original-size" : ""
+                }`}
+                onClick={() => setShowOriginalSize(!showOriginalSize)}
+              />
+            )}
           </Form.Group>
-
+          <Form.Group controlId="fotos">
+            <Form.Label>Fotos:</Form.Label>
+            <div className="d-flex align-items-center">
+              <Form.Control
+                type="text"
+                placeholder="Enter photo link"
+                value={photoLink}
+                onChange={(e) => setPhotoLink(e.target.value)}
+              />
+              <Button
+                variant="success"
+                size="sm"
+                onClick={handleAddPhotoLink}
+                disabled={photoLink.trim() === ""}
+                style={{ marginLeft: "10px" }}
+              >
+                <i className="fa fa-plus-circle" />
+              </Button>
+              <br />
+            </div>
+            {state.formData.fotos.map((link, index) => (
+              <div key={index} className="d-flex align-items-center">
+                <Form.Control
+                  type="text"
+                  value={link}
+                  readOnly
+                  style={{ marginRight: "10px" }}
+                />
+                <img
+                  src={link}
+                  alt={`Preview ${index + 1}`}
+                  className={`preview-image-sm`}
+                />
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={() => handleRemovePhotoLink(index)}
+                >
+                  <i className="fa fa-trash"></i>
+                </Button>
+              </div>
+            ))}
+          </Form.Group>
           {/* Add more form fields for other properties in the dress schema here */}
           {/* For example, to add photos and cost fields: */}
           {/* <Form.Group controlId="fotos">

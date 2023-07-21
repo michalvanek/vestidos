@@ -15,7 +15,7 @@ const CardComponent = ({
 }) => {
   const { isLoggedIn } = useContext(LoginContext);
   return (
-    <div className="card border-0" style={{ background: "#FFF8F7" }}>
+    <div className="card border rounded" style={{ background: "#FFF8F7" }}>
       <div className="card-body">
         <img className="card-img-top" src={dress.fotoPrincipal} alt="Dress" />
         <div className="card-details">

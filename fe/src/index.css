@@ -32,4 +32,20 @@ code {
 .card {
   width: 100%;
 }
+.preview-image {
+  width: 100%;
+  max-height: 100px; /* You can adjust this value as needed */
+  object-fit: contain;
+  margin-top: 10px;
+  cursor: pointer; /* Add a cursor pointer to indicate that the image is clickable */
+}
+.preview-image-sm {
+  width: 50px;
+  max-height: 50px; /* You can adjust this value as needed */
+  object-fit: cover;
+  margin-right: 10px;
+}
 
+.original-size {
+  max-height: none; /* Remove the max-height constraint to show the original size */
+}
