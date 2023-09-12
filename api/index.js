@@ -11,8 +11,11 @@ connectDb().then(() => {
 const app = express();
 const port = process.env.PORT || 5000;
 
-const allowedOrigin = process.env.ORIGIN_ACCESS || "";
-app.use(cors({ origin: allowedOrigin }));
+const allowedOrigins = process.env.ORIGIN_ACCESS
+  ? process.env.ORIGIN_ACCESS.split(",")
+  : [];
+
+app.use(cors({ origin: allowedOrigins }));
 
 app.use(express.json());
 app.use("/api/dress", require("./routes/dressRoutes"));
