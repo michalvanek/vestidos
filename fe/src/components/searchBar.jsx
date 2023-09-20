@@ -2,10 +2,11 @@ import React from "react";
 
 function SearchBar({ state, updateInput }) {
   return (
-    <div className="row">
+    <div className="row justify-content-center">
       <div className="col-md-8">
         <form className="row">
-          <i className="fa-solid fa-magnifying-glass"></i>
+          {/* <i className="fa-solid fa-magnifying-glass"></i> */}
+          <h5>Filtros:</h5>
           <div className="col">
             <div className="mb-2">
               <select

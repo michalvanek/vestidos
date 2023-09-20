@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import Spinner from "../components/spinner/Spinner"; //tocici se kolecko kdyz loaduje 100% css
 import { DressService } from "../../dao/dressService";
 import "../index.css";
@@ -29,6 +29,11 @@ function Catalogue() {
     currentPage: 1,
     dressesPerPage: 15,
   });
+
+  const refInicio = useRef(null);
+  const refCatalogueTop = useRef(null);
+  const refAbout = useRef(null);
+  const refContainer = useRef(null);
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -103,8 +108,13 @@ function Catalogue() {
     indexOfLastDress
   );
   const handlePageChange = (pageNumber) => {
-    // Scroll to the top of the page when the page is turned
-    window.scrollTo(0, 0);
+    // Scroll to the #catalogueTop element
+    const catalogueTopElement = document.getElementById("catalogueTop");
+
+    if (catalogueTopElement) {
+      catalogueTopElement.scrollIntoView({ behavior: "smooth" });
+    }
+
     setState({ ...state, currentPage: pageNumber });
   };
 
@@ -193,153 +203,210 @@ function Catalogue() {
 
   return (
     <>
-      <SearchBar state={state} updateInput={updateInput} />
-      <br />
-      {/* Add the button to open the CreateDressModal */}
-      {isLoggedIn && (
-        <>
-          <Link onClick={openModal} className="btn btn-success my-1 mx-1">
-            <i className="fa fa-plus-circle me-2" /> Nuevo vestido
-          </Link>
-          <CreateDressModal
-            id="dressCreateModal"
-            isOpen={modalIsOpen}
-            closeModal={closeModal}
-            getAccessTokenHeader={getAccessTokenHeader}
-          />
-        </>
-      )}
-      {state.loading ? (
-        <Spinner />
-      ) : (
-        <>
-          {/* Bootstrap Pagination at the top */}
-          <nav aria-label="Page navigation">
-            <ul className="pagination justify-content-center">
-              {state.filteredDresses.length > state.dressesPerPage &&
-                Array.from({
-                  length: Math.ceil(
-                    state.filteredDresses.length / state.dressesPerPage
-                  ),
-                }).map((_, index) => (
-                  <li
-                    key={index}
-                    className={`page-item ${
-                      index + 1 === state.currentPage ? "active" : ""
-                    }`}
+      <div ref={refContainer} style={{ position: "relative" }}>
+        <section className="image" id="inicio" ref={refInicio}></section>
+        <section className="text">
+          <h2>CSS Parallax</h2>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eveniet
+            facilis voluptatem aliquid natus iure? Rerum porro iste neque quod
+            facilis cupiditate possimus voluptatem corrupti, quae beatae
+            asperiores omnis illo magni?
+          </p>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eveniet
+            facilis voluptatem aliquid natus iure? Rerum porro iste neque quod
+            facilis cupiditate possimus voluptatem corrupti, quae beatae
+            asperiores omnis illo magni?
+          </p>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eveniet
+            facilis voluptatem aliquid natus iure? Rerum porro iste neque quod
+            facilis cupiditate possimus voluptatem corrupti, quae beatae
+            asperiores omnis illo magni?
+          </p>
+        </section>
+        <br id="catalogueTop" ref={refCatalogueTop} />
+        <br />
+        <br />
+        <div className="container">
+          <SearchBar state={state} updateInput={updateInput} />
+
+          <br />
+          {/* Add the button to open the CreateDressModal */}
+          {isLoggedIn && (
+            <>
+              <Link onClick={openModal} className="btn btn-success my-1 mx-1">
+                <i className="fa fa-plus-circle me-2" /> Nuevo vestido
+              </Link>
+              <CreateDressModal
+                id="dressCreateModal"
+                isOpen={modalIsOpen}
+                closeModal={closeModal}
+                getAccessTokenHeader={getAccessTokenHeader}
+              />
+            </>
+          )}
+          {state.loading ? (
+            <Spinner />
+          ) : (
+            <>
+              {/* Bootstrap Pagination at the top */}
+              <nav aria-label="Page navigation">
+                <ul className="pagination justify-content-center">
+                  {state.filteredDresses.length > state.dressesPerPage &&
+                    Array.from({
+                      length: Math.ceil(
+                        state.filteredDresses.length / state.dressesPerPage
+                      ),
+                    }).map((_, index) => (
+                      <li
+                        key={index}
+                        className={`page-item ${
+                          index + 1 === state.currentPage ? "active" : ""
+                        }`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(index + 1)}
+                        >
+                          {index + 1}
+                        </button>
+                      </li>
+                    ))}
+                </ul>
+              </nav>
+
+              <div className="card-container">
+                {/* ----CARD COMPONENT----- */}
+
+                {currentDresses.map((dress) => (
+                  <div
+                    key={dress._id}
+                    className="card border rounded"
+                    style={{ background: "#FFF8F7" }}
                   >
-                    <button
-                      className="page-link"
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          </nav>
-
-          <div className="card-container">
-            {/* ----CARD COMPONENT----- */}
-
-            {currentDresses.map((dress) => (
-              <div
-                key={dress._id}
-                className="card border rounded"
-                style={{ background: "#FFF8F7" }}
-              >
-                <div className="card-body">
-                  <Link onClick={() => openModalCarouse(dress._id)}>
-                    <img
-                      className="card-img-top"
-                      src={dress.fotoPrincipal}
-                      alt="Dress"
-                    />
-                  </Link>
-                  <CarouseModal
-                    id={`carouseModal-${dress._id}`}
-                    isOpen={modalCarouseIsOpen === `carouseModal-${dress._id}`}
-                    closeModal={(props) => closeModalCarouse(dress._id, props)}
-                    props={dress}
-                  />
-                  <div className="card-details">
-                    <div className="card-detail">
-                      <i className="fas fa-ruler icon" title="talla"></i>
-                      <span className="icon-value">
-                        {dress.talla.join(", ")}
-                      </span>
-                    </div>
-                    <div className="card-detail">
-                      <i className="fas fa-palette icon" title="color"></i>
-                      <span className="icon-value">{dress.color}</span>
-                    </div>
-                    <div className="card-detail">
-                      <i
-                        className="fas fa-dollar-sign icon"
-                        title="precio en pesos"
-                      ></i>
-                      <span className="icon-value">{dress.precio}</span>
-                    </div>
-                    <div>
-                      {/* <Link to={`/`} className="btn btn-warning my-1 mx-1">
+                    <div className="card-body">
+                      <Link onClick={() => openModalCarouse(dress._id)}>
+                        <img
+                          className="card-img-top"
+                          src={dress.fotoPrincipal}
+                          alt="Dress"
+                        />
+                      </Link>
+                      <CarouseModal
+                        id={`carouseModal-${dress._id}`}
+                        isOpen={
+                          modalCarouseIsOpen === `carouseModal-${dress._id}`
+                        }
+                        closeModal={(props) =>
+                          closeModalCarouse(dress._id, props)
+                        }
+                        props={dress}
+                      />
+                      <div className="card-details">
+                        <div className="card-detail">
+                          <i className="fas fa-ruler icon" title="talla"></i>
+                          <span className="icon-value">
+                            {dress.talla.join(", ")}
+                          </span>
+                        </div>
+                        <div className="card-detail">
+                          <i className="fas fa-palette icon" title="color"></i>
+                          <span className="icon-value">{dress.color}</span>
+                        </div>
+                        <div className="card-detail">
+                          <i
+                            className="fas fa-dollar-sign icon"
+                            title="precio en pesos"
+                          ></i>
+                          <span className="icon-value">{dress.precio}</span>
+                        </div>
+                        <div>
+                          {/* <Link to={`/`} className="btn btn-warning my-1 mx-1">
                         <i className="fa fa-eye"></i>
                       </Link> */}
-                      {isLoggedIn && (
-                        <>
-                          <Link
-                            to={`/${dress._id}`}
-                            className="btn btn-primary my-1 mx-1"
-                          >
-                            <i className="fa fa-pen"></i>
-                          </Link>
-                          {/* <EditDress
+                          {isLoggedIn && (
+                            <>
+                              <Link
+                                to={`/${dress._id}`}
+                                className="btn btn-primary my-1 mx-1"
+                              >
+                                <i className="fa fa-pen"></i>
+                              </Link>
+                              {/* <EditDress
                   getAccessTokenHeader={getAccessTokenHeader}
                   dress={dress}
                   dressChanged={dressChanged}
                 /> */}
-                          <button
-                            className="btn btn-danger my-1 mx-1"
-                            onClick={() => deleteDress(dress._id)}
-                            //   onClick={() => clickDelete(video.id)}
-                          >
-                            <i className="fa fa-trash"></i>
-                          </button>{" "}
-                        </>
-                      )}
+                              <button
+                                className="btn btn-danger my-1 mx-1"
+                                onClick={() => deleteDress(dress._id)}
+                                //   onClick={() => clickDelete(video.id)}
+                              >
+                                <i className="fa fa-trash"></i>
+                              </button>{" "}
+                            </>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          <br />
-          {/* Bootstrap Pagination */}
-          <nav aria-label="Page navigation">
-            <ul className="pagination justify-content-center">
-              {state.filteredDresses.length > state.dressesPerPage &&
-                Array.from({
-                  length: Math.ceil(
-                    state.filteredDresses.length / state.dressesPerPage
-                  ),
-                }).map((_, index) => (
-                  <li
-                    key={index}
-                    className={`page-item ${
-                      index + 1 === state.currentPage ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={() => handlePageChange(index + 1)}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
                 ))}
-            </ul>
-          </nav>
-        </>
-      )}
+              </div>
+              <br />
+              {/* Bootstrap Pagination */}
+              <nav aria-label="Page navigation">
+                <ul className="pagination justify-content-center">
+                  {state.filteredDresses.length > state.dressesPerPage &&
+                    Array.from({
+                      length: Math.ceil(
+                        state.filteredDresses.length / state.dressesPerPage
+                      ),
+                    }).map((_, index) => (
+                      <li
+                        key={index}
+                        className={`page-item ${
+                          index + 1 === state.currentPage ? "active" : ""
+                        }`}
+                      >
+                        <button
+                          className="page-link"
+                          onClick={() => handlePageChange(index + 1)}
+                        >
+                          {index + 1}
+                        </button>
+                      </li>
+                    ))}
+                </ul>
+              </nav>
+            </>
+          )}
+        </div>
+        <section className="image image-2"></section>
+
+        <section className="text" id="about" ref={refAbout}>
+          <h2>Acerca de nosotros</h2>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eveniet
+            facilis voluptatem aliquid natus iure? Rerum porro iste neque quod
+            facilis cupiditate possimus voluptatem corrupti, quae beatae
+            asperiores omnis illo magni?
+          </p>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eveniet
+            facilis voluptatem aliquid natus iure? Rerum porro iste neque quod
+            facilis cupiditate possimus voluptatem corrupti, quae beatae
+            asperiores omnis illo magni?
+          </p>
+          <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eveniet
+            facilis voluptatem aliquid natus iure? Rerum porro iste neque quod
+            facilis cupiditate possimus voluptatem corrupti, quae beatae
+            asperiores omnis illo magni?
+          </p>
+        </section>
+      </div>
     </>
   );
 }
