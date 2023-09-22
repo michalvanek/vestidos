@@ -52,3 +52,97 @@ code {
 .modal-bg {
   background-color: #fff8f7;
 }
+
+.navbar-container {
+  background-color: #cc5ea4; /* Change the background color as desired */
+}
+
+/* Styling for parallax */
+body {
+  margin: 0;
+  font-family: "Euclid Circular A";
+  color: #1d1d1d;
+  background: #071a20;
+  overflow-x: hidden;
+}
+
+p,
+h2 {
+  position: relative;
+  z-index: 1;
+  margin: 20px 15%;
+}
+h1 {
+  color: white !important;
+  text-shadow: 1px 1px 3px black;
+  z-index: 1;
+  font-size: 3em;
+  font-weight: 400;
+}
+p {
+  opacity: 0.8;
+}
+
+section {
+  padding: 40px 0;
+}
+select {
+  border-color: pink !important;
+}
+select option:hover {
+  background-color: pink !important;
+}
+
+.image {
+  height: 380px;
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  background-image: url("../public/bg.avif");
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text {
+  position: relative;
+}
+
+.text::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 125%;
+  background: #ffffff;
+  rotate: -3deg;
+  translate: -50% -50%;
+}
+
+/* Change Bootstrap pagination color */
+.pagination .page-item.active .page-link {
+  background-color: pink;
+  border-color: pink;
+  color: #333; /* Set the text color for the active page */
+}
+
+.pagination .page-item .page-link {
+  background-color: transparent;
+  border-color: pink;
+  color: pink; /* Set the text color for the inactive pages */
+}
+
+.pagination .page-item.disabled .page-link {
+  background-color: transparent;
+  border-color: pink;
+  color: #bbb; /* Set the text color for disabled pages */
+}
+
+/* Optionally, you can style the hover effect */
+.pagination .page-item:hover .page-link {
+  background-color: #fff8f7;
+  color: #333;
+}

@@ -7,6 +7,7 @@ import { LoginContext } from "../context/loginContext";
 import { Link } from "react-router-dom";
 import CreateDressModal from "../components/modalWindows/createDressModal";
 import CarouseModal from "../components/modalWindows/carouseModal";
+import RentProcess from "../components/rentProcess/rentProcess";
 
 function Catalogue() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
@@ -103,8 +104,13 @@ function Catalogue() {
     indexOfLastDress
   );
   const handlePageChange = (pageNumber) => {
-    // Scroll to the top of the page when the page is turned
-    window.scrollTo(0, 0);
+    // Scroll to the #catalogueTop element
+    const catalogueTopElement = document.getElementById("catalogueTop");
+
+    if (catalogueTopElement) {
+      catalogueTopElement.scrollIntoView({ behavior: "smooth" });
+    }
+
     setState({ ...state, currentPage: pageNumber });
   };
 
@@ -193,153 +199,247 @@ function Catalogue() {
 
   return (
     <>
-      <SearchBar state={state} updateInput={updateInput} />
+      <section className="image" id="inicio">
+        <h1>Renta de vestidos Queens</h1>
+      </section>
+      <section className="text"></section>
+      <RentProcess />
+      <br id="catalogueTop" />
       <br />
-      {/* Add the button to open the CreateDressModal */}
-      {isLoggedIn && (
-        <>
-          <Link onClick={openModal} className="btn btn-success my-1 mx-1">
-            <i className="fa fa-plus-circle me-2" /> Nuevo vestido
-          </Link>
-          <CreateDressModal
-            id="dressCreateModal"
-            isOpen={modalIsOpen}
-            closeModal={closeModal}
-            getAccessTokenHeader={getAccessTokenHeader}
-          />
-        </>
-      )}
-      {state.loading ? (
-        <Spinner />
-      ) : (
-        <>
-          {/* Bootstrap Pagination at the top */}
-          <nav aria-label="Page navigation">
-            <ul className="pagination justify-content-center">
-              {state.filteredDresses.length > state.dressesPerPage &&
-                Array.from({
-                  length: Math.ceil(
-                    state.filteredDresses.length / state.dressesPerPage
-                  ),
-                }).map((_, index) => (
-                  <li
-                    key={index}
-                    className={`page-item ${
-                      index + 1 === state.currentPage ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={() => handlePageChange(index + 1)}
+      <div className="container">
+        <SearchBar state={state} updateInput={updateInput} />
+
+        <br />
+        {/* Add the button to open the CreateDressModal */}
+        {isLoggedIn && (
+          <>
+            <Link onClick={openModal} className="btn btn-success my-1 mx-1">
+              <i className="fa fa-plus-circle me-2" /> Nuevo vestido
+            </Link>
+            <CreateDressModal
+              id="dressCreateModal"
+              isOpen={modalIsOpen}
+              closeModal={closeModal}
+              getAccessTokenHeader={getAccessTokenHeader}
+            />
+          </>
+        )}
+        {state.loading ? (
+          <Spinner />
+        ) : (
+          <>
+            {/* Bootstrap Pagination at the top */}
+            <nav aria-label="Page navigation">
+              <ul className="pagination justify-content-center">
+                {state.filteredDresses.length > state.dressesPerPage &&
+                  Array.from({
+                    length: Math.ceil(
+                      state.filteredDresses.length / state.dressesPerPage
+                    ),
+                  }).map((_, index) => (
+                    <li
+                      key={index}
+                      className={`page-item ${
+                        index + 1 === state.currentPage ? "active" : ""
+                      }`}
                     >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          </nav>
+                      <button
+                        className="page-link"
+                        onClick={() => handlePageChange(index + 1)}
+                      >
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
 
-          <div className="card-container">
-            {/* ----CARD COMPONENT----- */}
+            <div className="card-container">
+              {/* ----CARD COMPONENT----- */}
 
-            {currentDresses.map((dress) => (
-              <div
-                key={dress._id}
-                className="card border rounded"
-                style={{ background: "#FFF8F7" }}
-              >
-                <div className="card-body">
-                  <Link onClick={() => openModalCarouse(dress._id)}>
-                    <img
-                      className="card-img-top"
-                      src={dress.fotoPrincipal}
-                      alt="Dress"
+              {currentDresses.map((dress) => (
+                <div
+                  key={dress._id}
+                  className="card border rounded"
+                  style={{ background: "#FFF8F7" }}
+                >
+                  <div className="card-body">
+                    <Link onClick={() => openModalCarouse(dress._id)}>
+                      <img
+                        className="card-img-top"
+                        src={dress.fotoPrincipal}
+                        alt="Dress"
+                      />
+                    </Link>
+                    <CarouseModal
+                      id={`carouseModal-${dress._id}`}
+                      isOpen={
+                        modalCarouseIsOpen === `carouseModal-${dress._id}`
+                      }
+                      closeModal={(props) =>
+                        closeModalCarouse(dress._id, props)
+                      }
+                      props={dress}
                     />
-                  </Link>
-                  <CarouseModal
-                    id={`carouseModal-${dress._id}`}
-                    isOpen={modalCarouseIsOpen === `carouseModal-${dress._id}`}
-                    closeModal={(props) => closeModalCarouse(dress._id, props)}
-                    props={dress}
-                  />
-                  <div className="card-details">
-                    <div className="card-detail">
-                      <i className="fas fa-ruler icon" title="talla"></i>
-                      <span className="icon-value">
-                        {dress.talla.join(", ")}
-                      </span>
-                    </div>
-                    <div className="card-detail">
-                      <i className="fas fa-palette icon" title="color"></i>
-                      <span className="icon-value">{dress.color}</span>
-                    </div>
-                    <div className="card-detail">
-                      <i
-                        className="fas fa-dollar-sign icon"
-                        title="precio en pesos"
-                      ></i>
-                      <span className="icon-value">{dress.precio}</span>
-                    </div>
-                    <div>
-                      {/* <Link to={`/`} className="btn btn-warning my-1 mx-1">
+                    <div className="card-details">
+                      <div className="card-detail">
+                        <i className="fas fa-ruler icon" title="talla"></i>
+                        <span className="icon-value">
+                          {dress.talla.join(", ")}
+                        </span>
+                      </div>
+                      <div className="card-detail">
+                        <i className="fas fa-palette icon" title="color"></i>
+                        <span className="icon-value">{dress.color}</span>
+                      </div>
+                      <div className="card-detail">
+                        <i
+                          className="fas fa-dollar-sign icon"
+                          title="precio en pesos"
+                        ></i>
+                        <span className="icon-value">{dress.precio}</span>
+                      </div>
+                      <div>
+                        {/* <Link to={`/`} className="btn btn-warning my-1 mx-1">
                         <i className="fa fa-eye"></i>
                       </Link> */}
-                      {isLoggedIn && (
-                        <>
-                          <Link
-                            to={`/${dress._id}`}
-                            className="btn btn-primary my-1 mx-1"
-                          >
-                            <i className="fa fa-pen"></i>
-                          </Link>
-                          {/* <EditDress
+                        {isLoggedIn && (
+                          <>
+                            <Link
+                              to={`/${dress._id}`}
+                              className="btn btn-primary my-1 mx-1"
+                            >
+                              <i className="fa fa-pen"></i>
+                            </Link>
+                            {/* <EditDress
                   getAccessTokenHeader={getAccessTokenHeader}
                   dress={dress}
                   dressChanged={dressChanged}
                 /> */}
-                          <button
-                            className="btn btn-danger my-1 mx-1"
-                            onClick={() => deleteDress(dress._id)}
-                            //   onClick={() => clickDelete(video.id)}
-                          >
-                            <i className="fa fa-trash"></i>
-                          </button>{" "}
-                        </>
-                      )}
+                            <button
+                              className="btn btn-danger my-1 mx-1"
+                              onClick={() => deleteDress(dress._id)}
+                              //   onClick={() => clickDelete(video.id)}
+                            >
+                              <i className="fa fa-trash"></i>
+                            </button>{" "}
+                          </>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-          <br />
-          {/* Bootstrap Pagination */}
-          <nav aria-label="Page navigation">
-            <ul className="pagination justify-content-center">
-              {state.filteredDresses.length > state.dressesPerPage &&
-                Array.from({
-                  length: Math.ceil(
-                    state.filteredDresses.length / state.dressesPerPage
-                  ),
-                }).map((_, index) => (
-                  <li
-                    key={index}
-                    className={`page-item ${
-                      index + 1 === state.currentPage ? "active" : ""
-                    }`}
-                  >
-                    <button
-                      className="page-link"
-                      onClick={() => handlePageChange(index + 1)}
+              ))}
+            </div>
+            <br />
+            {/* Bootstrap Pagination */}
+            <nav aria-label="Page navigation">
+              <ul className="pagination justify-content-center">
+                {state.filteredDresses.length > state.dressesPerPage &&
+                  Array.from({
+                    length: Math.ceil(
+                      state.filteredDresses.length / state.dressesPerPage
+                    ),
+                  }).map((_, index) => (
+                    <li
+                      key={index}
+                      className={`page-item ${
+                        index + 1 === state.currentPage ? "active" : ""
+                      }`}
                     >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          </nav>
-        </>
-      )}
+                      <button
+                        className="page-link"
+                        onClick={() => handlePageChange(index + 1)}
+                      >
+                        {index + 1}
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </nav>
+          </>
+        )}
+      </div>
+      <section className="image image-2"></section>
+      <section className="text" id="contact"></section>
+      <br />
+      <br />
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <h3>Contacto:</h3>
+            <br />
+            Dirección: Prolongación Irán #1600, Valle Alto, Cd Valles
+            <br />
+            Teléfono: (+52) 481 110 5225
+            <br />
+            <div className="row justify-content-sm-center">
+              <div className="col sm">
+                <a
+                  href="https://wa.me/524811105225"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fa-brands fa-whatsapp fa-2xl"
+                  style={{ textDecoration: "none", color: "#48fd30" }}
+                ></a>
+              </div>
+              <div className="col sm">
+                <a
+                  href="https://www.facebook.com/rentadevestidosciudadvalles"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fa-brands fa-facebook fa-2xl"
+                  style={{ textDecoration: "none" }}
+                ></a>
+              </div>
+              <div className="col sm">
+                <a
+                  href="https://www.instagram.com/rentadevestidosciudadvalles/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fa-brands fa-instagram fa-2xl"
+                  style={{ textDecoration: "none", color: "red" }}
+                ></a>
+              </div>
+              <div className="col sm">
+                <a
+                  href="https://www.instagram.com/rentadevestidosciudadvalles/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fa-brands fa-tiktok fa-2xl"
+                  style={{ textDecoration: "none", color: "black" }}
+                ></a>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            {/* Paste the Google Maps embed code here */}
+            <iframe
+              title="Google Maps"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3699.2391866725648!2d-99.0143871236523!3d22.002144453634426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d612a7e1466d59%3A0x4bd984913f9abd02!2sQueens!5e0!3m2!1ses-419!2sus!4v1689964550522!5m2!1ses-419!2sus"
+              width="600"
+              height="450"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+
+      <footer>
+        <div className="container">
+          <p className="text-center">
+            &copy; {new Date().getFullYear()} Created by{" "}
+            <a
+              href="https://www.linkedin.com/in/michal-vanek-czmx/?locale=es_ES"
+              style={{ textDecoration: "none", color: "#333" }}
+            >
+              Michal Vanek
+            </a>
+          </p>
+        </div>
+      </footer>
     </>
   );
 }
