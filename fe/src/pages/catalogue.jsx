@@ -205,7 +205,7 @@ function Catalogue() {
       <section className="text"></section>
       <RentProcess />
       <br id="catalogueTop" />
-      <br />
+      <br /> <br />
       <div className="container">
         <SearchBar state={state} updateInput={updateInput} />
 
@@ -363,7 +363,6 @@ function Catalogue() {
       <section className="image image-2"></section>
       <section className="text" id="contact"></section>
       <br />
-      <br />
       <div className="container">
         <div className="row">
           <div className="col">
@@ -374,34 +373,28 @@ function Catalogue() {
             Teléfono: (+52) 481 110 5225
             <br />
             <div className="row justify-content-sm-center">
-              <div className="col sm">
+              <div className="col sm-4">
                 <a
                   href="https://wa.me/524811105225"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="fa-brands fa-whatsapp fa-2xl"
                   style={{ textDecoration: "none", color: "#48fd30" }}
-                ></a>
-              </div>
-              <div className="col sm">
+                ></a>{" "}
                 <a
                   href="https://www.facebook.com/rentadevestidosciudadvalles"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="fa-brands fa-facebook fa-2xl"
                   style={{ textDecoration: "none" }}
-                ></a>
-              </div>
-              <div className="col sm">
+                ></a>{" "}
                 <a
                   href="https://www.instagram.com/rentadevestidosciudadvalles/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="fa-brands fa-instagram fa-2xl"
                   style={{ textDecoration: "none", color: "red" }}
-                ></a>
-              </div>
-              <div className="col sm">
+                ></a>{" "}
                 <a
                   href="https://www.instagram.com/rentadevestidosciudadvalles/"
                   target="_blank"
@@ -417,16 +410,15 @@ function Catalogue() {
             <iframe
               title="Google Maps"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3699.2391866725648!2d-99.0143871236523!3d22.002144453634426!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d612a7e1466d59%3A0x4bd984913f9abd02!2sQueens!5e0!3m2!1ses-419!2sus!4v1689964550522!5m2!1ses-419!2sus"
-              width="600"
-              height="450"
+              width="100%"
+              height="400px"
               style={{ border: 0 }}
               allowFullScreen=""
-              loading="lazy"
+              loading="eager"
             ></iframe>
           </div>
         </div>
       </div>
-
       <footer>
         <div className="container">
           <p className="text-center">
