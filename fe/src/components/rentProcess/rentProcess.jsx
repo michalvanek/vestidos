@@ -31,7 +31,7 @@ const RentProcess = () => {
                   rel="noopener noreferrer"
                 >
                   <img
-                    src="https://imgur.com/a/ZhwsbNA"
+                    src="https://i.imgur.com/fTwYHj3.png"
                     alt="WhatsApp"
                     style={{ width: "100px", height: "auto" }}
                   />
