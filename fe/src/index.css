@@ -84,7 +84,7 @@ p {
 }
 
 section {
-  padding: 50px 0;
+  padding: 40px 0;
 }
 select {
   border-color: pink !important;
@@ -115,7 +115,7 @@ select option:hover {
   position: absolute;
   top: 25%;
   left: 50%;
-  width: 105%;
+  width: 101%;
   height: 100%;
   background: #ffffff;
   rotate: -3deg;
