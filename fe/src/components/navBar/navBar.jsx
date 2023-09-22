@@ -34,7 +34,11 @@ const NavBar = () => {
   return (
     <>
       <div className="navbar-container sticky-top">
-        <Navbar expand="lg" bg="red" variant="light" id="navbar-example">
+        <Navbar
+          expand="lg"
+          variant="light"
+          style={{ backgroundColor: " #ffb6c1" }}
+        >
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
             onClick={toggleMenu}
@@ -74,18 +78,17 @@ const NavBar = () => {
                   Catálogo
                 </Nav.Link>
               ) : undefined}
-
               {location.pathname === "/" ? ( // Check if on the home page
                 <Nav.Link
                   onClick={() =>
-                    scroller.scrollTo("about", {
+                    scroller.scrollTo("contact", {
                       smooth: true,
                       offset: -10,
                       duration: 500,
                     })
                   }
                 >
-                  Acerca de nosotros
+                  Contacto
                 </Nav.Link>
               ) : undefined}
             </Nav>

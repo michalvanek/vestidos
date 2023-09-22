@@ -59,7 +59,6 @@ code {
 
 /* Styling for parallax */
 body {
-  position: relative;
   margin: 0;
   font-family: "Euclid Circular A";
   color: #1d1d1d;
@@ -73,13 +72,25 @@ h2 {
   z-index: 1;
   margin: 20px 15%;
 }
-
+h1 {
+  color: white !important;
+  text-shadow: 1px 1px 3px black;
+  z-index: 1;
+  font-size: 3em;
+  font-weight: 400;
+}
 p {
   opacity: 0.8;
 }
 
 section {
   padding: 40px 0;
+}
+select {
+  border-color: pink !important;
+}
+select option:hover {
+  background-color: pink !important;
 }
 
 .image {
@@ -88,6 +99,10 @@ section {
   background-attachment: fixed;
   background-position: center;
   background-image: url("../public/bg.avif");
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .text {
@@ -109,20 +124,20 @@ section {
 
 /* Change Bootstrap pagination color */
 .pagination .page-item.active .page-link {
-  background-color: #f38c8e;
-  border-color: #f38c8e;
+  background-color: pink;
+  border-color: pink;
   color: #333; /* Set the text color for the active page */
 }
 
 .pagination .page-item .page-link {
   background-color: transparent;
-  border-color: #f38c8e;
-  color: #f38c8e; /* Set the text color for the inactive pages */
+  border-color: pink;
+  color: pink; /* Set the text color for the inactive pages */
 }
 
 .pagination .page-item.disabled .page-link {
   background-color: transparent;
-  border-color: #f38c8e;
+  border-color: pink;
   color: #bbb; /* Set the text color for disabled pages */
 }
 
