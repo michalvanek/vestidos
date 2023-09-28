@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 function SearchBar({ state, updateInput }) {
   return (
@@ -72,5 +72,19 @@ function SearchBar({ state, updateInput }) {
     </div>
   );
 }
+
+SearchBar.propTypes = {
+  state: PropTypes.shape({
+    dress: PropTypes.shape({
+      sizeActualSelector: PropTypes.string,
+      colorActualSelector: PropTypes.string,
+      priceActualSelector: PropTypes.string,
+    }),
+    tallas: PropTypes.arrayOf(PropTypes.string),
+    colores: PropTypes.arrayOf(PropTypes.string),
+    precios: PropTypes.arrayOf(PropTypes.string),
+  }),
+  updateInput: PropTypes.func.isRequired,
+};
 
 export default SearchBar;

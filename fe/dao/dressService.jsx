@@ -115,7 +115,7 @@ export class DressService {
     });
   }
 
-  static getCurrentUser() {
+  static getCurrentUser(accessToken) {
     let dataURL = "/api/users/current";
     return this.axiosInstance.get(dataURL, {
       headers: {

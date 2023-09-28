@@ -1,13 +1,9 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { Navbar, Nav } from "react-bootstrap";
-import { Outlet, Link, NavLink, useLocation } from "react-router-dom";
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 import LoginModal from "../modalWindows/loginModal";
 import { LoginContext } from "../../context/loginContext";
-import {
-  Link as ScrollLink,
-  animateScroll as scroll,
-  scroller,
-} from "react-scroll";
+import { scroller } from "react-scroll";
 
 const NavBar = () => {
   const [menuVisible, setMenuVisible] = useState(false);
@@ -34,11 +30,7 @@ const NavBar = () => {
   return (
     <>
       <div className="navbar-container sticky-top">
-        <Navbar
-          expand="lg"
-          variant="light"
-          style={{ backgroundColor: " #ffb6c1" }}
-        >
+        <Navbar expand="lg" variant="light">
           <Navbar.Toggle
             aria-controls="basic-navbar-nav"
             onClick={toggleMenu}

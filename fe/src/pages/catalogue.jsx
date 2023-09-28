@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import CreateDressModal from "../components/modalWindows/createDressModal";
 import CarouseModal from "../components/modalWindows/carouseModal";
 import RentProcess from "../components/rentProcess/rentProcess";
+import SocialMedia from "../components/socialMedia/socialMedia";
 
 function Catalogue() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
@@ -69,25 +70,25 @@ function Catalogue() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setState({ ...state, loading: true });
+        setState((prevState) => ({ ...prevState, loading: true }));
         const dressesResponse = await DressService.getAllDresses();
         const colorsResponse = await DressService.getAllColors();
         const pricesResponse = await DressService.getAllPrices();
 
-        setState({
-          ...state,
+        setState((prevState) => ({
+          ...prevState,
           loading: false,
           dresses: dressesResponse.data,
           filteredDresses: dressesResponse.data,
           colores: colorsResponse.data.map((color) => color.color),
           precios: pricesResponse.data.map((price) => price.value),
-        });
+        }));
       } catch (error) {
-        setState({
-          ...state,
+        setState((prevState) => ({
+          ...prevState,
           loading: false,
           errorMessage: error.message,
-        });
+        }));
       }
     };
 
@@ -372,38 +373,7 @@ function Catalogue() {
             <br />
             Teléfono: (+52) 481 110 5225
             <br />
-            <div className="row justify-content-sm-center">
-              <div className="col sm-4">
-                <a
-                  href="https://wa.me/524811105225"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="fa-brands fa-whatsapp fa-2xl"
-                  style={{ textDecoration: "none", color: "#48fd30" }}
-                ></a>{" "}
-                <a
-                  href="https://www.facebook.com/rentadevestidosciudadvalles"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="fa-brands fa-facebook fa-2xl"
-                  style={{ textDecoration: "none" }}
-                ></a>{" "}
-                <a
-                  href="https://www.instagram.com/rentadevestidosciudadvalles/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="fa-brands fa-instagram fa-2xl"
-                  style={{ textDecoration: "none", color: "red" }}
-                ></a>{" "}
-                <a
-                  href="https://www.instagram.com/rentadevestidosciudadvalles/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="fa-brands fa-tiktok fa-2xl"
-                  style={{ textDecoration: "none", color: "black" }}
-                ></a>
-              </div>
-            </div>
+            <SocialMedia />
           </div>
           <div className="col">
             {/* Paste the Google Maps embed code here */}

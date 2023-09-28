@@ -1,4 +1,4 @@
-import React from "react";
+
 
 const RentProcess = () => {
   return (
@@ -6,12 +6,7 @@ const RentProcess = () => {
       <div className="row justify-content-center">
         <h2>Proceso de renta</h2>
         <div className="col-md-3 mb-4">
-          <div
-            className="card  text-black"
-            style={{
-              backgroundColor: "pink",
-            }}
-          >
+          <div className="card  text-black">
             <div className="card-header">1.</div>
             <div className="card-body">
               <h5 className="card-title">Cita</h5>
@@ -41,7 +36,7 @@ const RentProcess = () => {
           </div>
         </div>
         <div className="col-md-3 mb-4">
-          <div className="card text-black" style={{ backgroundColor: "pink" }}>
+          <div className="card text-black">
             <div className="card-header">2.</div>
             <div className="card-body">
               <h5 className="card-title">Primera visita</h5>
@@ -57,7 +52,7 @@ const RentProcess = () => {
           </div>
         </div>
         <div className="col-md-3 mb-4">
-          <div className="card text-black" style={{ backgroundColor: "pink" }}>
+          <div className="card text-black">
             <div className="card-header">3.</div>
             <div className="card-body">
               <h5 className="card-title">Recoger vestido</h5>
@@ -72,7 +67,7 @@ const RentProcess = () => {
           </div>
         </div>
         <div className="col-md-3 mb-4">
-          <div className="card text-black" style={{ backgroundColor: "pink" }}>
+          <div className="card text-black">
             <div className="card-header">4.</div>
             <div className="card-body">
               <h5 className="card-title">Regreso de vestido</h5>
