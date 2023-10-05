@@ -5,7 +5,7 @@ const { default: mongoose } = require("mongoose");
 
 //@desc Read all dresss
 //@route GET /api/dress
-//@access private
+//@access public
 const dressReadAll = asyncHandler(async (req, res) => {
   try {
     const dresses = await Dress.find({})
