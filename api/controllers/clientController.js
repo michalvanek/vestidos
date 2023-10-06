@@ -26,7 +26,6 @@ const clientReadAll = asyncHandler(async (req, res) => {
         lastName: client.lastName,
         phoneNumber: client.phoneNumber,
         email: client.email,
-        rent: client.rent,
         createdAt: client.createdAt,
         updatedAt: client.updatedAt,
         __v: client.__v,
@@ -99,14 +98,13 @@ const clientEdit = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "Client not found" });
     }
 
-    const { firstName, lastName, phoneNumber, email, rent } = req.body;
+    const { firstName, lastName, phoneNumber, email } = req.body;
 
     // Update the client object properties
     client.firstName = firstName;
     client.lastName = lastName;
     client.phoneNumber = phoneNumber;
     client.email = email;
-    client.rent = rent;
 
     // Validate the updated client
     const validationError = client.validateSync();
@@ -122,7 +120,6 @@ const clientEdit = asyncHandler(async (req, res) => {
       lastName: updatedClient.lastName,
       phoneNumber: updatedClient.phoneNumber,
       email: updatedClient.email,
-      rent: updatedClient.rent,
       createdAt: updatedClient.createdAt,
       updatedAt: updatedClient.updatedAt,
       __v: updatedClient.__v,

@@ -35,6 +35,8 @@ const rentReadAll = asyncHandler(async (req, res) => {
         remainingAmount: rent.remainingAmount,
         pickUpDate: rent.pickUpDate,
         dressId: rent.dressId,
+        clientId: rent.clientId,
+        eventId: rent.eventId,
         createdAt: rent.createdAt,
         updatedAt: rent.updatedAt,
         __v: rent.__v,
@@ -57,8 +59,15 @@ const rentReadAll = asyncHandler(async (req, res) => {
 //@access private
 
 const rentCreate = asyncHandler(async (req, res) => {
-  const { dateOfBooking, bookingAmount, remainingAmount, pickUpDate, dressId } =
-    req.body;
+  const {
+    dateOfBooking,
+    bookingAmount,
+    remainingAmount,
+    pickUpDate,
+    dressId,
+    clientId,
+    eventId,
+  } = req.body;
 
   try {
     const rent = new Rent({
@@ -67,6 +76,8 @@ const rentCreate = asyncHandler(async (req, res) => {
       remainingAmount,
       pickUpDate,
       dressId,
+      clientId,
+      eventId,
     });
     await rent.save();
     return res.status(201).json(rent);
@@ -97,6 +108,8 @@ const rentEdit = asyncHandler(async (req, res) => {
       remainingAmount,
       pickUpDate,
       dressId,
+      clientId,
+      eventId,
     } = req.body;
 
     // Update the rent object properties
@@ -105,6 +118,8 @@ const rentEdit = asyncHandler(async (req, res) => {
     rent.remainingAmount = remainingAmount;
     rent.pickUpDate = pickUpDate;
     rent.dressId = dressId;
+    rent.clientId = clientId;
+    rent.eventId = eventId;
 
     const validationError = rent.validateSync();
     if (validationError) {

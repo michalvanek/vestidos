@@ -48,11 +48,11 @@ const rentSchema = mongoose.Schema(
       ref: "Client",
       required: [true, "Please provide the client"],
     },
-    // typeOfEvent: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "Event",
-    //     required: [true, "Please provide the type of event"],
-    //   },
+    eventId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Event",
+      required: [true, "Please provide the type of event"],
+    },
   },
   { timestamps: true }
 );
