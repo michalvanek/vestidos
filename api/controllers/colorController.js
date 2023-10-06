@@ -9,9 +9,9 @@ const colorReadAll = asyncHandler(async (req, res) => {
   try {
     const color = await Color.find({});
     return res.status(200).json(color);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Server Error");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -40,7 +40,7 @@ const colorCreate = asyncHandler(async (req, res) => {
       return res.status(400).send(err.message);
     } else {
       console.error(err);
-      return res.status(500).send("Server Error");
+      return res.status(500).json({ message: err.message });
     }
   }
 });
@@ -56,8 +56,8 @@ const colorReadId = asyncHandler(async (req, res) => {
       return res.status(404).send({ error: "Color not found" });
     }
     return res.status(200).json(color);
-  } catch (error) {
-    return res.status(500).send("Server error");
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -87,7 +87,7 @@ const colorEdit = asyncHandler(async (req, res) => {
     res.status(200).json(updatedColor);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Server Error");
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -103,8 +103,8 @@ const colorDelete = asyncHandler(async (req, res) => {
     }
     await color.deleteOne({ _id: req.params.id });
     return res.status(200).json({ success: true, data: color });
-  } catch (error) {
-    return res.status(500).send("Failed to delete color");
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 });
 

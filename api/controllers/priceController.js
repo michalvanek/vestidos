@@ -9,9 +9,9 @@ const priceReadAll = asyncHandler(async (req, res) => {
   try {
     const price = await Price.find({});
     return res.status(200).json(price);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Server Error");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -41,7 +41,7 @@ const priceEdit = asyncHandler(async (req, res) => {
     res.status(200).json(updatedPrice);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Server Error");
+    return res.status(500).json({ message: err.message });
   }
 });
 

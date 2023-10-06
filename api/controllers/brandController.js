@@ -9,9 +9,9 @@ const brandReadAll = asyncHandler(async (req, res) => {
   try {
     const brand = await Brand.find({});
     return res.status(200).json(brand);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Server Error");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -40,7 +40,7 @@ const brandCreate = asyncHandler(async (req, res) => {
       return res.status(400).send(err.message);
     } else {
       console.error(err);
-      return res.status(500).send("Server Error");
+      return res.status(500).json({ message: err.message });
     }
   }
 });
@@ -56,8 +56,8 @@ const brandReadId = asyncHandler(async (req, res) => {
       return res.status(404).send({ error: "Brand not found" });
     }
     return res.status(200).json(brand);
-  } catch (error) {
-    return res.status(500).send("Server error");
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -87,7 +87,7 @@ const brandEdit = asyncHandler(async (req, res) => {
     res.status(200).json(updatedBrand);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Server Error");
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -103,8 +103,8 @@ const brandDelete = asyncHandler(async (req, res) => {
     }
     await brand.deleteOne({ _id: req.params.id });
     return res.status(200).json({ success: true, data: brand });
-  } catch (error) {
-    return res.status(500).send("Failed to delete brand");
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 });
 

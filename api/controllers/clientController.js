@@ -35,8 +35,12 @@ const clientReadAll = asyncHandler(async (req, res) => {
 
     return res.status(200).json(clientsList);
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: err.message });
+    if (err instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({ message: err.message });
+    } else {
+      console.error(err);
+      return res.status(500).json({ message: err.message });
+    }
   }
 });
 

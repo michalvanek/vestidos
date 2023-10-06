@@ -43,8 +43,12 @@ const rentReadAll = asyncHandler(async (req, res) => {
 
     return res.status(200).json(rentsWithinRange);
   } catch (error) {
-    console.error(error);
-    return res.status(500).send("Server Error");
+    if (err instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({ message: err.message });
+    } else {
+      console.error(err);
+      return res.status(500).json({ message: err.message });
+    }
   }
 });
 
@@ -71,7 +75,7 @@ const rentCreate = asyncHandler(async (req, res) => {
       return res.status(400).send(err.message);
     } else {
       console.error(err);
-      return res.status(500).send("Server Error");
+      return res.status(500).json({ message: err.message });
     }
   }
 });
@@ -112,7 +116,7 @@ const rentEdit = asyncHandler(async (req, res) => {
     return res.status(200).json(updatedRent);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Server Error");
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -130,9 +134,9 @@ const rentDelete = asyncHandler(async (req, res) => {
     return res
       .status(200)
       .json({ success: true, message: "Rent deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Failed to delete rent");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message });
   }
 });
 

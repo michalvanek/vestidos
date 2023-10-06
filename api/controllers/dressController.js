@@ -30,9 +30,9 @@ const dressReadAll = asyncHandler(async (req, res) => {
     });
 
     return res.status(200).json(dressesWithBrandAndPrice);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send("Server Error");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -64,7 +64,7 @@ const dressCreate = asyncHandler(async (req, res) => {
       return res.status(400).send(err.message);
     } else {
       console.error(err);
-      return res.status(500).send("Server Error");
+      return res.status(500).json({ message: err.message });
     }
   }
 });
@@ -80,8 +80,8 @@ const dressReadId = asyncHandler(async (req, res) => {
       return res.status(404).send("Dress not found");
     }
     return res.status(200).json(dress);
-  } catch (error) {
-    return res.status(500).send("Server error");
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -111,7 +111,7 @@ const dressEdit = asyncHandler(async (req, res) => {
     return res.status(200).json(updatedDress);
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Server Error");
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -127,8 +127,8 @@ const dressDelete = asyncHandler(async (req, res) => {
     }
     await dress.deleteOne({ _id: req.params.id });
     return res.status(200).json({ success: true, data: dress });
-  } catch (error) {
-    return res.status(500).send("Failed to delete dress");
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
   }
 });
 

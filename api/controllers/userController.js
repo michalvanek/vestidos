@@ -83,7 +83,7 @@ const tokenRefresh = asyncHandler(async (req, res) => {
     const accessToken = generateAccessToken(user);
     return res.status(200).json({ accessToken: accessToken });
   } catch (err) {
-    return res.status(500).send("Error refreshing token");
+    return res.status(500).json({ message: err.message });
   }
 });
 
@@ -114,7 +114,7 @@ const logoutUser = asyncHandler(async (req, res) => {
 
     return res.status(204).send("Success");
   } catch (err) {
-    return res.status(500).send("Error logging out");
+    return res.status(500).json({ message: err.message });
   }
 });
 
