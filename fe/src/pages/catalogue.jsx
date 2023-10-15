@@ -200,6 +200,9 @@ function Catalogue() {
 
   return (
     <>
+      {state.errorMessage && (
+        <div className="alert alert-danger">{state.errorMessage}</div>
+      )}
       <section className="image" id="inicio">
         <h1>Renta de vestidos Queens</h1>
       </section>

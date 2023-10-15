@@ -169,4 +169,31 @@ export class DressService {
       },
     });
   }
+  //------------------------------------------------------------------------
+  // ----------------- CLIENT requests --------------------------------------
+  //------------------------------------------------------------------------
+  static getAllClients(searchQuery, accessToken) {
+    let dataURL = `/api/client?name=${searchQuery}`;
+    return this.axiosInstance.get(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  static createClient(clientData, accessToken) {
+    let dataURL = `/api/client`;
+    return this.axiosInstance.post(dataURL, clientData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  static editClient(clientData, clientId, accessToken) {
+    let dataURL = `/api/client/${clientId}`;
+    return this.axiosInstance.put(dataURL, clientData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
 }
