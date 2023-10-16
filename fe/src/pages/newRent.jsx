@@ -69,6 +69,14 @@ function NewRent() {
         selectedClientId,
         getAccessTokenHeader()
       );
+
+      // Update the client in the clients state
+      setClients((prevClients) =>
+        prevClients.map((client) =>
+          client._id === selectedClientId ? editClientData : client
+        )
+      );
+
       setShowEditClientModal(false);
       setEditClientData(null);
       // You can also refresh the client list here if needed.
@@ -81,9 +89,11 @@ function NewRent() {
   };
 
   const handleCreateNewClient = async () => {
+    // Reset previous errors
     setValidationErrors({});
     setBackendError(null);
 
+    // Validation
     if (
       !newClientData.firstName ||
       !newClientData.lastName ||
@@ -98,17 +108,27 @@ function NewRent() {
     }
 
     try {
-      await DressService.createClient(newClientData, getAccessTokenHeader());
+      const createdClient = await DressService.createClient(
+        newClientData,
+        getAccessTokenHeader()
+      );
+
+      // Update the clients state by adding the newly created client
+      setClients([...clients, createdClient.data]);
+
+      // Close the modal after successful creation
       setShowNewClientModal(false);
+
+      // Clear the new client data
       setNewClientData({
         firstName: "",
         lastName: "",
         phoneNumber: "",
         email: "",
       });
-      // You can also refresh the client list here if needed.
     } catch (error) {
       console.error("Error creating a new client:", error);
+      // Handle the error and set the backendError state
       setBackendError(
         `${error.message} - ${JSON.stringify(error.response.data, null, 2)}`
       );
@@ -157,16 +177,16 @@ function NewRent() {
             <Button
               variant="primary"
               onClick={handleShowNewClientModal}
-              className="mt-2"
+              className="btn btn-success my-1 mx-1"
             >
-              New Client
+              <i className="fa fa-plus-circle me-2" /> New Client
             </Button>
             <Button
               variant="primary"
               onClick={handleShowEditClientModal}
-              className="mt-2"
+              className="btn btn-primary my-1 mx-1"
             >
-              Edit Client
+              <i className="fa fa-pen" /> Edit Client
             </Button>
           </div>
         </div>
