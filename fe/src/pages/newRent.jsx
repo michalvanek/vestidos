@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Form, Button, Modal, Alert } from "react-bootstrap";
 import { LoginContext } from "../context/loginContext";
 import { DressService } from "../../dao/dressService";
@@ -6,6 +6,7 @@ import { DressService } from "../../dao/dressService";
 function NewRent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [clients, setClients] = useState([]);
+  const [typeOfEventData, setTypeOfEventData] = useState({});
 
   const [showNewClientModal, setShowNewClientModal] = useState(false);
   const [showEditClientModal, setShowEditClientModal] = useState(false);
@@ -29,6 +30,33 @@ function NewRent() {
   });
 
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
+
+  useEffect(() => {
+    // Fetch the list of events and update the typeOfEventData state
+    const fetchEvents = async () => {
+      try {
+        const response = await DressService.getAllEvents(
+          getAccessTokenHeader()
+        );
+        const events = response.data;
+
+        // Create an object with event IDs as keys and event names as values
+        const eventsData = {};
+        events.forEach((event) => {
+          eventsData[event._id] = event.NameOfEvent;
+        });
+
+        setTypeOfEventData(eventsData);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        // Handle the error as needed
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchEvents();
+    }
+  }, [isLoggedIn]);
 
   const handleSearch = async () => {
     try {
@@ -396,7 +424,7 @@ function NewRent() {
         </Modal.Footer>
       </Modal>
       <div>
-        <Form.Group controlId="newClientFirstName">
+        <Form.Group controlId="newClientName">
           <Form.Label>Clienta:</Form.Label>
           <Form.Control
             type="text"
@@ -404,7 +432,7 @@ function NewRent() {
             readOnly
           />
         </Form.Group>
-        <Form.Group controlId="newClientLastName">
+        <Form.Group controlId="dateOfBooking">
           <Form.Label>Fecha de apartado:</Form.Label>
           <Form.Control
             type="date"
@@ -421,7 +449,7 @@ function NewRent() {
             Date of Booking is required.
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group controlId="newClientEmail">
+        <Form.Group controlId="pickUpDate">
           <Form.Label>Fecha de recolección:</Form.Label>
           <Form.Control
             type="date"
@@ -434,12 +462,11 @@ function NewRent() {
             }
             isInvalid={validationErrors.pickUpDate}
           />
-
           <Form.Control.Feedback type="invalid">
             Pick up date is required.
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group controlId="newClientPhoneNumber">
+        <Form.Group controlId="bookingAmount">
           <Form.Label>Cantidad de apartado:</Form.Label>
           <Form.Control
             type="number"
@@ -456,7 +483,7 @@ function NewRent() {
             Booking amount is required.
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group controlId="">
+        <Form.Group controlId="remainingAmount">
           <Form.Label>Cantidad restante:</Form.Label>
           <Form.Control
             type="number"
@@ -469,29 +496,31 @@ function NewRent() {
             }
             isInvalid={validationErrors.remainingAmount}
           />
-
           <Form.Control.Feedback type="invalid">
             Remaining amount is required.
           </Form.Control.Feedback>
         </Form.Group>
-        <Form.Group controlId="newClientEmail">
+        <Form.Group controlId="eventId">
           <Form.Label>Tipo de evento:</Form.Label>
           <Form.Control
-            type="select"
-            value={newClientData.email}
+            as="select"
+            value={newRent.eventId}
             onChange={(e) =>
-              setNewClientData({
-                ...newClientData,
-                email: e.target.value,
+              setNewRent({
+                ...newRent,
+                eventId: e.target.value,
               })
             }
-          />
-
-          <Form.Control.Feedback type="invalid">
-            Phone Number is required.
-          </Form.Control.Feedback>
+          >
+            <option value="">Select an event</option>
+            {Object.entries(typeOfEventData).map(([eventId, eventName]) => (
+              <option key={eventId} value={eventId}>
+                {eventName}
+              </option>
+            ))}
+          </Form.Control>
         </Form.Group>
-        <Form.Group controlId="newClientEmail">
+        <Form.Group controlId="dressId">
           <Form.Label>Vestido:</Form.Label>
           <Form.Control
             type="email"
@@ -503,14 +532,13 @@ function NewRent() {
               })
             }
           />
-
           <Form.Control.Feedback type="invalid">
-            Phone Number is required.
+            Email is required.
           </Form.Control.Feedback>
         </Form.Group>
         <Button
           variant="primary"
-          //   onClick={handleShowNewClientModal}
+          // onClick={handleShowNewClientModal}
           className="btn btn-success my-1 mx-1"
         >
           <i className="fa fa-plus-circle me-2" /> New Rent

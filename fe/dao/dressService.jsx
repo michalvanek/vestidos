@@ -196,4 +196,15 @@ export class DressService {
       },
     });
   }
+  //--------------------------------------------------------------------------
+  // -------------------- EVENT requests -------------------------------------
+  //--------------------------------------------------------------------------
+  static getAllEvents(accessToken) {
+    let dataURL = `/api/event`;
+    return this.axiosInstance.get(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
 }
