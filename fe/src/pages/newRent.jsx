@@ -6,7 +6,7 @@ import { DressService } from "../../dao/dressService";
 function NewRent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [clients, setClients] = useState([]);
-  const [selectedClientId, setSelectedClientId] = useState(null);
+
   const [showNewClientModal, setShowNewClientModal] = useState(false);
   const [showEditClientModal, setShowEditClientModal] = useState(false);
   const [newClientData, setNewClientData] = useState({
@@ -18,6 +18,15 @@ function NewRent() {
   const [editClientData, setEditClientData] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
   const [backendError, setBackendError] = useState(null);
+  const [newRent, setNewRent] = useState({
+    dateOfBooking: "",
+    bookingAmount: "",
+    remainingAmount: "",
+    pickUpDate: "",
+    dressId: "",
+    clientId: "",
+    eventId: "",
+  });
 
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
 
@@ -41,7 +50,7 @@ function NewRent() {
   const handleShowEditClientModal = () => {
     setShowEditClientModal(true);
     const selectedClient = clients.find(
-      (client) => client._id === selectedClientId
+      (client) => client._id === newRent.clientId
     );
     setEditClientData(selectedClient);
   };
@@ -66,14 +75,14 @@ function NewRent() {
     try {
       await DressService.editClient(
         editClientData,
-        selectedClientId,
+        newRent.clientId,
         getAccessTokenHeader()
       );
 
       // Update the client in the clients state
       setClients((prevClients) =>
         prevClients.map((client) =>
-          client._id === selectedClientId ? editClientData : client
+          client._id === newRent.clientId ? editClientData : client
         )
       );
 
@@ -87,6 +96,15 @@ function NewRent() {
       );
     }
   };
+
+  function getClientFirstAndLastName(clients, targetClientId) {
+    const targetClient = clients.find(
+      (client) => client._id === targetClientId
+    );
+    return targetClient
+      ? `${targetClient.firstName} ${targetClient.lastName}`
+      : null;
+  }
 
   const handleCreateNewClient = async () => {
     // Reset previous errors
@@ -115,6 +133,8 @@ function NewRent() {
 
       // Update the clients state by adding the newly created client
       setClients([...clients, createdClient.data]);
+      // Update the newRent state with the created client's ID
+      setNewRent({ ...newRent, clientId: createdClient.data._id });
 
       // Close the modal after successful creation
       setShowNewClientModal(false);
@@ -163,9 +183,14 @@ function NewRent() {
             <select
               className="form-select"
               aria-label="Select a client"
-              onChange={(e) => setSelectedClientId(e.target.value)}
+              onChange={(e) =>
+                setNewRent((prevState) => ({
+                  ...prevState,
+                  clientId: e.target.value,
+                }))
+              }
               size="5"
-              value={selectedClientId || ""}
+              value={newRent.clientId || ""}
             >
               <option value="">Select a client</option>
               {clients.map((client) => (
@@ -370,6 +395,127 @@ function NewRent() {
           </Button>
         </Modal.Footer>
       </Modal>
+      <div>
+        <Form.Group controlId="newClientFirstName">
+          <Form.Label>Clienta:</Form.Label>
+          <Form.Control
+            type="text"
+            value={getClientFirstAndLastName(clients, newRent.clientId) || ""}
+            readOnly
+          />
+        </Form.Group>
+        <Form.Group controlId="newClientLastName">
+          <Form.Label>Fecha de apartado:</Form.Label>
+          <Form.Control
+            type="date"
+            value={newRent.dateOfBooking}
+            onChange={(e) =>
+              setNewRent({
+                ...newRent,
+                dateOfBooking: e.target.value,
+              })
+            }
+            isInvalid={validationErrors.dateOfBooking}
+          />
+          <Form.Control.Feedback type="invalid">
+            Date of Booking is required.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="newClientEmail">
+          <Form.Label>Fecha de recolección:</Form.Label>
+          <Form.Control
+            type="date"
+            value={newRent.pickUpDate}
+            onChange={(e) =>
+              setNewRent({
+                ...newRent,
+                pickUpDate: e.target.value,
+              })
+            }
+            isInvalid={validationErrors.pickUpDate}
+          />
+
+          <Form.Control.Feedback type="invalid">
+            Pick up date is required.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="newClientPhoneNumber">
+          <Form.Label>Cantidad de apartado:</Form.Label>
+          <Form.Control
+            type="number"
+            value={newRent.bookingAmount}
+            onChange={(e) =>
+              setNewRent({
+                ...newRent,
+                bookingAmount: e.target.value,
+              })
+            }
+            isInvalid={validationErrors.bookingAmount}
+          />
+          <Form.Control.Feedback type="invalid">
+            Booking amount is required.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="">
+          <Form.Label>Cantidad restante:</Form.Label>
+          <Form.Control
+            type="number"
+            value={newRent.remainingAmount}
+            onChange={(e) =>
+              setNewRent({
+                ...newRent,
+                remainingAmount: e.target.value,
+              })
+            }
+            isInvalid={validationErrors.remainingAmount}
+          />
+
+          <Form.Control.Feedback type="invalid">
+            Remaining amount is required.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="newClientEmail">
+          <Form.Label>Tipo de evento:</Form.Label>
+          <Form.Control
+            type="select"
+            value={newClientData.email}
+            onChange={(e) =>
+              setNewClientData({
+                ...newClientData,
+                email: e.target.value,
+              })
+            }
+          />
+
+          <Form.Control.Feedback type="invalid">
+            Phone Number is required.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="newClientEmail">
+          <Form.Label>Vestido:</Form.Label>
+          <Form.Control
+            type="email"
+            value={newClientData.email}
+            onChange={(e) =>
+              setNewClientData({
+                ...newClientData,
+                email: e.target.value,
+              })
+            }
+          />
+
+          <Form.Control.Feedback type="invalid">
+            Phone Number is required.
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Button
+          variant="primary"
+          //   onClick={handleShowNewClientModal}
+          className="btn btn-success my-1 mx-1"
+        >
+          <i className="fa fa-plus-circle me-2" /> New Rent
+        </Button>
+      </div>
     </div>
   );
 }
