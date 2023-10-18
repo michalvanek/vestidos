@@ -207,4 +207,15 @@ export class DressService {
       },
     });
   }
+  //--------------------------------------------------------------------------
+  // -------------------- RENT requests -------------------------------------
+  //--------------------------------------------------------------------------
+  static createRent(rentData, accessToken) {
+    let dataURL = `/api/rent`;
+    return this.axiosInstance.post(dataURL, rentData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
 }

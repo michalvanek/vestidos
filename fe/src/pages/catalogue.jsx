@@ -292,10 +292,10 @@ function Catalogue() {
                           {dress.talla.join(", ")}
                         </span>
                       </div>
-                      <div className="card-detail">
+                      {/* <div className="card-detail">
                         <i className="fas fa-palette icon" title="color"></i>
                         <span className="icon-value">{dress.color}</span>
-                      </div>
+                      </div> */}
                       <div className="card-detail">
                         <i
                           className="fas fa-dollar-sign icon"

@@ -2,12 +2,13 @@ import { useState, useContext, useEffect } from "react";
 import { Form, Button, Modal, Alert } from "react-bootstrap";
 import { LoginContext } from "../context/loginContext";
 import { DressService } from "../../dao/dressService";
+import { Toast } from "react-bootstrap";
 
 function NewRent() {
   const [searchQuery, setSearchQuery] = useState("");
   const [clients, setClients] = useState([]);
   const [typeOfEventData, setTypeOfEventData] = useState({});
-
+  const [showToast, setShowToast] = useState(false);
   const [showNewClientModal, setShowNewClientModal] = useState(false);
   const [showEditClientModal, setShowEditClientModal] = useState(false);
   const [newClientData, setNewClientData] = useState({
@@ -28,17 +29,39 @@ function NewRent() {
     clientId: "",
     eventId: "",
   });
-
+  const [state, setState] = useState({
+    loading: false,
+    dresses: [],
+    filteredDresses: [],
+    dress: {
+      sizeActualSelector: "",
+      colorActualSelector: "",
+      priceActualSelector: "",
+    },
+    tallas: ["CH", "M", "G", "XG", "Adolescente"],
+    colores: [],
+    precios: [],
+  });
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
 
   useEffect(() => {
     // Fetch the list of events and update the typeOfEventData state
     const fetchEvents = async () => {
       try {
-        const response = await DressService.getAllEvents(
+        setState((prevState) => ({ ...prevState, loading: true }));
+        const dressesResponse = await DressService.getAllDresses();
+        const colorsResponse = await DressService.getAllColors();
+        const eventsResponse = await DressService.getAllEvents(
           getAccessTokenHeader()
         );
-        const events = response.data;
+        const events = eventsResponse.data;
+
+        setState((prevState) => ({
+          ...prevState,
+          loading: false,
+          dresses: dressesResponse.data,
+          colores: colorsResponse.data.map((color) => color.color),
+        }));
 
         // Create an object with event IDs as keys and event names as values
         const eventsData = {};
@@ -56,6 +79,50 @@ function NewRent() {
       fetchEvents();
     }
   }, [isLoggedIn]);
+
+  let updateInput = (event) => {
+    const { name, value } = event.target;
+
+    const filterByColor = (include) => {
+      return state.dresses.filter((dress) => {
+        return dress.color === include || include === "";
+      });
+    };
+
+    let updatedDress = {};
+
+    if (name === "color") {
+      const filteredDresses = filterByColor(value);
+      updatedDress = {
+        sizeActualSelector: "",
+        colorActualSelector: value,
+        priceActualSelector: "",
+      };
+      setState({
+        ...state,
+        filteredDresses,
+        dress: {
+          ...state.dress,
+          ...updatedDress,
+        },
+      });
+    }
+
+    // Reset the select field values
+    setState((prevState) => ({
+      ...prevState,
+      dress: {
+        ...prevState.dress,
+        ...updatedDress,
+      },
+    }));
+  };
+  const handleCardClick = (card) => {
+    setNewRent((prevState) => ({
+      ...prevState,
+      dressId: card,
+    }));
+  };
 
   const handleApiError = (error) => {
     console.error("API error:", error);
@@ -186,9 +253,81 @@ function NewRent() {
       handleApiError(error);
     }
   };
+  const handleCreateNewRent = async () => {
+    setValidationErrors({});
+    setBackendError(null);
+
+    // Validate the form data before creating a new rent
+    if (
+      !newRent.clientId ||
+      !newRent.dateOfBooking ||
+      !newRent.pickUpDate ||
+      !newRent.bookingAmount ||
+      !newRent.remainingAmount ||
+      !newRent.eventId ||
+      !newRent.dressId
+    ) {
+      setValidationErrors({
+        clientId: !newRent.clientId,
+        dateOfBooking: !newRent.dateOfBooking,
+        pickUpDate: !newRent.pickUpDate,
+        bookingAmount: !newRent.bookingAmount,
+        remainingAmount: !newRent.remainingAmount,
+        eventId: !newRent.eventId,
+        dressId: !newRent.dressId,
+      });
+      return;
+    }
+
+    try {
+      // Create a new rent by calling the createRent method from DressService
+      await DressService.createRent(newRent, getAccessTokenHeader());
+
+      // You may want to handle success or redirect to a different page here
+
+      // Clear the form or perform other actions as needed
+      setNewRent({
+        dateOfBooking: "",
+        bookingAmount: "",
+        remainingAmount: "",
+        pickUpDate: "",
+        dressId: "",
+        clientId: "",
+        eventId: "",
+      });
+
+      // Scroll to the top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setShowToast(true);
+    } catch (error) {
+      handleApiError(error);
+    }
+  };
 
   return (
     <div className="container">
+      <div>
+        <div
+          className="toast-container position-fixed bottom-0 end-0 p-3"
+          style={{ zIndex: 9999 }}
+        >
+          <Toast
+            show={showToast}
+            onClose={() => setShowToast(false)}
+            id="liveToast"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <Toast.Header>
+              {/* <img src="..." className="rounded me-2" alt="..." /> */}
+              <strong className="me-auto">✅</strong>
+              <small>Success</small>
+            </Toast.Header>
+            <Toast.Body>The rent has been successfully created.</Toast.Body>
+          </Toast>
+        </div>
+      </div>
       <div>
         {/* Display backend errors if present */}
         {backendError && <Alert variant="danger">{backendError}</Alert>}
@@ -438,7 +577,11 @@ function NewRent() {
             type="text"
             value={getClientFirstAndLastName(clients, newRent.clientId) || ""}
             readOnly
+            isInvalid={validationErrors.clientId}
           />
+          <Form.Control.Feedback type="invalid">
+            Client is required.
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="dateOfBooking">
           <Form.Label>Fecha de apartado:</Form.Label>
@@ -519,6 +662,7 @@ function NewRent() {
                 eventId: e.target.value,
               })
             }
+            isInvalid={validationErrors.eventId}
           >
             <option value="">Select an event</option>
             {Object.entries(typeOfEventData).map(([eventId, eventName]) => (
@@ -527,29 +671,64 @@ function NewRent() {
               </option>
             ))}
           </Form.Control>
+          <Form.Control.Feedback type="invalid">
+            Event is required.
+          </Form.Control.Feedback>
         </Form.Group>
         <Form.Group controlId="dressId">
-          <Form.Label>Vestido:</Form.Label>
+          <Form.Label>Vestido ID:</Form.Label>
           <Form.Control
-            type="email"
-            value={newClientData.email}
-            onChange={(e) =>
-              setNewClientData({
-                ...newClientData,
-                email: e.target.value,
-              })
-            }
+            type="text"
+            value={newRent.dressId || ""}
+            readOnly
+            isInvalid={validationErrors.dressId}
           />
           <Form.Control.Feedback type="invalid">
-            Email is required.
+            Dress ID is required.
           </Form.Control.Feedback>
+          <Form.Label>Filtra por color:</Form.Label>
+          <div className="col">
+            <div className="mb-2">
+              <select
+                name="color"
+                value={state.dress.colorActualSelector}
+                onChange={updateInput}
+                className="form-control"
+              >
+                <option value="">Color</option>
+                {state.colores.length > 0 &&
+                  state.colores.map((color) => {
+                    return (
+                      <option key={color} value={color}>
+                        {color}
+                      </option>
+                    );
+                  })}
+              </select>
+            </div>
+          </div>
+          <div className="card-grid">
+            {state.filteredDresses.map((card) => (
+              <div
+                key={card._id}
+                className={`card card-select ${
+                  newRent.dressId === card._id ? "selected-dress" : ""
+                }`}
+                onClick={() => handleCardClick(card._id)}
+              >
+                <img src={card.fotoPrincipal} alt={card._id} />
+                <h5>{`${card.talla.join(", ")} ${card.precio}`}</h5>
+                {/* Other card information */}
+              </div>
+            ))}
+          </div>
         </Form.Group>
         <Button
           variant="primary"
-          // onClick={handleShowNewClientModal}
+          onClick={handleCreateNewRent}
           className="btn btn-success my-1 mx-1"
         >
-          <i className="fa fa-plus-circle me-2" /> New Rent
+          Create New Rent
         </Button>
       </div>
     </div>
