@@ -304,9 +304,6 @@ function Catalogue() {
                         <span className="icon-value">{dress.precio}</span>
                       </div>
                       <div>
-                        {/* <Link to={`/`} className="btn btn-warning my-1 mx-1">
-                        <i className="fa fa-eye"></i>
-                      </Link> */}
                         {isLoggedIn && (
                           <>
                             <Link
@@ -315,11 +312,6 @@ function Catalogue() {
                             >
                               <i className="fa fa-pen"></i>
                             </Link>
-                            {/* <EditDress
-                  getAccessTokenHeader={getAccessTokenHeader}
-                  dress={dress}
-                  dressChanged={dressChanged}
-                /> */}
                             <button
                               className="btn btn-danger my-1 mx-1"
                               onClick={() => deleteDress(dress._id)}
@@ -374,7 +366,7 @@ function Catalogue() {
             <br />
             Dirección: Prolongación Irán #1600, Valle Alto, Cd Valles
             <br />
-            Teléfono: (+52) 481 110 5225
+            Teléfono: <a href="tel:+524811105225">481 110 5225</a>
             <br />
             <SocialMedia />
           </div>

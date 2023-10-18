@@ -48,8 +48,7 @@ function NewRent() {
 
         setTypeOfEventData(eventsData);
       } catch (error) {
-        console.error("Error fetching events:", error);
-        // Handle the error as needed
+        handleApiError(error);
       }
     };
 
@@ -57,6 +56,18 @@ function NewRent() {
       fetchEvents();
     }
   }, [isLoggedIn]);
+
+  const handleApiError = (error) => {
+    console.error("API error:", error);
+
+    if (error.response) {
+      setBackendError(
+        `${error.message} - ${JSON.stringify(error.response.data, null, 2)}`
+      );
+    } else {
+      setBackendError("An error occurred. Please try again later.");
+    }
+  };
 
   const handleSearch = async () => {
     try {
@@ -118,10 +129,7 @@ function NewRent() {
       setEditClientData(null);
       // You can also refresh the client list here if needed.
     } catch (error) {
-      console.error("Error editing the client:", error);
-      setBackendError(
-        `${error.message} - ${JSON.stringify(error.response.data, null, 2)}`
-      );
+      handleApiError(error);
     }
   };
 
@@ -175,16 +183,16 @@ function NewRent() {
         email: "",
       });
     } catch (error) {
-      console.error("Error creating a new client:", error);
-      // Handle the error and set the backendError state
-      setBackendError(
-        `${error.message} - ${JSON.stringify(error.response.data, null, 2)}`
-      );
+      handleApiError(error);
     }
   };
 
   return (
     <div className="container">
+      <div>
+        {/* Display backend errors if present */}
+        {backendError && <Alert variant="danger">{backendError}</Alert>}
+      </div>
       <div className="row">
         <h1>Nueva renta</h1>
       </div>
