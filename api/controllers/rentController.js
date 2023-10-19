@@ -44,7 +44,7 @@ const rentReadAll = asyncHandler(async (req, res) => {
     });
 
     return res.status(200).json(rentsWithinRange);
-  } catch (error) {
+  } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({ message: err.message });
     } else {
