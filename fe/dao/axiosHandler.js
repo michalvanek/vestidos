@@ -19,6 +19,15 @@ axiosHandler.interceptors.request.use(
       const isTokenExpired = dayjs(decodedToken.exp * 1000).isBefore(dayjs());
 
       if (isTokenExpired) {
+        // TODO - when refresh token is experid -> logout
+        // const decodedRefreshToken = jwt_decode(
+        //   localStorage.getItem("refreshToken")
+        // );
+        // const isRefreshTokenExpired = dayjs(
+        //   decodedRefreshToken.exp * 1000
+        // ).isBefore(dayjs());
+        // if (isRefreshTokenExpired) {
+        // }
         // Token is expired, make a new refresh token request
         try {
           const refreshToken = localStorage.getItem("refreshToken");
