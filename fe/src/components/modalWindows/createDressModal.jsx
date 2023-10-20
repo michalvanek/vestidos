@@ -1,13 +1,11 @@
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { DressService } from "../../../dao/dressService";
-import { LoginContext } from "../../context/loginContext";
 import Select from "react-select";
 
 function CreateDressModal(props) {
   const [showOriginalSize, setShowOriginalSize] = useState(false);
   const [photoLink, setPhotoLink] = useState(""); // State to store the current photo link input
-  const { isLoggedIn, refreshAccessToken } = useContext(LoginContext);
   const [state, setState] = useState({
     loading: false,
     dressSelectors: {
@@ -36,7 +34,6 @@ function CreateDressModal(props) {
     const fetchData = async () => {
       try {
         setState({ ...state, loading: true });
-        console.log(props.getAccessTokenHeader());
         const colorsResponse = await DressService.getAllColors();
         const pricesResponse = await DressService.getAllPrices();
         const brandsResponse = await DressService.getAllBrands(
@@ -69,13 +66,6 @@ function CreateDressModal(props) {
     };
     fetchData();
   }, []);
-
-  useEffect(() => {
-    // This effect will run whenever the isLoggedIn state changes
-    if (isLoggedIn) {
-      refreshAccessToken();
-    }
-  }, [isLoggedIn]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -130,7 +120,6 @@ function CreateDressModal(props) {
   };
 
   const handleSubmit = async (e) => {
-    console.log(state.formData);
     e.preventDefault();
     try {
       setState({ ...state, loading: true });

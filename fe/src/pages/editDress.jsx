@@ -10,7 +10,7 @@ function EditDress(props) {
   const [photoLink, setPhotoLink] = useState(""); // State to store the current photo link input
   let navigate = useNavigate();
   const { dressId } = useParams();
-  const { isLoggedIn, refreshAccessToken, getAccessTokenHeader } =
+  const { getAccessTokenHeader } =
     useContext(LoginContext);
   const [state, setState] = useState({
     loading: false,
@@ -81,13 +81,6 @@ function EditDress(props) {
     };
     fetchData();
   }, []);
-
-  useEffect(() => {
-    // This effect will run whenever the isLoggedIn state changes
-    if (isLoggedIn) {
-      refreshAccessToken();
-    }
-  }, [isLoggedIn]);
 
   // Function to handle adding a new photo link to the formData state
   const handleAddPhotoLink = () => {
@@ -178,7 +171,7 @@ function EditDress(props) {
   };
 
   const handleSubmit = async (e) => {
-    console.log(state.formData);
+
     e.preventDefault();
     try {
       setState({ ...state, loading: true });

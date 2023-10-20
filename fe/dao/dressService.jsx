@@ -1,13 +1,7 @@
-import axios from "axios";
+import axiosHandler from "./axiosHandler";
 
 export class DressService {
-  static serverURL =
-    import.meta.env.VITE_SERVER_URL ||
-    "https://vestidos-cd-valles.onrender.com";
-
-  static axiosInstance = axios.create({
-    baseURL: this.serverURL,
-  });
+  static axiosInstance = axiosHandler;
 
   //------------------------------------------------------------------------
   // ----------------- COLOR requests --------------------------------------

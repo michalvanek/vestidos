@@ -1,4 +1,3 @@
-import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -6,7 +5,7 @@ import {
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
-import LoginProvider, { LoginContext } from "./context/loginContext"; // Import the LoginProvider
+import LoginProvider from "./context/loginContext"; // Import the LoginProvider
 import Catalogue from "./pages/catalogue";
 import About from "./pages/about";
 import MenuAdmin from "./pages/menuAdmin";

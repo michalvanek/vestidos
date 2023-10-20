@@ -29,13 +29,6 @@ const LoginProvider = ({ children }) => {
     localStorage.setItem("refreshToken", refreshToken);
   }, [accessToken, refreshToken]);
 
-  useEffect(() => {
-    // Call the refreshAccessToken function on component mount (initial load) to ensure access token is up-to-date
-    if (isLoggedIn) {
-      refreshAccessToken();
-    }
-  }, []);
-
   const getAccessTokenHeader = () => {
     return localStorage.getItem("accessToken");
   };
