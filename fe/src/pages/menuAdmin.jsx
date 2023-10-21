@@ -255,9 +255,12 @@ function MenuAdmin() {
 
   return (
     <>
-      <h2>admin page</h2>
+      <h1>admin page</h1>
       {isLoggedIn ? (
         <>
+          {errorMessage && (
+            <div className="alert alert-danger">{errorMessage}</div>
+          )}
           {loading ? (
             <Spinner />
           ) : (

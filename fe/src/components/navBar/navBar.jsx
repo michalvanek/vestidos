@@ -87,9 +87,14 @@ const NavBar = () => {
 
             <Nav>
               {isLoggedIn && (
-                <Nav.Link as={NavLink} to="/admin">
-                  Administración
-                </Nav.Link>
+                <>
+                  <Nav.Link as={NavLink} to="/admin">
+                    Administración
+                  </Nav.Link>
+                  <Nav.Link as={NavLink} to="/newRent">
+                    Nueva renta
+                  </Nav.Link>
+                </>
               )}
             </Nav>
             <Nav>

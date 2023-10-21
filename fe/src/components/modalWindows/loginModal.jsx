@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import { Modal, Button } from "react-bootstrap"; // Import Bootstrap components
+import { useState, useContext } from "react";
+import { Modal, Button, Alert } from "react-bootstrap"; // Import Bootstrap components
 import { LoginContext } from "../../context/loginContext";
 
 const LoginModal = ({ isOpen, closeModal }) => {
@@ -18,7 +18,9 @@ const LoginModal = ({ isOpen, closeModal }) => {
       .catch((error) => {
         // Handle login error
         console.error(error);
-        setError(error);
+        setError(
+          `${error.message} - ${JSON.stringify(error.response.data, null, 2)}`
+        ); // Set error as a string message
       });
   };
 
@@ -36,7 +38,7 @@ const LoginModal = ({ isOpen, closeModal }) => {
         <Modal.Title>Login</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {error && <p>{error}</p>}
+        {error && <Alert variant="danger">{error}</Alert>}
         <div className="container">
           <div className="row">
             <div className="col-md-6">

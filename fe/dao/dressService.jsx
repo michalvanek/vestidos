@@ -1,13 +1,7 @@
-import axios from "axios";
+import axiosHandler from "./axiosHandler";
 
 export class DressService {
-  static serverURL =
-    import.meta.env.VITE_SERVER_URL ||
-    "https://vestidos-cd-valles.onrender.com";
-
-  static axiosInstance = axios.create({
-    baseURL: this.serverURL,
-  });
+  static axiosInstance = axiosHandler;
 
   //------------------------------------------------------------------------
   // ----------------- COLOR requests --------------------------------------
@@ -164,6 +158,55 @@ export class DressService {
   static editDressById(dressData, dressId, accessToken) {
     let dataURL = `/api/dress/${dressId}`;
     return this.axiosInstance.put(dataURL, dressData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  //------------------------------------------------------------------------
+  // ----------------- CLIENT requests --------------------------------------
+  //------------------------------------------------------------------------
+  static getAllClients(searchQuery, accessToken) {
+    let dataURL = `/api/client?name=${searchQuery}`;
+    return this.axiosInstance.get(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  static createClient(clientData, accessToken) {
+    let dataURL = `/api/client`;
+    return this.axiosInstance.post(dataURL, clientData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  static editClient(clientData, clientId, accessToken) {
+    let dataURL = `/api/client/${clientId}`;
+    return this.axiosInstance.put(dataURL, clientData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  //--------------------------------------------------------------------------
+  // -------------------- EVENT requests -------------------------------------
+  //--------------------------------------------------------------------------
+  static getAllEvents(accessToken) {
+    let dataURL = `/api/event`;
+    return this.axiosInstance.get(dataURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+  //--------------------------------------------------------------------------
+  // -------------------- RENT requests -------------------------------------
+  //--------------------------------------------------------------------------
+  static createRent(rentData, accessToken) {
+    let dataURL = `/api/rent`;
+    return this.axiosInstance.post(dataURL, rentData, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

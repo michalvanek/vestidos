@@ -57,6 +57,20 @@ code {
 .navbar-container {
   background-color: #fff8f7 !important; /* Change the background color as desired */
 }
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(200px, 1fr)
+  ); /* Adjust the card width */
+  gap: 16px; /* Adjust the gap between cards */
+}
+.card-select:hover {
+  transform: scale(1.05);
+}
+.selected-dress {
+  border: 2px solid green !important;
+}
 
 /* Styling for parallax */
 body {
