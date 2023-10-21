@@ -12,6 +12,7 @@ import MenuAdmin from "./pages/menuAdmin";
 import NavBar from "./components/navBar/navBar";
 import EditDress from "./pages/editDress";
 import NewRent from "./pages/newRent";
+import LogoutPage from "./pages/logoutPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
       <Route path="/about" element={<About />} />
       <Route path="/admin" element={<MenuAdmin />} />
       <Route path="/newRent" element={<NewRent />} />
+      <Route path="/logout" element={<LogoutPage />} />
       <Route path="/:dressId" element={<EditDress />} />
     </Route>
   )

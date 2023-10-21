@@ -81,7 +81,7 @@ function Catalogue() {
           dresses: dressesResponse.data,
           filteredDresses: dressesResponse.data,
           colores: colorsResponse.data.map((color) => color.color),
-          precios: pricesResponse.data.map((price) => price.value),
+          precios: pricesResponse.data.map((price) => price.value.toString()),
         }));
       } catch (error) {
         setState((prevState) => ({
@@ -175,7 +175,7 @@ function Catalogue() {
       updatedDress = {
         sizeActualSelector: "",
         colorActualSelector: "",
-        priceActualSelector: value,
+        priceActualSelector: value.toString(),
       };
       setState({
         ...state,
