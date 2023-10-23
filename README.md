@@ -6,6 +6,10 @@ Vestidos project
 
 The Vestidos project was conceived out of a necessity to present a catalog of dresses, offering sorting features and providing a means for the digitalization of client and rental data, along with the ability to generate statistics.
 
+## Status
+
+The project is currently in the development phase, with most of its features already implemented. However, it is important to note that some key components are still under construction. The project's future plans include the addition of a dashboard, and efforts are ongoing to further enhance its design and user interface.
+
 ## Features
 
 The main features for clients are:
@@ -29,5 +33,10 @@ JWT token for authentification
 ![image](https://github.com/michalvanek/vestidos/assets/69573011/7abde002-e5df-4ddb-81dc-60696055340b)
 ![image](https://github.com/michalvanek/vestidos/assets/69573011/dcfdfe61-58c7-40da-b5ed-157a40529c2c)
 ![image](https://github.com/michalvanek/vestidos/assets/69573011/1ae151bb-a815-4327-9b0d-9b427a902a6d)
+
+### Licence
+ISC
+
+
 
 
