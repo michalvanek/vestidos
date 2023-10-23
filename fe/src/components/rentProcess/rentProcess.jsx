@@ -1,11 +1,9 @@
-
-
 const RentProcess = () => {
   return (
     <div className="container">
       <div className="row justify-content-center">
         <h2>Proceso de renta</h2>
-        <div className="col-md-3 mb-4">
+        <div className="col-lg-3 col-xl-3 mb-4">
           <div className="card  text-black">
             <div className="card-header">1.</div>
             <div className="card-body">
@@ -35,7 +33,7 @@ const RentProcess = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-3 mb-4">
+        <div className="col-lg-3 col-xl-3 mb-4">
           <div className="card text-black">
             <div className="card-header">2.</div>
             <div className="card-body">
@@ -51,7 +49,7 @@ const RentProcess = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-3 mb-4">
+        <div className="col-lg-3 col-xl-3 mb-4">
           <div className="card text-black">
             <div className="card-header">3.</div>
             <div className="card-body">
@@ -66,7 +64,7 @@ const RentProcess = () => {
             </div>
           </div>
         </div>
-        <div className="col-md-3 mb-4">
+        <div className="col-lg-3 col-xl-3 mb-4">
           <div className="card text-black">
             <div className="card-header">4.</div>
             <div className="card-body">

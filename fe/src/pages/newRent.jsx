@@ -78,7 +78,7 @@ function NewRent() {
     if (isLoggedIn) {
       fetchEvents();
     }
-  }, [isLoggedIn]);
+  }, [getAccessTokenHeader, isLoggedIn]);
 
   let updateInput = (event) => {
     const { name, value } = event.target;
@@ -305,433 +305,443 @@ function NewRent() {
   };
 
   return (
-    <div className="container">
-      <div>
-        <div
-          className="toast-container position-fixed bottom-0 end-0 p-3"
-          style={{ zIndex: 9999 }}
-        >
-          <Toast
-            show={showToast}
-            onClose={() => setShowToast(false)}
-            id="liveToast"
-            role="alert"
-            aria-live="assertive"
-            aria-atomic="true"
-          >
-            <Toast.Header>
-              {/* <img src="..." className="rounded me-2" alt="..." /> */}
-              <strong className="me-auto">✅</strong>
-              <small>Success</small>
-            </Toast.Header>
-            <Toast.Body>The rent has been successfully created.</Toast.Body>
-          </Toast>
-        </div>
-      </div>
-      <div>
-        {/* Display backend errors if present */}
-        {backendError && <Alert variant="danger">{backendError}</Alert>}
-      </div>
+    <>
       <div className="row">
         <h1>Nueva renta</h1>
       </div>
-      <div className="row">
-        <Form.Group controlId="searchQuery">
-          <Form.Label>Search for a client:</Form.Label>
-          <div className="d-flex">
-            <Form.Control
-              type="text"
-              placeholder="Enter client name"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button variant="primary" onClick={handleSearch} className="ms-2">
-              Search
-            </Button>
-          </div>
-        </Form.Group>
-      </div>
       <div className="container">
-        <div className="row">
-          <div className="col">
-            <h2>Search Results</h2>
-            <select
-              className="form-select"
-              aria-label="Select a client"
-              onChange={(e) =>
-                setNewRent((prevState) => ({
-                  ...prevState,
-                  clientId: e.target.value,
-                }))
-              }
-              size="5"
-              value={newRent.clientId || ""}
+        <div>
+          <div
+            className="toast-container position-fixed bottom-0 end-0 p-3"
+            style={{ zIndex: 9999 }}
+          >
+            <Toast
+              show={showToast}
+              onClose={() => setShowToast(false)}
+              id="liveToast"
+              role="alert"
+              aria-live="assertive"
+              aria-atomic="true"
             >
-              <option value="">Select a client</option>
-              {clients.map((client) => (
-                <option key={client._id} value={client._id}>
-                  {client.firstName} {client.lastName} {client.phoneNumber}
-                </option>
-              ))}
-            </select>
-            <Button
-              variant="primary"
-              onClick={handleShowNewClientModal}
-              className="btn btn-success my-1 mx-1"
-            >
-              <i className="fa fa-plus-circle me-2" /> New Client
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleShowEditClientModal}
-              className="btn btn-primary my-1 mx-1"
-            >
-              <i className="fa fa-pen" /> Edit Client
-            </Button>
+              <Toast.Header>
+                {/* <img src="..." className="rounded me-2" alt="..." /> */}
+                <strong className="me-auto">✅</strong>
+                <small>Éxito</small>
+              </Toast.Header>
+              <Toast.Body>La renta se ha creado con éxito.</Toast.Body>
+            </Toast>
           </div>
         </div>
-      </div>
-      {/* Modal for creating a new client */}
-      <Modal
-        show={showNewClientModal}
-        onHide={() => setShowNewClientModal(false)}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Create a New Client</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+        <div>
+          {/* Display backend errors if present */}
           {backendError && <Alert variant="danger">{backendError}</Alert>}
-          <Form.Group controlId="newClientFirstName">
-            <Form.Label>First Name:</Form.Label>
-            <Form.Control
-              type="text"
-              value={newClientData.firstName}
-              onChange={(e) =>
-                setNewClientData({
-                  ...newClientData,
-                  firstName: e.target.value,
-                })
-              }
-              isInvalid={validationErrors.firstName}
-            />
-            <Form.Control.Feedback type="invalid">
-              First Name is required.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId="newClientLastName">
-            <Form.Label>Last Name:</Form.Label>
-            <Form.Control
-              type="text"
-              value={newClientData.lastName}
-              onChange={(e) =>
-                setNewClientData({
-                  ...newClientData,
-                  lastName: e.target.value,
-                })
-              }
-              isInvalid={validationErrors.lastName}
-            />
-            <Form.Control.Feedback type="invalid">
-              Last Name is required.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId="newClientPhoneNumber">
-            <Form.Label>Phone Number:</Form.Label>
-            <Form.Control
-              type="text"
-              value={newClientData.phoneNumber}
-              onChange={(e) =>
-                setNewClientData({
-                  ...newClientData,
-                  phoneNumber: e.target.value,
-                })
-              }
-              isInvalid={validationErrors.phoneNumber}
-            />
-            <Form.Control.Feedback type="invalid">
-              Phone Number is required.
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group controlId="newClientEmail">
-            <Form.Label>Email:</Form.Label>
-            <Form.Control
-              type="email"
-              value={newClientData.email}
-              onChange={(e) =>
-                setNewClientData({
-                  ...newClientData,
-                  email: e.target.value,
-                })
-              }
-            />
-          </Form.Group>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowNewClientModal(false)}
-          >
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleCreateNewClient}>
-            Create
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </div>
 
-      {/* Modal for editing a client */}
-      <Modal
-        show={showEditClientModal}
-        onHide={() => setShowEditClientModal(false)}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Client</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {backendError && <Alert variant="danger">{backendError}</Alert>}
-          {editClientData && (
-            <>
-              <Form.Group controlId="editClientFirstName">
-                <Form.Label>First Name:</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editClientData.firstName}
-                  onChange={(e) =>
-                    setEditClientData({
-                      ...editClientData,
-                      firstName: e.target.value,
-                    })
-                  }
-                  isInvalid={validationErrors.firstName}
-                />
-                <Form.Control.Feedback type="invalid">
-                  First Name is required.
-                </Form.Control.Feedback>
-              </Form.Group>
-              <Form.Group controlId="editClientLastName">
-                <Form.Label>Last Name:</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editClientData.lastName}
-                  onChange={(e) =>
-                    setEditClientData({
-                      ...editClientData,
-                      lastName: e.target.value,
-                    })
-                  }
-                  isInvalid={validationErrors.lastName}
-                />
-                <Form.Control.Feedback type="invalid">
-                  Last Name is required.
-                </Form.Control.Feedback>
-              </Form.Group>
-              <Form.Group controlId="editClientPhoneNumber">
-                <Form.Label>Phone Number:</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={editClientData.phoneNumber}
-                  onChange={(e) =>
-                    setEditClientData({
-                      ...editClientData,
-                      phoneNumber: e.target.value,
-                    })
-                  }
-                  isInvalid={validationErrors.phoneNumber}
-                />
-                <Form.Control.Feedback type="invalid">
-                  Phone Number is required.
-                </Form.Control.Feedback>
-              </Form.Group>
-              <Form.Group controlId="editClientEmail">
-                <Form.Label>Email:</Form.Label>
-                <Form.Control
-                  type="email"
-                  value={editClientData.email}
-                  onChange={(e) =>
-                    setEditClientData({
-                      ...editClientData,
-                      email: e.target.value,
-                    })
-                  }
-                />
-              </Form.Group>
-            </>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant="secondary"
-            onClick={() => setShowEditClientModal(false)}
-          >
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleEditClient}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <div>
-        <Form.Group controlId="newClientName">
-          <Form.Label>Clienta:</Form.Label>
-          <Form.Control
-            type="text"
-            value={getClientFirstAndLastName(clients, newRent.clientId) || ""}
-            readOnly
-            isInvalid={validationErrors.clientId}
-          />
-          <Form.Control.Feedback type="invalid">
-            Client is required.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="dateOfBooking">
-          <Form.Label>Fecha de apartado:</Form.Label>
-          <Form.Control
-            type="date"
-            value={newRent.dateOfBooking}
-            onChange={(e) =>
-              setNewRent({
-                ...newRent,
-                dateOfBooking: e.target.value,
-              })
-            }
-            isInvalid={validationErrors.dateOfBooking}
-          />
-          <Form.Control.Feedback type="invalid">
-            Date of Booking is required.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="pickUpDate">
-          <Form.Label>Fecha de recolección:</Form.Label>
-          <Form.Control
-            type="date"
-            value={newRent.pickUpDate}
-            onChange={(e) =>
-              setNewRent({
-                ...newRent,
-                pickUpDate: e.target.value,
-              })
-            }
-            isInvalid={validationErrors.pickUpDate}
-          />
-          <Form.Control.Feedback type="invalid">
-            Pick up date is required.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="bookingAmount">
-          <Form.Label>Cantidad de apartado:</Form.Label>
-          <Form.Control
-            type="number"
-            value={newRent.bookingAmount}
-            onChange={(e) =>
-              setNewRent({
-                ...newRent,
-                bookingAmount: e.target.value,
-              })
-            }
-            isInvalid={validationErrors.bookingAmount}
-          />
-          <Form.Control.Feedback type="invalid">
-            Booking amount is required.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="remainingAmount">
-          <Form.Label>Cantidad restante:</Form.Label>
-          <Form.Control
-            type="number"
-            value={newRent.remainingAmount}
-            onChange={(e) =>
-              setNewRent({
-                ...newRent,
-                remainingAmount: e.target.value,
-              })
-            }
-            isInvalid={validationErrors.remainingAmount}
-          />
-          <Form.Control.Feedback type="invalid">
-            Remaining amount is required.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="eventId">
-          <Form.Label>Tipo de evento:</Form.Label>
-          <Form.Control
-            as="select"
-            value={newRent.eventId}
-            onChange={(e) =>
-              setNewRent({
-                ...newRent,
-                eventId: e.target.value,
-              })
-            }
-            isInvalid={validationErrors.eventId}
-          >
-            <option value="">Select an event</option>
-            {Object.entries(typeOfEventData).map(([eventId, eventName]) => (
-              <option key={eventId} value={eventId}>
-                {eventName}
-              </option>
-            ))}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid">
-            Event is required.
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group controlId="dressId">
-          <Form.Label>Vestido ID:</Form.Label>
-          <Form.Control
-            type="text"
-            value={newRent.dressId || ""}
-            readOnly
-            isInvalid={validationErrors.dressId}
-          />
-          <Form.Control.Feedback type="invalid">
-            Dress ID is required.
-          </Form.Control.Feedback>
-          <Form.Label>Filtra por color:</Form.Label>
-          <div className="col">
-            <div className="mb-2">
+        <div className="row">
+          <Form.Group controlId="searchQuery">
+            <Form.Label>Encuentra clienta existente:</Form.Label>
+            <div className="d-flex">
+              <Form.Control
+                type="text"
+                placeholder="Escribe apellido(s) de clienta"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Button variant="primary" onClick={handleSearch} className="ms-2">
+                Buscar
+              </Button>
+            </div>
+          </Form.Group>
+        </div>
+        <div className="container">
+          <div className="row">
+            <div className="col">
+              <Form.Label htmlFor="listOfClients">
+                Resultados de búsqueda:
+              </Form.Label>
               <select
-                name="color"
-                value={state.dress.colorActualSelector}
-                onChange={updateInput}
-                className="form-control"
+                id={"listOfClients"}
+                className="form-select"
+                aria-label="Select a client"
+                onChange={(e) =>
+                  setNewRent((prevState) => ({
+                    ...prevState,
+                    clientId: e.target.value,
+                  }))
+                }
+                size="5"
+                value={newRent.clientId || ""}
               >
-                <option value="">Color</option>
-                {state.colores.length > 0 &&
-                  state.colores.map((color) => {
-                    return (
-                      <option key={color} value={color}>
-                        {color}
-                      </option>
-                    );
-                  })}
+                <option value="">Selecciona clienta</option>
+                {clients.map((client) => (
+                  <option key={client._id} value={client._id}>
+                    {client.firstName} {client.lastName} {client.phoneNumber}
+                  </option>
+                ))}
               </select>
+              <Button
+                variant="primary"
+                onClick={handleShowNewClientModal}
+                className="btn btn-success my-1 mx-1"
+              >
+                <i className="fa fa-plus-circle me-2" /> Nueva clienta
+              </Button>
+              <Button
+                variant="primary"
+                onClick={handleShowEditClientModal}
+                className="btn btn-primary my-1 mx-1"
+              >
+                <i className="fa fa-pen" /> Editar clienta
+              </Button>
             </div>
           </div>
-          <div className="card-grid">
-            {state.filteredDresses.map((card) => (
-              <div
-                key={card._id}
-                className={`card card-select ${
-                  newRent.dressId === card._id ? "selected-dress" : ""
-                }`}
-                onClick={() => handleCardClick(card._id)}
-              >
-                <img src={card.fotoPrincipal} alt={card._id} />
-                <h5>{`${card.talla.join(", ")} ${card.precio}`}</h5>
-                {/* Other card information */}
-              </div>
-            ))}
-          </div>
-        </Form.Group>
-        <Button
-          variant="primary"
-          onClick={handleCreateNewRent}
-          className="btn btn-success my-1 mx-1"
+        </div>
+        {/* Modal for creating a new client */}
+        <Modal
+          show={showNewClientModal}
+          onHide={() => setShowNewClientModal(false)}
         >
-          Create New Rent
-        </Button>
+          <Modal.Header closeButton>
+            <Modal.Title>Crear clienta nueva</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {backendError && <Alert variant="danger">{backendError}</Alert>}
+            <Form.Group controlId="newClientFirstName">
+              <Form.Label>Nombre(s):</Form.Label>
+              <Form.Control
+                type="text"
+                value={newClientData.firstName}
+                onChange={(e) =>
+                  setNewClientData({
+                    ...newClientData,
+                    firstName: e.target.value,
+                  })
+                }
+                isInvalid={validationErrors.firstName}
+              />
+              <Form.Control.Feedback type="invalid">
+                Campo nombre(s) es obligatorio.
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="newClientLastName">
+              <Form.Label>Apellido(s):</Form.Label>
+              <Form.Control
+                type="text"
+                value={newClientData.lastName}
+                onChange={(e) =>
+                  setNewClientData({
+                    ...newClientData,
+                    lastName: e.target.value,
+                  })
+                }
+                isInvalid={validationErrors.lastName}
+              />
+              <Form.Control.Feedback type="invalid">
+                Campo apellido(s) es obligatorio.
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="newClientPhoneNumber">
+              <Form.Label>Número de teléfono:</Form.Label>
+              <Form.Control
+                type="text"
+                value={newClientData.phoneNumber}
+                onChange={(e) =>
+                  setNewClientData({
+                    ...newClientData,
+                    phoneNumber: e.target.value,
+                  })
+                }
+                isInvalid={validationErrors.phoneNumber}
+              />
+              <Form.Control.Feedback type="invalid">
+                Campo número de teléfono es obligatorio.
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group controlId="newClientEmail">
+              <Form.Label>Correo electrónico:</Form.Label>
+              <Form.Control
+                type="email"
+                value={newClientData.email}
+                onChange={(e) =>
+                  setNewClientData({
+                    ...newClientData,
+                    email: e.target.value,
+                  })
+                }
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setShowNewClientModal(false)}
+            >
+              Cancelar
+            </Button>
+            <Button variant="primary" onClick={handleCreateNewClient}>
+              Crear
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Modal for editing a client */}
+        <Modal
+          show={showEditClientModal}
+          onHide={() => setShowEditClientModal(false)}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Editar clienta</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {backendError && <Alert variant="danger">{backendError}</Alert>}
+            {editClientData && (
+              <>
+                <Form.Group controlId="editClientFirstName">
+                  <Form.Label>Nombre(s):</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editClientData.firstName}
+                    onChange={(e) =>
+                      setEditClientData({
+                        ...editClientData,
+                        firstName: e.target.value,
+                      })
+                    }
+                    isInvalid={validationErrors.firstName}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Campo nombre(s) es obligatorio.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group controlId="editClientLastName">
+                  <Form.Label>Apellido(s):</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editClientData.lastName}
+                    onChange={(e) =>
+                      setEditClientData({
+                        ...editClientData,
+                        lastName: e.target.value,
+                      })
+                    }
+                    isInvalid={validationErrors.lastName}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Campo apellido(s) es obligatorio.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group controlId="editClientPhoneNumber">
+                  <Form.Label>Número de teléfono:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editClientData.phoneNumber}
+                    onChange={(e) =>
+                      setEditClientData({
+                        ...editClientData,
+                        phoneNumber: e.target.value,
+                      })
+                    }
+                    isInvalid={validationErrors.phoneNumber}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Campo número de teléfono es obligatorio.
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group controlId="editClientEmail">
+                  <Form.Label>Correo electrónico:</Form.Label>
+                  <Form.Control
+                    type="email"
+                    value={editClientData.email}
+                    onChange={(e) =>
+                      setEditClientData({
+                        ...editClientData,
+                        email: e.target.value,
+                      })
+                    }
+                  />
+                </Form.Group>
+              </>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              variant="secondary"
+              onClick={() => setShowEditClientModal(false)}
+            >
+              Cancelar
+            </Button>
+            <Button variant="primary" onClick={handleEditClient}>
+              Guardar cambios
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <div>
+          <Form.Group controlId="newClientName">
+            <Form.Label>
+              Clienta (selecciona existente o crea nueva):
+            </Form.Label>
+            <Form.Control
+              type="text"
+              value={getClientFirstAndLastName(clients, newRent.clientId) || ""}
+              readOnly
+              isInvalid={validationErrors.clientId}
+            />
+            <Form.Control.Feedback type="invalid">
+              Campo clienta es obligatorio.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="dateOfBooking">
+            <Form.Label>Fecha de apartado:</Form.Label>
+            <Form.Control
+              type="date"
+              value={newRent.dateOfBooking}
+              onChange={(e) =>
+                setNewRent({
+                  ...newRent,
+                  dateOfBooking: e.target.value,
+                })
+              }
+              isInvalid={validationErrors.dateOfBooking}
+            />
+            <Form.Control.Feedback type="invalid">
+              Campo fecha de apartado es obligatorio.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="pickUpDate">
+            <Form.Label>Fecha de recolección:</Form.Label>
+            <Form.Control
+              type="date"
+              value={newRent.pickUpDate}
+              onChange={(e) =>
+                setNewRent({
+                  ...newRent,
+                  pickUpDate: e.target.value,
+                })
+              }
+              isInvalid={validationErrors.pickUpDate}
+            />
+            <Form.Control.Feedback type="invalid">
+              Campo fecha de recolección es obligatorio.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="bookingAmount">
+            <Form.Label>Cantidad de apartado:</Form.Label>
+            <Form.Control
+              type="number"
+              value={newRent.bookingAmount}
+              onChange={(e) =>
+                setNewRent({
+                  ...newRent,
+                  bookingAmount: e.target.value,
+                })
+              }
+              isInvalid={validationErrors.bookingAmount}
+            />
+            <Form.Control.Feedback type="invalid">
+              Campo cantidad de apartado es obligatorio.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="remainingAmount">
+            <Form.Label>Cantidad restante:</Form.Label>
+            <Form.Control
+              type="number"
+              value={newRent.remainingAmount}
+              onChange={(e) =>
+                setNewRent({
+                  ...newRent,
+                  remainingAmount: e.target.value,
+                })
+              }
+              isInvalid={validationErrors.remainingAmount}
+            />
+            <Form.Control.Feedback type="invalid">
+              Campo cantidad restante es obligatorio.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="eventId">
+            <Form.Label>Tipo de evento:</Form.Label>
+            <Form.Control
+              as="select"
+              value={newRent.eventId}
+              onChange={(e) =>
+                setNewRent({
+                  ...newRent,
+                  eventId: e.target.value,
+                })
+              }
+              isInvalid={validationErrors.eventId}
+            >
+              <option value="">Select an event</option>
+              {Object.entries(typeOfEventData).map(([eventId, eventName]) => (
+                <option key={eventId} value={eventId}>
+                  {eventName}
+                </option>
+              ))}
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              Campo tipo de evento es obligatorio.
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="dressId">
+            <Form.Label>
+              Vestido ID (se rellena en automático al seleccionar vestido):
+            </Form.Label>
+            <Form.Control
+              type="text"
+              value={newRent.dressId || ""}
+              readOnly
+              isInvalid={validationErrors.dressId}
+            />
+            <Form.Control.Feedback type="invalid">
+              Campo vestido ID es obligatorio.
+            </Form.Control.Feedback>
+            <Form.Label>Filtra por color:</Form.Label>
+            <div className="col">
+              <div className="mb-2">
+                <select
+                  name="color"
+                  value={state.dress.colorActualSelector}
+                  onChange={updateInput}
+                  className="form-control"
+                >
+                  <option value="">Color</option>
+                  {state.colores.length > 0 &&
+                    state.colores.map((color) => {
+                      return (
+                        <option key={color} value={color}>
+                          {color}
+                        </option>
+                      );
+                    })}
+                </select>
+              </div>
+            </div>
+            <div className="card-grid">
+              {state.filteredDresses.map((card) => (
+                <div
+                  key={card._id}
+                  className={`card card-select ${
+                    newRent.dressId === card._id ? "selected-dress" : ""
+                  }`}
+                  onClick={() => handleCardClick(card._id)}
+                >
+                  <img src={card.fotoPrincipal} alt={card._id} />
+                  <h5>{`${card.talla.join(", ")} ${card.precio}`}</h5>
+                  {/* Other card information */}
+                </div>
+              ))}
+            </div>
+          </Form.Group>
+          <Button
+            variant="primary"
+            onClick={handleCreateNewRent}
+            className="btn btn-success my-1 mx-1"
+          >
+            Crear renta nueva
+          </Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

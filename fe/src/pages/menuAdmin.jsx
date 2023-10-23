@@ -3,12 +3,11 @@ import Spinner from "../components/spinner/Spinner";
 import { DressService } from "../../dao/dressService";
 import { LoginContext } from "../context/loginContext";
 import DressDependencyManagement from "../components/dressDependencyManagement/dressDependencyManagement";
-import { Form, Button, Collapse } from "react-bootstrap";
 
 function MenuAdmin() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
   const [dressChanged, setDressChanged] = useState(0);
-  const [showBrand, setShowBrand] = useState(false);
+
   const [state, setState] = useState({
     loading: false,
     brands: [],
@@ -25,22 +24,18 @@ function MenuAdmin() {
     errorMessage: "",
   });
 
-  const handleShowBrand = () => {
-    setShowBrand((prevShowBrand) => !prevShowBrand);
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setState({ ...state, loading: true });
+        setState((prevState) => ({ ...prevState, loading: true }));
         const brandsResponse = await DressService.getAllBrands(
           getAccessTokenHeader()
         );
         const colorsResponse = await DressService.getAllColors();
         const pricesResponse = await DressService.getAllPrices();
 
-        setState({
-          ...state,
+        setState((prevState) => ({
+          ...prevState,
           loading: false,
           brands: brandsResponse.data.map((brand) => ({
             _id: brand._id,
@@ -54,21 +49,18 @@ function MenuAdmin() {
             _id: price._id,
             value: price.value,
           })),
-        });
+        }));
       } catch (error) {
-        setState({
-          ...state,
+        setState((prevState) => ({
+          ...prevState,
           loading: false,
           errorMessage: error.message,
-        });
+        }));
       }
     };
 
     fetchData();
-    return () => {
-      // This now gets called when the component unmounts
-    };
-  }, [dressChanged]);
+  }, [getAccessTokenHeader, dressChanged]);
 
   const updateInput = (event) => {
     const { name, value } = event.target;

@@ -14,7 +14,7 @@ function LogoutPage() {
 
     // Cleanup the timer to prevent any unexpected behavior
     return () => clearTimeout(timer);
-  }, []);
+  }, [logout]);
 
   return (
     <>
