@@ -13,7 +13,7 @@ function SearchBar({ state, updateInput }) {
                 name="talla"
                 value={state.dress.sizeActualSelector}
                 onChange={updateInput}
-                className="form-control"
+                className="form-control custom-select"
               >
                 <option value="">Talla</option>
                 {state.tallas.length > 0 &&
@@ -33,7 +33,7 @@ function SearchBar({ state, updateInput }) {
                 name="color"
                 value={state.dress.colorActualSelector}
                 onChange={updateInput}
-                className="form-control"
+                className="form-control custom-select"
               >
                 <option value="">Color</option>
                 {state.colores.length > 0 &&
@@ -53,7 +53,7 @@ function SearchBar({ state, updateInput }) {
                 name="precio"
                 value={state.dress.priceActualSelector}
                 onChange={updateInput}
-                className="form-control"
+                className="form-control custom-select"
               >
                 <option value="">Precio</option>
                 {state.precios.length > 0 &&

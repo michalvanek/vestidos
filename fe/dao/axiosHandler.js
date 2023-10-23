@@ -2,8 +2,7 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
 
-const baseURL =
-  import.meta.env.VITE_SERVER_URL || "https://vestidos-cd-valles.onrender.com";
+const baseURL = import.meta.env.VITE_SERVER_URL;
 
 const axiosHandler = axios.create({
   baseURL,

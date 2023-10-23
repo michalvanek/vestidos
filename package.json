@@ -11,6 +11,6 @@
     "start-client": "cd fe && npm run start"
   },
   "keywords": [],
-  "author": "",
+  "author": "Michal Vanek",
   "license": "ISC"
 }

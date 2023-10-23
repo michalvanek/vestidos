@@ -101,9 +101,10 @@ p {
 section {
   padding: 40px 0;
 }
-select {
+.custom-select {
   border-color: pink !important;
 }
+
 select option:hover {
   background-color: pink !important;
 }
