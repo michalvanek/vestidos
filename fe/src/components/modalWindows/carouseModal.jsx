@@ -1,5 +1,6 @@
-import React, { useState, useContext } from "react";
+/* eslint-disable react/prop-types */
 import { Modal, Button, Carousel } from "react-bootstrap"; // Import Bootstrap components
+import PropTypes from "prop-types";
 
 const CarouseModal = ({ isOpen, closeModal, props }) => {
   const hasFotos = props.fotos && props.fotos.length > 0;
@@ -41,4 +42,12 @@ const CarouseModal = ({ isOpen, closeModal, props }) => {
   );
 };
 
+CarouseModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  props: PropTypes.shape({
+    fotos: PropTypes.arrayOf(PropTypes.string),
+    fotoPrincipal: PropTypes.string,
+  }).isRequired,
+};
 export default CarouseModal;

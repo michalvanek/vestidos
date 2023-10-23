@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { Modal, Button, Alert } from "react-bootstrap"; // Import Bootstrap components
 import { LoginContext } from "../../context/loginContext";
+import PropTypes from "prop-types";
 
 const LoginModal = ({ isOpen, closeModal }) => {
   const [email, setEmail] = useState("");
@@ -78,5 +79,8 @@ const LoginModal = ({ isOpen, closeModal }) => {
     </Modal>
   );
 };
-
+LoginModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+};
 export default LoginModal;

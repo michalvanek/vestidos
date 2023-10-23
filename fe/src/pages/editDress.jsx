@@ -5,13 +5,12 @@ import { LoginContext } from "../context/loginContext";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import Select from "react-select";
 
-function EditDress(props) {
+function EditDress() {
   const [showOriginalSize, setShowOriginalSize] = useState(false);
   const [photoLink, setPhotoLink] = useState(""); // State to store the current photo link input
   let navigate = useNavigate();
   const { dressId } = useParams();
-  const { getAccessTokenHeader } =
-    useContext(LoginContext);
+  const { getAccessTokenHeader } = useContext(LoginContext);
   const [state, setState] = useState({
     loading: false,
     dressSelectors: {
@@ -39,7 +38,7 @@ function EditDress(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setState({ ...state, loading: true });
+        setState((prevState) => ({ ...prevState, loading: true }));
         const colorsResponse = await DressService.getAllColors();
         const pricesResponse = await DressService.getAllPrices();
         const brandsResponse = await DressService.getAllBrands(
@@ -49,15 +48,11 @@ function EditDress(props) {
           dressId,
           getAccessTokenHeader()
         );
-        setState({
-          ...state,
-          loading: false,
-          formData: dressByIdResponse.data,
-        });
 
         setState((prevState) => ({
           ...prevState,
           loading: false,
+          formData: dressByIdResponse.data,
           colores: colorsResponse.data.map((color) => ({
             _id: color._id,
             color: color.color,
@@ -80,7 +75,7 @@ function EditDress(props) {
       }
     };
     fetchData();
-  }, []);
+  }, [dressId, getAccessTokenHeader]);
 
   // Function to handle adding a new photo link to the formData state
   const handleAddPhotoLink = () => {
@@ -171,7 +166,6 @@ function EditDress(props) {
   };
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
     try {
       setState({ ...state, loading: true });

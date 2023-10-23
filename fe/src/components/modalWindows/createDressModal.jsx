@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { DressService } from "../../../dao/dressService";
 import Select from "react-select";
+import PropTypes from "prop-types";
 
 function CreateDressModal(props) {
   const [showOriginalSize, setShowOriginalSize] = useState(false);
@@ -30,14 +31,15 @@ function CreateDressModal(props) {
     },
   });
 
+  const { getAccessTokenHeader } = props;
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setState({ ...state, loading: true });
+        setState((prevState) => ({ ...prevState, loading: true }));
         const colorsResponse = await DressService.getAllColors();
         const pricesResponse = await DressService.getAllPrices();
         const brandsResponse = await DressService.getAllBrands(
-          props.getAccessTokenHeader()
+          getAccessTokenHeader()
         );
 
         setState((prevState) => ({
@@ -65,7 +67,7 @@ function CreateDressModal(props) {
       }
     };
     fetchData();
-  }, []);
+  }, [getAccessTokenHeader]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -341,5 +343,10 @@ function CreateDressModal(props) {
     </Modal>
   );
 }
+CreateDressModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  getAccessTokenHeader: PropTypes.func.isRequired,
+};
 
 export default CreateDressModal;

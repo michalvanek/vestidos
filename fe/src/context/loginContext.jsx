@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { DressService } from "../../dao/dressService";
+import PropTypes from "prop-types";
 
 export const LoginContext = createContext();
 
@@ -94,5 +95,7 @@ const LoginProvider = ({ children }) => {
     </LoginContext.Provider>
   );
 };
-
+LoginProvider.propTypes = {
+  children: PropTypes.node, // is a valid React node.
+};
 export default LoginProvider;

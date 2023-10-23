@@ -1,7 +1,8 @@
 import { Form, Button, Collapse } from "react-bootstrap";
 import { useState } from "react";
+import PropTypes from "prop-types";
 
-const DressDependencyManagemen = ({
+const DressDependencyManagement = ({
   state,
   updateInput,
   submitForm,
@@ -17,7 +18,6 @@ const DressDependencyManagemen = ({
 
   return (
     <>
-      <p>{(state.selectedBrandId, state.addBrandTextField.marca)}</p>
       <div className="row align-items-center">
         <div className="container-sm pb-2">
           <Form.Label>
@@ -204,4 +204,27 @@ const DressDependencyManagemen = ({
   );
 };
 
-export default DressDependencyManagemen;
+DressDependencyManagement.propTypes = {
+  state: PropTypes.shape({
+    loading: PropTypes.bool,
+    brands: PropTypes.array,
+    addBrandTextField: PropTypes.object,
+    editBrandTextField: PropTypes.object,
+    selectedBrandId: PropTypes.string,
+    colors: PropTypes.array,
+    addColorTextField: PropTypes.object,
+    editColorTextField: PropTypes.object,
+    selectedColorId: PropTypes.string,
+    prices: PropTypes.array,
+    editPriceTextField: PropTypes.object,
+    selectedPriceId: PropTypes.string,
+    errorMessage: PropTypes.string,
+  }),
+  updateInput: PropTypes.func,
+  submitForm: PropTypes.func,
+  submitDelete: PropTypes.func,
+  submitEdditedForm: PropTypes.func,
+  typeOf: PropTypes.string,
+};
+
+export default DressDependencyManagement;
