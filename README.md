@@ -26,7 +26,7 @@ For staff:
 ## STACK
 
 The application is build on MERN stack (MongoDB, Express.js, React.js, Node.js)
-JWT token for authentification
+and JWT token for authentification
 
 ## SAMPLES
 
