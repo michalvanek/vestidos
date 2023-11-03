@@ -29,7 +29,7 @@ function Catalogue() {
     precios: [],
     errorMessage: "",
     currentPage: 1,
-    dressesPerPage: 15,
+    dressesPerPage: 16,
   });
 
   const openModal = () => {

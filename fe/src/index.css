@@ -3,6 +3,39 @@ code {
     monospace;
 }
 
+/* For small screens */
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+  grid-gap: 0px;
+}
+
+.card {
+  width: 100%;
+  background-color: #fff8f7 !important;
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+}
+
+/* For larger screens */
+@media (min-width: 800px) {
+  .card-container {
+    grid-template-columns: repeat(auto-fit, minmax(20rem, max-content));
+  }
+
+  .card {
+    width: 100%;
+    background-color: #fff8f7 !important;
+  }
+
+  .card img {
+    width: 100%;
+    height: auto;
+  }
+}
 .dress-img {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -23,16 +56,6 @@ code {
   margin-right: 5px; /* Add spacing between icon and value */
 }
 
-.card-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(25rem, max-content));
-  grid-gap: 20px;
-}
-
-.card {
-  width: 100%;
-  background-color: #fff8f7 !important;
-}
 .preview-image {
   width: 100%;
   max-height: 100px; /* You can adjust this value as needed */
