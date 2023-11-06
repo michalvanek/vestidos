@@ -17,7 +17,7 @@ const CarouseModal = ({ isOpen, closeModal, props }) => {
         >
           <Carousel.Item>
             <img
-              className="d-block w-100"
+              className="d-block mx-auto"
               src={props.fotoPrincipal}
               alt="First slide"
             />
@@ -25,7 +25,7 @@ const CarouseModal = ({ isOpen, closeModal, props }) => {
           {props.fotos.map((foto, index) => (
             <Carousel.Item key={index}>
               <img
-                className="d-block w-100"
+                className="d-block mx-auto"
                 src={foto}
                 alt={`foto # ${index}`}
               />
