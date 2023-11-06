@@ -12,7 +12,7 @@ code {
 
 .card {
   width: 100%;
-  background-color: #fff8f7 !important;
+  background-color: white !important;
 }
 
 .card img {
@@ -23,12 +23,12 @@ code {
 /* For larger screens */
 @media (min-width: 800px) {
   .card-container {
-    grid-template-columns: repeat(auto-fit, minmax(20rem, max-content));
+    grid-template-columns: repeat(auto-fit, minmax(10rem, max-content));
   }
 
   .card {
     width: 100%;
-    background-color: #fff8f7 !important;
+    background-color: white !important;
   }
 
   .card img {
@@ -36,9 +36,10 @@ code {
     height: auto;
   }
 }
+
 .dress-img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 2 !important;
   object-fit: contain;
 }
 
@@ -74,7 +75,7 @@ code {
   max-height: none; /* Remove the max-height constraint to show the original size */
 }
 .modal-bg {
-  background-color: #fff8f7;
+  background-color: white;
 }
 
 .navbar-container {
