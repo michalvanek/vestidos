@@ -36,6 +36,10 @@ code {
   }
 }
 
+.rentProcess {
+  background-color: #fff8f7;
+}
+
 .dress-img {
   width: 100%;
   aspect-ratio: 1 / 2 !important;
@@ -95,31 +99,10 @@ code {
   border: 2px solid green !important;
 }
 
-/* Styling for parallax */
 body {
   margin: 0;
   font-family: "Roboto" !important;
-  color: #1d1d1d;
-  background: #071a20;
-  overflow-x: hidden;
 }
-
-p,
-h2 {
-  position: relative;
-  z-index: 1;
-  margin: 20px 15%;
-}
-h1 {
-  color: black;
-  z-index: 1;
-  font-size: 3em;
-  font-weight: 400;
-  font-family: "Roboto";
-}
-/* p {
-  opacity: 0.8;
-} */
 
 section {
   padding: 40px 0;

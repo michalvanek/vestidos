@@ -205,7 +205,13 @@ function Catalogue() {
       )}
       <section className="header" id="inicio">
         <div className="container text-center">
-          <h1>Renta de vestidos Queens</h1>
+          <h1>
+            <img
+              src="../../public/logo-rectangulo.png"
+              alt="Logo de Renta de Vestidos Queens"
+              className="img-fluid"
+            />
+          </h1>
         </div>
       </section>
       <section className="rentProcess">
@@ -215,7 +221,6 @@ function Catalogue() {
         <div className="container">
           <SearchBar state={state} updateInput={updateInput} />
 
-          {/* Add the button to open the CreateDressModal */}
           {isLoggedIn && (
             <>
               <Link onClick={openModal} className="btn btn-success my-1 mx-1">
