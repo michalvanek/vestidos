@@ -1,6 +1,5 @@
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: "Roboto", Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 /* For small screens */
@@ -35,6 +34,10 @@ code {
     width: 100%;
     height: auto;
   }
+}
+
+.rentProcess {
+  background-color: #fff8f7;
 }
 
 .dress-img {
@@ -96,30 +99,9 @@ code {
   border: 2px solid green !important;
 }
 
-/* Styling for parallax */
 body {
   margin: 0;
-  font-family: "Euclid Circular A";
-  color: #1d1d1d;
-  background: #071a20;
-  overflow-x: hidden;
-}
-
-p,
-h2 {
-  position: relative;
-  z-index: 1;
-  margin: 20px 15%;
-}
-h1 {
-  color: white !important;
-  text-shadow: 1px 1px 3px black;
-  z-index: 1;
-  font-size: 3em;
-  font-weight: 400;
-}
-p {
-  opacity: 0.8;
+  font-family: "Roboto" !important;
 }
 
 section {
@@ -193,4 +175,9 @@ select option:hover {
 }
 .social-media {
   margin-top: 20px !important;
+}
+
+.process-card-text {
+  margin-right: 0;
+  margin-left: 15px;
 }
