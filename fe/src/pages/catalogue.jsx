@@ -9,6 +9,7 @@ import CreateDressModal from "../components/modalWindows/createDressModal";
 import CarouseModal from "../components/modalWindows/carouseModal";
 import RentProcess from "../components/rentProcess/rentProcess";
 import SocialMedia from "../components/socialMedia/socialMedia";
+import logo from "../../public/logo-rectangulo.png";
 
 function Catalogue() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
@@ -207,7 +208,7 @@ function Catalogue() {
         <div className="container text-center">
           <h1>
             <img
-              src="../../public/logo-rectangulo.png"
+              src={logo}
               alt="Logo de Renta de Vestidos Queens"
               className="img-fluid"
             />
