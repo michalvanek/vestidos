@@ -1,6 +1,5 @@
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: "Roboto", Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 /* For small screens */
@@ -99,7 +98,7 @@ code {
 /* Styling for parallax */
 body {
   margin: 0;
-  font-family: "Euclid Circular A";
+  font-family: "Roboto" !important;
   color: #1d1d1d;
   background: #071a20;
   overflow-x: hidden;
@@ -112,15 +111,15 @@ h2 {
   margin: 20px 15%;
 }
 h1 {
-  color: white !important;
-  text-shadow: 1px 1px 3px black;
+  color: black;
   z-index: 1;
   font-size: 3em;
   font-weight: 400;
+  font-family: "Roboto";
 }
-p {
+/* p {
   opacity: 0.8;
-}
+} */
 
 section {
   padding: 40px 0;
@@ -193,4 +192,9 @@ select option:hover {
 }
 .social-media {
   margin-top: 20px !important;
+}
+
+.process-card-text {
+  margin-right: 0;
+  margin-left: 15px;
 }
