@@ -10,6 +10,8 @@ import CarouseModal from "../components/modalWindows/carouseModal";
 import RentProcess from "../components/rentProcess/rentProcess";
 import SocialMedia from "../components/socialMedia/socialMedia";
 import logo from "../../public/logo-rectangulo.webp";
+import { FloatingWhatsApp } from "react-floating-whatsapp";
+import logoWhats from "../../public/logoChico.webp";
 
 function Catalogue() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
@@ -32,6 +34,18 @@ function Catalogue() {
     currentPage: 1,
     dressesPerPage: 16,
   });
+
+  const whatsappSettings = {
+    phoneNumber: "+524811105225",
+    chatMessage: "Hola! 🤝 \nCómo podemos ayudarte?",
+    accountName: "Queens",
+    statusMessage: "Normalmente responde dentro de 1 hora",
+    placeholder: "Escriba su mensaje",
+    allowClickAway: true,
+    notificationDelay: 10,
+    notificationSound: true,
+    avatar: logoWhats,
+  };
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -201,6 +215,7 @@ function Catalogue() {
 
   return (
     <>
+      <FloatingWhatsApp {...whatsappSettings} />
       {state.errorMessage && (
         <div className="alert alert-danger">{state.errorMessage}</div>
       )}
