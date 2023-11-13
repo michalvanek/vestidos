@@ -221,6 +221,7 @@ function Catalogue() {
       </section>
       <section className="catalogue" id="catalogueTop">
         <div className="container">
+          <h2>Catálogo</h2>
           <SearchBar state={state} updateInput={updateInput} />
 
           {isLoggedIn && (
@@ -293,43 +294,48 @@ function Catalogue() {
                         }
                         props={dress}
                       />
-                      <div className="card-details">
-                        <div className="card-detail">
-                          <i className="fas fa-ruler icon" title="talla"></i>
-                          <span className="icon-value">
-                            {dress.talla.join(", ")}
-                          </span>
-                        </div>
-                        {/* <div className="card-detail">
+                      <div className="card-text">
+                        <div className="row row-cols-auto">
+                          <div className="col dress-detail">
+                            <i className="fas fa-ruler icon" title="talla"></i>
+                            <span className="icon-value">
+                              {dress.talla.join(",")}
+                            </span>
+                          </div>
+                          {/* <div className="card-detail">
                         <i className="fas fa-palette icon" title="color"></i>
                         <span className="icon-value">{dress.color}</span>
                       </div> */}
-                        <div className="card-detail">
-                          <i
-                            className="fas fa-dollar-sign icon"
-                            title="precio en pesos"
-                          ></i>
-                          <span className="icon-value">{dress.precio}</span>
+                          <div className="col dress-detail">
+                            <i
+                              className="fas fa-dollar-sign icon"
+                              title="precio en pesos"
+                            ></i>
+                            <span className="icon-value">{dress.precio}</span>
+                          </div>
                         </div>
-                        <div>
-                          {isLoggedIn && (
-                            <>
-                              <Link
-                                to={`/${dress._id}`}
-                                className="btn btn-primary my-1 mx-1"
-                              >
-                                <i className="fa fa-pen"></i>
-                              </Link>
-                              <button
-                                className="btn btn-danger my-1 mx-1"
-                                onClick={() => deleteDress(dress._id)}
-                                //   onClick={() => clickDelete(video.id)}
-                              >
-                                <i className="fa fa-trash"></i>
-                              </button>{" "}
-                            </>
-                          )}
-                        </div>
+
+                        {isLoggedIn && (
+                          <>
+                            {/* <div className="row"> */}
+                            <Link
+                              to={`/${dress._id}`}
+                              className="btn btn-primary my-1 mx-1"
+                            >
+                              <i className="fa fa-pen"></i>
+                            </Link>
+                            {/* </div> */}
+                            {/* <div className="row"> */}
+                            <button
+                              className="btn btn-danger my-1 mx-1"
+                              onClick={() => deleteDress(dress._id)}
+                              //   onClick={() => clickDelete(video.id)}
+                            >
+                              <i className="fa fa-trash"></i>
+                            </button>
+                            {/* </div> */}
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -369,16 +375,28 @@ function Catalogue() {
       <section className="contact" id="contact">
         <div className="container">
           <div className="row">
-            <div className="col">
-              <h3>Contacto:</h3>
+            <div className="col-sm">
+              <h3>Contacto</h3>
+
               <br />
-              Dirección: Prolongación Irán #1600, Valle Alto, Cd Valles
-              <br />
-              Teléfono: <a href="tel:+524811105225">481 110 5225</a>
-              <br />
-              <SocialMedia />
+              <div className="contact-details">
+                <p>Dirección: Prolongación Irán #1600, Valle Alto, Cd Valles</p>
+
+                <p>
+                  Teléfono: <a href="tel:+524811105225">481 110 5225</a>
+                </p>
+
+                <p>Nuestro horario:</p>
+                <ul>
+                  <li>Lunes - Viernes: 10am - 3pm y 5pm - 9pm</li>
+                  <li>S&aacute;bado: 10am - 3pm</li>
+                  <li>Domingo: Cerrado</li>
+                </ul>
+
+                <SocialMedia />
+              </div>
             </div>
-            <div className="col">
+            <div className="col-sm">
               {/* Paste the Google Maps embed code here */}
               <iframe
                 title="Google Maps"

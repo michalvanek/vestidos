@@ -25,8 +25,7 @@ axiosHandler.interceptors.request.use(
           decodedRefreshToken.exp * 1000
         ).isBefore(dayjs());
         if (isRefreshTokenExpired) {
-          console.log(isRefreshTokenExpired);
-          window.location.href = "/logout";
+          console.log(`refreshToken is expired: ${isRefreshTokenExpired}`);
         }
 
         try {
