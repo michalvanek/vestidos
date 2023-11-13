@@ -6,7 +6,8 @@ code {
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
-  grid-gap: 0px;
+
+  min-width: 270px;
 }
 
 .card {
@@ -54,6 +55,10 @@ code {
   display: flex;
   align-items: center; /* Vertically align content */
   margin-right: 20px; /* Add spacing between card details */
+}
+.dress-detail {
+  padding-left: 6px !important;
+  padding-right: 6px !important;
 }
 
 .icon {
@@ -174,10 +179,15 @@ select option:hover {
   color: gray;
 }
 .social-media {
-  margin-top: 20px !important;
+  margin-top: 15px !important;
+  margin-bottom: 10px !important;
 }
 
 .process-card-text {
   margin-right: 0;
   margin-left: 15px;
+}
+.contact-details p {
+  margin-bottom: 0px !important;
+  /* min-width: 250px; */
 }
