@@ -57,7 +57,7 @@ const RentProcess = () => {
               <p className="process-card-text">
                 🎉 Tu evento se está acercando!
                 <br />
-                📅 Ven en la fecha acordada con tu INE y el resto del costo de
+                📅 Ven en la fecha acordada con tu IFE y el resto del costo de
                 la renta. <br />
                 🤩 La renta incluye 3 días, ajustes y tintorería.
               </p>
@@ -72,7 +72,7 @@ const RentProcess = () => {
               <p className="process-card-text">
                 📅 En la fecha acordada, devuelve el vestido.
                 <br />
-                🤝 Te regresamos tu INE. ¡Listo!
+                🤝 Te regresamos tu IFE. ¡Listo!
               </p>
             </div>
           </div>
