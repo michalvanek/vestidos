@@ -4,7 +4,7 @@ function SocialMedia() {
       <div className="row justify-content-sm-center social-media">
         <div className="col sm-4">
           <a
-            href="https://wa.me/524811105225"
+            href="https://wa.me/524811538822"
             target="_blank"
             rel="noopener noreferrer"
             className="fa-brands fa-whatsapp fa-2xl"
