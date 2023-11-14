@@ -36,13 +36,13 @@ function Catalogue() {
   });
 
   const whatsappSettings = {
-    phoneNumber: "+524811105225",
+    phoneNumber: "+524811538822",
     chatMessage: "Hola! 🤝 \nCómo podemos ayudarte?",
     accountName: "Queens",
     statusMessage: "Normalmente responde dentro de 1 hora",
     placeholder: "Escriba su mensaje",
     allowClickAway: true,
-    notificationDelay: 10,
+    notificationDelay: 20,
     notificationSound: true,
     avatar: logoWhats,
   };
@@ -215,7 +215,8 @@ function Catalogue() {
 
   return (
     <>
-      <FloatingWhatsApp {...whatsappSettings} />
+      {!modalCarouseIsOpen && <FloatingWhatsApp {...whatsappSettings} />}
+
       {state.errorMessage && (
         <div className="alert alert-danger">{state.errorMessage}</div>
       )}
