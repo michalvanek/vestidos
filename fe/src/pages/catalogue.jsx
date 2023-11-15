@@ -88,16 +88,6 @@ function Catalogue() {
   };
 
   useEffect(() => {
-    // Check if there's a dress ID in the URL parameters
-    const dressIdParam = new URLSearchParams(location.search).get("dress");
-
-    if (dressIdParam) {
-      // Open the modal window for the specified dress ID
-      openModalCarouse(dressIdParam);
-    }
-  }, []);
-
-  useEffect(() => {
     const fetchData = async () => {
       try {
         setState((prevState) => ({ ...prevState, loading: true }));
@@ -105,14 +95,20 @@ function Catalogue() {
         const colorsResponse = await DressService.getAllColors();
         const pricesResponse = await DressService.getAllPrices();
 
+        const newFilteredDresses = dressesResponse.data;
+
         setState((prevState) => ({
           ...prevState,
           loading: false,
-          dresses: dressesResponse.data,
-          filteredDresses: dressesResponse.data,
+          dresses: newFilteredDresses,
+          filteredDresses: newFilteredDresses,
           colores: colorsResponse.data.map((color) => color.color),
           precios: pricesResponse.data.map((price) => price.value.toString()),
         }));
+
+        // Log the filteredDresses array here
+
+        loadDressFromUrl();
       } catch (error) {
         setState((prevState) => ({
           ...prevState,
@@ -123,10 +119,35 @@ function Catalogue() {
     };
 
     fetchData();
+
     return () => {
       // This now gets called when the component unmounts
     };
   }, [dressChanged]);
+
+  useEffect(() => {
+    loadDressFromUrl();
+  }, [state.filteredDresses]);
+
+  const loadDressFromUrl = async () => {
+    const dressIdParam = new URLSearchParams(location.search).get("dress");
+    if (dressIdParam) {
+      const dressIndex = state.filteredDresses.findIndex(
+        (dress) => dress._id === dressIdParam
+      );
+
+      if (dressIndex !== -1) {
+        const page = Math.ceil((dressIndex + 1) / state.dressesPerPage); // Adjusted to ensure correct page calculation
+
+        handlePageChange(page);
+
+        // Delay opening the modal to ensure the page transition is complete
+        setTimeout(() => {
+          openModalCarouse(dressIdParam);
+        }, 500);
+      }
+    }
+  };
 
   const indexOfLastDress = state.currentPage * state.dressesPerPage;
   const indexOfFirstDress = indexOfLastDress - state.dressesPerPage;
