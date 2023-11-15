@@ -12,6 +12,7 @@ import SocialMedia from "../components/socialMedia/socialMedia";
 import logo from "../../public/logo-rectangulo.webp";
 import { FloatingWhatsApp } from "react-floating-whatsapp";
 import logoWhats from "../../public/logoChico.webp";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Catalogue() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
@@ -34,7 +35,8 @@ function Catalogue() {
     currentPage: 1,
     dressesPerPage: 16,
   });
-
+  const location = useLocation();
+  const navigate = useNavigate();
   const whatsappSettings = {
     phoneNumber: "+524811538822",
     chatMessage: "Hola! 🤝 \nCómo podemos ayudarte?",
@@ -63,7 +65,10 @@ function Catalogue() {
   const closeModalCarouse = (dressId, props) => {
     // Set the modalIsOpen state to false, and reset the modal ID
     setModalCarouseIsOpen(false);
-    props === 1 && setDressChanged((prevDressChanged) => prevDressChanged + 1);
+    if (props === 1) {
+      setDressChanged((prevDressChanged) => prevDressChanged + 1);
+    }
+    navigate(location.pathname);
   };
 
   const deleteDress = async (dressId) => {
@@ -81,6 +86,16 @@ function Catalogue() {
       }
     }
   };
+
+  useEffect(() => {
+    // Check if there's a dress ID in the URL parameters
+    const dressIdParam = new URLSearchParams(location.search).get("dress");
+
+    if (dressIdParam) {
+      // Open the modal window for the specified dress ID
+      openModalCarouse(dressIdParam);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -293,11 +308,17 @@ function Catalogue() {
                     style={{ background: "#FFF8F7" }}
                   >
                     <div className="card-body">
-                      <Link onClick={() => openModalCarouse(dress._id)}>
+                      <Link
+                        to={{
+                          pathname: location.pathname,
+                          search: `?dress=${dress._id}`,
+                        }}
+                      >
                         <img
                           className="card-img-top"
                           src={dress.fotoPrincipal}
                           alt="Dress"
+                          onClick={() => openModalCarouse(dress._id)}
                         />
                       </Link>
                       <CarouseModal
