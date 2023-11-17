@@ -13,14 +13,12 @@ import NewRent from "./pages/newRent";
 import LogoutPage from "./pages/logoutPage";
 import ErrorPage from "./pages/errorPage";
 import { ProtectedRoute } from "./components/protectedRoute/protectedRoute";
-import CarouseModal from "./components/modalWindows/carouseModal";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<NavBar />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
         <Route index element={<Catalogue />} />
-        {/* <Route path="/:id" element={<CarouseModal />} /> */}
         <Route element={<ProtectedRoute />}>
           <Route path="/admin" element={<MenuAdmin />} />
           <Route path="/newRent" element={<NewRent />} />

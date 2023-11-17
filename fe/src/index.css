@@ -16,8 +16,8 @@ code {
 }
 
 .card img {
-  width: 100%;
-  height: auto;
+  width: 250;
+  height: 500;
 }
 
 /* For larger screens */
@@ -32,8 +32,8 @@ code {
   }
 
   .card img {
-    width: 100%;
-    height: auto;
+    width: 250;
+    height: 500;
   }
 }
 
