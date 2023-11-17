@@ -4,7 +4,6 @@ import { DressService } from "../../dao/dressService";
 import "../index.css";
 import SearchBar from "../components/searchBar";
 import { LoginContext } from "../context/loginContext";
-import { Link } from "react-router-dom";
 import CreateDressModal from "../components/modalWindows/createDressModal";
 import CarouseModal from "../components/modalWindows/carouseModal";
 import RentProcess from "../components/rentProcess/rentProcess";
@@ -12,7 +11,12 @@ import SocialMedia from "../components/socialMedia/socialMedia";
 import logo from "../../public/logo-rectangulo.webp";
 import { FloatingWhatsApp } from "react-floating-whatsapp";
 import logoWhats from "../../public/logoChico.webp";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  Link,
+  useSearchParams,
+} from "react-router-dom";
 
 function Catalogue() {
   const { isLoggedIn, getAccessTokenHeader } = useContext(LoginContext);
@@ -35,6 +39,7 @@ function Catalogue() {
     currentPage: 1,
     dressesPerPage: 16,
   });
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const navigate = useNavigate();
   const whatsappSettings = {
@@ -107,8 +112,6 @@ function Catalogue() {
         }));
 
         // Log the filteredDresses array here
-
-        loadDressFromUrl();
       } catch (error) {
         setState((prevState) => ({
           ...prevState,
@@ -126,11 +129,29 @@ function Catalogue() {
   }, [dressChanged]);
 
   useEffect(() => {
-    loadDressFromUrl();
-  }, [state.filteredDresses]);
+    loadDressesFromUrl();
+  }, [state.dresses]);
 
-  const loadDressFromUrl = async () => {
-    const dressIdParam = new URLSearchParams(location.search).get("dress");
+  // Load dresses based on URL parameters when the component mounts
+  const loadDressesFromUrl = () => {
+    if (!state.dresses) return;
+    const sizeParam = searchParams.get("talla");
+    const colorParam = searchParams.get("color");
+    const priceParam = searchParams.get("precio");
+    const dressIdParam = searchParams.get("dress");
+
+    if (sizeParam) {
+      updateInput({ target: { name: "talla", value: sizeParam } });
+    }
+
+    if (colorParam) {
+      updateInput({ target: { name: "color", value: colorParam } });
+    }
+
+    if (priceParam) {
+      updateInput({ target: { name: "precio", value: priceParam } });
+    }
+
     if (dressIdParam) {
       const dressIndex = state.filteredDresses.findIndex(
         (dress) => dress._id === dressIdParam
@@ -142,9 +163,8 @@ function Catalogue() {
         handlePageChange(page);
 
         // Delay opening the modal to ensure the page transition is complete
-        setTimeout(() => {
-          openModalCarouse(dressIdParam);
-        }, 500);
+
+        openModalCarouse(dressIdParam);
       }
     }
   };
@@ -238,6 +258,12 @@ function Catalogue() {
         currentPage: 1, // Reset the current page to 1
       });
     }
+    if (value === "") {
+      setSearchParams({});
+    } else {
+      setSearchParams({ [name]: value });
+      // navigate(`${location.pathname}?${name}=${value}`);
+    }
 
     // Reset the select field values
     setState((prevState) => ({
@@ -252,7 +278,14 @@ function Catalogue() {
   return (
     <>
       {!modalCarouseIsOpen && <FloatingWhatsApp {...whatsappSettings} />}
-
+      <div className="alert alert-success">
+        <span>
+          ¡Celebra el Buen Fin con nosotros en Queens! 🎉 Todos los vestidos a
+          <b> $ 700</b>. Validez del 15 al 21 de noviembre de 2023. Ajustes y
+          tintorería incluidos. ¡Disfruta de una atención personalizada y luce
+          espectacular en tu próximo evento con nosotros!
+        </span>
+      </div>
       {state.errorMessage && (
         <div className="alert alert-danger">{state.errorMessage}</div>
       )}
@@ -330,10 +363,7 @@ function Catalogue() {
                   >
                     <div className="card-body">
                       <Link
-                        to={{
-                          pathname: location.pathname,
-                          search: `?dress=${dress._id}`,
-                        }}
+                        onClick={() => setSearchParams({ dress: dress._id })}
                       >
                         <img
                           className="card-img-top"
@@ -355,7 +385,6 @@ function Catalogue() {
                       <div className="card-text">
                         <div className="row row-cols-auto">
                           <div className="col dress-detail">
-                            <i className="fas fa-ruler icon" title="talla"></i>
                             <span className="icon-value">
                               {dress.talla.join(",")}
                             </span>
@@ -365,11 +394,7 @@ function Catalogue() {
                         <span className="icon-value">{dress.color}</span>
                       </div> */}
                           <div className="col dress-detail">
-                            <i
-                              className="fas fa-dollar-sign icon"
-                              title="precio en pesos"
-                            ></i>
-                            <span className="icon-value">{dress.precio}</span>
+                            <span className="icon-value">$ {dress.precio}</span>
                           </div>
                         </div>
 
