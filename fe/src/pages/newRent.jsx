@@ -338,20 +338,26 @@ function NewRent() {
         </div>
 
         <div className="row">
-          <Form.Group controlId="searchQuery">
-            <Form.Label>Encuentra clienta existente:</Form.Label>
-            <div className="d-flex">
-              <Form.Control
-                type="text"
-                placeholder="Escribe apellido(s) de clienta"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Button variant="primary" onClick={handleSearch} className="ms-2">
-                Buscar
-              </Button>
-            </div>
-          </Form.Group>
+          <div className="col-sm-5">
+            <Form.Group controlId="searchQuery">
+              <Form.Label>Encuentra clienta existente:</Form.Label>
+              <div className="d-flex">
+                <Form.Control
+                  type="text"
+                  placeholder="Escribe apellido(s) de clienta"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <Button
+                  variant="primary"
+                  onClick={handleSearch}
+                  className="ms-2"
+                >
+                  Buscar
+                </Button>
+              </div>
+            </Form.Group>
+          </div>
         </div>
         <div className="container">
           <div className="row">
