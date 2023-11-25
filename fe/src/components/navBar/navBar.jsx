@@ -10,6 +10,7 @@ const NavBar = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const { isLoggedIn, logout } = useContext(LoginContext);
   const location = useLocation(); // Get the current location
+  const navBarHeight = 60;
 
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
@@ -45,7 +46,7 @@ const NavBar = () => {
                   onClick={() =>
                     scroller.scrollTo("inicio", {
                       smooth: true,
-                      offset: 0,
+                      offset: -navBarHeight,
                       duration: 500,
                     })
                   }
@@ -62,7 +63,7 @@ const NavBar = () => {
                   onClick={() =>
                     scroller.scrollTo("catalogueTop", {
                       smooth: true,
-                      offset: 0,
+                      offset: -navBarHeight,
                       duration: 500,
                     })
                   }
@@ -75,7 +76,7 @@ const NavBar = () => {
                   onClick={() =>
                     scroller.scrollTo("contact", {
                       smooth: true,
-                      offset: -10,
+                      offset: -navBarHeight,
                       duration: 500,
                     })
                   }

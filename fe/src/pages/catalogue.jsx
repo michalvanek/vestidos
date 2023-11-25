@@ -278,18 +278,19 @@ function Catalogue() {
   return (
     <>
       {!modalCarouseIsOpen && <FloatingWhatsApp {...whatsappSettings} />}
-      <div className="alert alert-success">
+
+      {state.errorMessage && (
+        <div className="alert alert-danger">{state.errorMessage}</div>
+      )}
+      {/* <div className="alert alert-success" id="inicio">
         <span>
           ¡Celebra el Buen Fin con nosotros en Queens! 🎉 Todos los vestidos a
           <b> $ 700</b>. Validez del 15 al 21 de noviembre de 2023. Ajustes y
           tintorería incluidos. ¡Disfruta de una atención personalizada y luce
           espectacular en tu próximo evento con nosotros!
         </span>
-      </div>
-      {state.errorMessage && (
-        <div className="alert alert-danger">{state.errorMessage}</div>
-      )}
-      <section className="header" id="inicio">
+      </div> */}
+      <section className="header">
         <div className="container text-center">
           <h1>
             <img
