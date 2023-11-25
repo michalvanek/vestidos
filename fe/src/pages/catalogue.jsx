@@ -290,7 +290,7 @@ function Catalogue() {
           espectacular en tu próximo evento con nosotros!
         </span>
       </div> */}
-      <section className="header">
+      <section className="header" id="inicio">
         <div className="container text-center">
           <h1>
             <img
