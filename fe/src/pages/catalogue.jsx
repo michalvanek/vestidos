@@ -43,7 +43,7 @@ function Catalogue() {
   const location = useLocation();
   const navigate = useNavigate();
   const whatsappSettings = {
-    phoneNumber: "+524811538822",
+    phoneNumber: "+524811105225",
     chatMessage: "Hola! 🤝 \nCómo podemos ayudarte?",
     accountName: "Queens",
     statusMessage: "Normalmente responde dentro de 1 hora",

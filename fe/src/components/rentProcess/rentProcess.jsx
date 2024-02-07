@@ -10,7 +10,7 @@ const RentProcess = () => {
               <h5 className="card-title">Cita</h5>
               <p className="process-card-text">
                 <a
-                  href="https://wa.me/524811538822"
+                  href="https://wa.me/524811105225"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -20,7 +20,7 @@ const RentProcess = () => {
                 <br /> 👁 Te recomendamos hacerlo con al menos una semana de
                 anticipación para tu evento.{" "}
                 <a
-                  href="https://wa.me/524811538822"
+                  href="https://wa.me/524811105225"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
